@@ -28,7 +28,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
         : 'Internal server error';
 
     if (exception instanceof HttpException) {
-      if (status >= HttpStatus.INTERNAL_SERVER_ERROR) {
+      if (Number(status) >= HttpStatus.INTERNAL_SERVER_ERROR) {
         this.logger.error(
           `${request.method} ${request.url} → ${status}`,
           exception.stack,

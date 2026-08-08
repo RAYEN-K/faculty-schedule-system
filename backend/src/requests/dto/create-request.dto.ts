@@ -1,9 +1,4 @@
-import {
-  IsEnum,
-  IsNotEmpty,
-  IsDateString,
-  ValidateIf,
-} from 'class-validator';
+import { IsEnum, IsNotEmpty, IsDateString, ValidateIf } from 'class-validator';
 import { RequestType } from '@prisma/client';
 
 export class CreateRequestDto {

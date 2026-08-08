@@ -44,7 +44,9 @@ export class EventsController {
 
   @Get()
   @Roles(Role.ADMIN, Role.HOD, Role.FACULTY)
-  @ApiOperation({ summary: 'List events (scoped by department for non-admins)' })
+  @ApiOperation({
+    summary: 'List events (scoped by department for non-admins)',
+  })
   findAll(@CurrentUser() user: AuthUser) {
     return this.eventsService.findAll(user.role, user.departmentId);
   }
