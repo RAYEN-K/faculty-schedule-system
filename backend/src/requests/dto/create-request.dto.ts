@@ -13,11 +13,21 @@ export class CreateRequestDto {
   })
   type: RequestType;
 
-  @IsOptional()
+  @ValidateIf((o: CreateRequestDto) => o.type === RequestType.MODIFICATION)
+  @IsNotEmpty({ message: 'scheduleId is required for MODIFICATION requests' })
   scheduleId?: string;
 
-  // proposedDate is required for ADDITIONAL and COMPENSATION, but optional for MODIFICATION
-  @ValidateIf((o: CreateRequestDto) => o.type === RequestType.COMPENSATION)
+  @ValidateIf((o: CreateRequestDto) => o.type === RequestType.MODIFICATION)
+  @IsOptional()
+  @IsDateString()
+  originalDate?: string;
+
+  @ValidateIf(
+    (o: CreateRequestDto) =>
+      o.type === RequestType.MODIFICATION ||
+      o.type === RequestType.ADDITIONAL ||
+      o.type === RequestType.COMPENSATION,
+  )
   @IsNotEmpty({ message: 'proposedDate is required for this request type' })
   @IsDateString()
   proposedDate?: string;

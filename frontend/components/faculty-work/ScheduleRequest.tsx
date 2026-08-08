@@ -41,9 +41,21 @@ export function ScheduleRequest() {
   });
 
   function handleSubmit() {
-    const payload: any = { type: selectedType };
-    if (reason.trim()) payload.reason = reason;
-    if (proposedDate) payload.proposedDate = new Date(proposedDate).toISOString();
+    const payload: {
+      type: typeof selectedType;
+      reason: string;
+      proposedDate?: string;
+      scheduleId?: string;
+      originalDate?: string;
+    } = { type: selectedType, reason: reason.trim() };
+    if (!payload.reason) return;
+    if (proposedDate) {
+      const iso = new Date(proposedDate).toISOString();
+      payload.proposedDate = iso;
+      if (selectedType === 'MODIFICATION') {
+        payload.originalDate = iso;
+      }
+    }
     if (selectedType === 'MODIFICATION' && scheduleId) payload.scheduleId = scheduleId;
     mutation.mutate(payload);
   }
@@ -163,7 +175,7 @@ export function ScheduleRequest() {
           <div className="flex gap-3">
             <button
               onClick={handleSubmit}
-              disabled={mutation.isPending || (selectedType === 'MODIFICATION' && !scheduleId)}
+              disabled={mutation.isPending || (selectedType === 'MODIFICATION' && !scheduleId) || !reason.trim() || !proposedDate}
               className="flex-1 py-3 rounded-lg text-sm font-semibold text-white disabled:opacity-60"
               style={{ background: '#1a2f5e' }}
             >

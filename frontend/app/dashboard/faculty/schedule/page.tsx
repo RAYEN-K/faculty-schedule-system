@@ -1,13 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { apiClient } from "@/lib/api-client";
+import { useQuery } from "@tanstack/react-query";
+import { useCurrentUser } from "@/lib/hooks/use-current-user";
+import { getMyScheduleForWeek } from "@/lib/schedules";
 
 interface ScheduleSlot {
   id: string;
   dayOfWeek: number;
   startTime: string;
   endTime: string;
+  isException?: boolean;
 }
 
 const DAYS = [
@@ -20,32 +22,25 @@ const DAYS = [
   "Saturday",
 ];
 
+function weekAnchorIso(date = new Date()): string {
+  return date.toISOString().split("T")[0];
+}
+
 export default function FacultySchedulePage() {
-  const [schedules, setSchedules] = useState<ScheduleSlot[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { data: user, isLoading: userLoading } = useCurrentUser();
 
-  useEffect(() => {
-    const fetchSchedule = async () => {
-      try {
-        const storedUser = localStorage.getItem("user");
-        const user = storedUser ? JSON.parse(storedUser) : null;
+  const {
+    data: schedules,
+    isLoading: scheduleLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["my-schedule-week", user?.id],
+    queryFn: () =>
+      getMyScheduleForWeek(user!.id, weekAnchorIso()) as Promise<ScheduleSlot[]>,
+    enabled: !!user?.id,
+  });
 
-        if (user?.id) {
-          const res = await apiClient.get(`/schedules/user/${user.id}`);
-          setSchedules(Array.isArray(res.data) ? res.data : []);
-        } else {
-          setSchedules([]);
-        }
-      } catch (err) {
-        console.error(err);
-        setSchedules([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchSchedule();
-  }, []);
+  const loading = userLoading || scheduleLoading;
 
   return (
     <div className="space-y-6">
@@ -63,7 +58,11 @@ export default function FacultySchedulePage() {
           <div className="p-8 text-center text-xs text-slate-400">
             Loading schedule...
           </div>
-        ) : schedules.length === 0 ? (
+        ) : isError ? (
+          <div className="p-8 text-center text-xs text-red-500">
+            Could not load your schedule. Please try again.
+          </div>
+        ) : !schedules?.length ? (
           <div className="p-8 text-center text-xs text-slate-500">
             No schedule slots found.
           </div>
@@ -84,6 +83,11 @@ export default function FacultySchedulePage() {
                 >
                   <td className="px-6 py-4 font-semibold text-slate-900">
                     {DAYS[slot.dayOfWeek] || `Day ${slot.dayOfWeek}`}
+                    {slot.isException && (
+                      <span className="ml-2 text-[10px] font-normal text-amber-600">
+                        (modified)
+                      </span>
+                    )}
                   </td>
                   <td className="px-6 py-4 text-slate-600 font-mono">
                     {slot.startTime}

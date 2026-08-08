@@ -48,8 +48,16 @@ export class SchedulesController {
   @Get()
   @Roles(Role.ADMIN, Role.HOD)
   @ApiOperation({ summary: 'Get all schedule slots' })
-  findAll(@Query() { page, pageSize }: PaginationDto) {
-    return this.schedulesService.findAll(page, pageSize);
+  findAll(
+    @Query() { page, pageSize }: PaginationDto,
+    @CurrentUser() user: AuthUser,
+  ) {
+    return this.schedulesService.findAll(
+      page,
+      pageSize,
+      user.role,
+      user.departmentId,
+    );
   }
 
   @Get('user/:userId/week/:weekStartDate')
@@ -57,7 +65,7 @@ export class SchedulesController {
     summary:
       'Get the actual schedule for a specific week, including exceptions',
   })
-  findByUserForWeek(
+  async findByUserForWeek(
     @Param('userId') userId: string,
     @Param('weekStartDate') weekStartDate: string,
     @CurrentUser() user: AuthUser,
@@ -67,6 +75,13 @@ export class SchedulesController {
 
     if (!isSelf && !isPrivileged) {
       throw new ForbiddenException('You can only view your own timetable');
+    }
+    if (user.role === Role.HOD && !isSelf) {
+      await this.schedulesService.assertHodCanAccessUser(
+        userId,
+        user.role,
+        user.departmentId,
+      );
     }
     return this.schedulesService.getScheduleForWeek(
       userId,
@@ -91,17 +106,27 @@ export class SchedulesController {
   @Get(':id')
   @Roles(Role.ADMIN, Role.HOD)
   @ApiOperation({ summary: 'Get a specific schedule slot by ID' })
-  findOne(@Param('id') id: string) {
-    return this.schedulesService.findOne(id);
+  findOne(@Param('id') id: string, @CurrentUser() user: AuthUser) {
+    return this.schedulesService.findOne(id, user.role, user.departmentId);
   }
   @Get('user/:userId')
   @ApiOperation({ summary: 'Get all schedule slots for a specific user' })
-  findByUser(@Param('userId') userId: string, @CurrentUser() user: AuthUser) {
+  async findByUser(
+    @Param('userId') userId: string,
+    @CurrentUser() user: AuthUser,
+  ) {
     const isSelf = user.id === userId;
     const isPrivileged = user.role === Role.ADMIN || user.role === Role.HOD;
 
     if (!isSelf && !isPrivileged) {
       throw new ForbiddenException('You can only view your own timetable');
+    }
+    if (user.role === Role.HOD && !isSelf) {
+      await this.schedulesService.assertHodCanAccessUser(
+        userId,
+        user.role,
+        user.departmentId,
+      );
     }
 
     return this.schedulesService.findByUser(userId);
@@ -126,7 +151,7 @@ export class SchedulesController {
   @Delete(':id')
   @Roles(Role.ADMIN, Role.HOD)
   @ApiOperation({ summary: 'Delete a schedule slot' })
-  remove(@Param('id') id: string) {
-    return this.schedulesService.remove(id);
+  remove(@Param('id') id: string, @CurrentUser() user: AuthUser) {
+    return this.schedulesService.remove(id, user.role, user.departmentId);
   }
 }

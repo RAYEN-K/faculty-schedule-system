@@ -3,7 +3,7 @@ import {
   NotFoundException,
   ForbiddenException,
 } from '@nestjs/common';
-import { Role } from '@prisma/client';
+import { Event, Role } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
@@ -14,8 +14,8 @@ export class EventsService {
 
   async create(
     dto: CreateEventDto,
-    callerRole?: Role,
-    callerDepartmentId?: string | null,
+    callerRole: Role,
+    callerDepartmentId: string | null,
   ) {
     if (callerRole === Role.HOD && dto.departmentId !== callerDepartmentId) {
       throw new ForbiddenException(
@@ -27,23 +27,36 @@ export class EventsService {
     });
   }
 
-  async findAll() {
+  async findAll(callerRole: Role, callerDepartmentId: string | null) {
+    if (callerRole !== Role.ADMIN && !callerDepartmentId) {
+      return [];
+    }
+
     return this.prisma.event.findMany({
+      where:
+        callerRole === Role.ADMIN
+          ? undefined
+          : { departmentId: callerDepartmentId! },
       orderBy: { eventDate: 'asc' },
     });
   }
 
-  async findOne(id: string) {
+  async findOne(
+    id: string,
+    callerRole: Role,
+    callerDepartmentId: string | null,
+  ) {
     const event = await this.prisma.event.findUnique({ where: { id } });
     if (!event) throw new NotFoundException('Event not found');
+    this.assertCanAccessEvent(event, callerRole, callerDepartmentId);
     return event;
   }
 
   async update(
     id: string,
     dto: UpdateEventDto,
-    callerRole?: Role,
-    callerDepartmentId?: string | null,
+    callerRole: Role,
+    callerDepartmentId: string | null,
   ) {
     const event = await this.prisma.event.findUnique({ where: { id } });
     if (!event) throw new NotFoundException('Event not found');
@@ -59,8 +72,8 @@ export class EventsService {
 
   async remove(
     id: string,
-    callerRole?: Role,
-    callerDepartmentId?: string | null,
+    callerRole: Role,
+    callerDepartmentId: string | null,
   ) {
     const event = await this.prisma.event.findUnique({ where: { id } });
     if (!event) throw new NotFoundException('Event not found');
@@ -72,5 +85,18 @@ export class EventsService {
     }
 
     return this.prisma.event.delete({ where: { id } });
+  }
+
+  private assertCanAccessEvent(
+    event: Event,
+    callerRole: Role,
+    callerDepartmentId: string | null,
+  ) {
+    if (callerRole === Role.ADMIN) {
+      return;
+    }
+    if (!callerDepartmentId || event.departmentId !== callerDepartmentId) {
+      throw new ForbiddenException('You cannot access this event');
+    }
   }
 }

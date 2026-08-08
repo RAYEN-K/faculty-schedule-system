@@ -10,15 +10,14 @@ import { CreateRequestDto } from './dto/create-request.dto';
 import { UpdateStatusDto } from './dto/update-status.dto';
 import { RequestStatus, RequestType, Role, Prisma } from '@prisma/client';
 import { assertNoScheduleOverlap } from '../common/utils/schedule-overlap.util';
-import { SchedulesService } from '../schedules/schedules.service';
-import { CreateScheduleDto } from '../schedules/dto/create-schedule.dto';
+import { startOfWeek } from '../common/utils/date.util';
+
+const DEFAULT_SLOT_START = '08:30';
+const DEFAULT_SLOT_END = '10:00';
 
 @Injectable()
 export class RequestsService {
-  constructor(
-    private readonly prisma: PrismaService,
-    private readonly schedulesService: SchedulesService,
-  ) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   async create(userId: string, dto: CreateRequestDto) {
     if (dto.type === RequestType.MODIFICATION) {
@@ -86,7 +85,6 @@ export class RequestsService {
     callerDepartmentId: string | null,
   ) {
     return this.prisma.$transaction(async (tx) => {
-      // 1. Fetch Request within Transaction
       const request = await tx.modificationRequest.findUnique({
         where: { id },
         include: { user: true, schedule: true },
@@ -102,7 +100,6 @@ export class RequestsService {
         );
       }
 
-      // 2. Department Check for HOD
       if (
         callerRole === Role.HOD &&
         request.user.departmentId !== callerDepartmentId
@@ -112,7 +109,6 @@ export class RequestsService {
         );
       }
 
-      // 3. Update Request Status
       const updatedRequest = await tx.modificationRequest.update({
         where: { id },
         data: {
@@ -122,85 +118,148 @@ export class RequestsService {
         },
       });
 
-      // If REJECTED, stop here
       if (dto.status !== RequestStatus.APPROVED) {
         return updatedRequest;
       }
 
-      // 4. Handle Schedule Changes on Approval
       if (request.type === RequestType.MODIFICATION && request.scheduleId) {
-        if (!request.proposedDate || !request.schedule) {
-          throw new BadRequestException(
-            'Modification request must have a proposedDate and associated schedule.',
-          );
-        }
-
-        const proposedDate = new Date(request.proposedDate);
-        const newDayOfWeek = proposedDate.getUTCDay();
-
-        try {
-          await tx.scheduleException.create({
-            data: {
-              scheduleId: request.scheduleId,
-              weekStartDate: request.originalDate ?? proposedDate,
-              newDayOfWeek,
-              newStartTime: request.schedule.startTime,
-              newEndTime: request.schedule.endTime,
-              isSkipped: false,
-              requestId: request.id,
-            },
-          });
-        } catch (error) {
-          if (
-            error instanceof Prisma.PrismaClientKnownRequestError &&
-            error.code === 'P2002'
-          ) {
-            throw new ConflictException(
-              'This week already has a scheduling exception for this slot',
-            );
-          }
-          throw error;
-        }
-      } else if (
-        request.type === RequestType.ADDITIONAL ||
-        request.type === RequestType.COMPENSATION
-      ) {
-        if (!request.proposedDate) {
-          throw new BadRequestException(
-            'Proposed date is required for this request type',
-          );
-        }
-
-        const proposedDate = new Date(request.proposedDate);
-        const dayOfWeek = proposedDate.getUTCDay();
-
-        // Check for overlap before creating schedule
-        const existingUserSchedules = await tx.schedule.findMany({
-          where: { userId: request.userId, dayOfWeek },
-        });
-
-        assertNoScheduleOverlap(
-          {
-            dayOfWeek,
-            startTime: '08:30',
-            endTime: '10:00',
-          },
-          existingUserSchedules,
-        );
-
-        // 1. Declare newSlot b-st3mal dayOfWeek el-jaḥedh
-        const newSlot: CreateScheduleDto = {
-          userId: request.userId,
-          dayOfWeek,
-          startTime: '08:30',
-          endTime: '10:00',
-        };
-
-        // 2. Call el-service
-        await this.schedulesService.create(newSlot);
-      } // <-- Hedhi el-accolade elli kān't na9sa!
+        await this.applyModificationApproval(tx, request);
+      } else if (request.type === RequestType.ADDITIONAL) {
+        await this.applyAdditionalApproval(tx, request);
+      } else if (request.type === RequestType.COMPENSATION) {
+        await this.applyCompensationApproval(tx, request, dto);
+      }
 
       return updatedRequest;
     });
+  }
+
+  private async applyModificationApproval(
+    tx: Prisma.TransactionClient,
+    request: Prisma.ModificationRequestGetPayload<{
+      include: { schedule: true };
+    }>,
+  ) {
+    if (!request.proposedDate || !request.schedule) {
+      throw new BadRequestException(
+        'Modification request must have a proposedDate and associated schedule.',
+      );
+    }
+
+    const proposedDate = new Date(request.proposedDate);
+    const newDayOfWeek = proposedDate.getUTCDay();
+    const weekAnchor = request.originalDate ?? request.proposedDate;
+
+    try {
+      await tx.scheduleException.create({
+        data: {
+          scheduleId: request.scheduleId!,
+          weekStartDate: startOfWeek(new Date(weekAnchor)),
+          newDayOfWeek,
+          newStartTime: request.schedule.startTime,
+          newEndTime: request.schedule.endTime,
+          isSkipped: false,
+          requestId: request.id,
+        },
+      });
+    } catch (error) {
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === 'P2002'
+      ) {
+        throw new ConflictException(
+          'This week already has a scheduling exception for this slot',
+        );
+      }
+      throw error;
+    }
+  }
+
+  private async applyAdditionalApproval(
+    tx: Prisma.TransactionClient,
+    request: Prisma.ModificationRequestGetPayload<{
+      include: { schedule: true };
+    }>,
+  ) {
+    if (!request.proposedDate) {
+      throw new BadRequestException(
+        'Proposed date is required for this request type',
+      );
+    }
+
+    const proposedDate = new Date(request.proposedDate);
+    const dayOfWeek = proposedDate.getUTCDay();
+    const startTime = request.schedule?.startTime ?? DEFAULT_SLOT_START;
+    const endTime = request.schedule?.endTime ?? DEFAULT_SLOT_END;
+
+    const existingUserSchedules = await tx.schedule.findMany({
+      where: { userId: request.userId, dayOfWeek },
+    });
+
+    assertNoScheduleOverlap(
+      { dayOfWeek, startTime, endTime },
+      existingUserSchedules,
+    );
+
+    await tx.schedule.create({
+      data: {
+        userId: request.userId,
+        dayOfWeek,
+        startTime,
+        endTime,
+      },
+    });
+  }
+
+  private async applyCompensationApproval(
+    tx: Prisma.TransactionClient,
+    request: Prisma.ModificationRequestGetPayload<{
+      include: { schedule: true };
+    }>,
+    dto: UpdateStatusDto,
+  ) {
+    if (!dto.compensationScheduleId || !dto.compensationWeekStartDate) {
+      throw new BadRequestException(
+        'Compensation approval requires compensationScheduleId and compensationWeekStartDate',
+      );
+    }
+
+    const skipSlot = await tx.schedule.findUnique({
+      where: { id: dto.compensationScheduleId },
+    });
+
+    if (!skipSlot || skipSlot.userId !== request.userId) {
+      throw new BadRequestException(
+        'Invalid compensation slot for this faculty member',
+      );
+    }
+
+    try {
+      await tx.scheduleException.create({
+        data: {
+          scheduleId: dto.compensationScheduleId,
+          weekStartDate: startOfWeek(new Date(dto.compensationWeekStartDate)),
+          newDayOfWeek: skipSlot.dayOfWeek,
+          newStartTime: skipSlot.startTime,
+          newEndTime: skipSlot.endTime,
+          isSkipped: true,
+          requestId: request.id,
+        },
+      });
+    } catch (error) {
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === 'P2002'
+      ) {
+        throw new ConflictException(
+          'This week already has a scheduling exception for this slot',
+        );
+      }
+      throw error;
+    }
+
+    if (request.proposedDate) {
+      await this.applyAdditionalApproval(tx, request);
+    }
   }
 }

@@ -2,6 +2,7 @@ import { Controller, Post, Body, Get, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ApiTags, ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
 import { JwtAuthGuard } from './jwt.guard';
+import { Public } from './public.decorator';
 import { LoginDto } from './dto/login.dto';
 import {
   CurrentUser,
@@ -13,6 +14,7 @@ import {
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @Public()
   @ApiOperation({ summary: 'User login' })
   @Post('login')
   login(@Body() loginDto: LoginDto) {

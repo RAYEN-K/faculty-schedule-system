@@ -40,16 +40,43 @@ export class SchedulesService {
     return this.prisma.schedule.create({ data: dto });
   }
 
-  async findAll(page = 1, pageSize = 20) {
+  async findAll(
+    page = 1,
+    pageSize = 20,
+    callerRole?: Role,
+    callerDepartmentId?: string | null,
+  ) {
     return this.prisma.schedule.findMany({
       skip: (page - 1) * pageSize,
       take: pageSize,
+      where:
+        callerRole === Role.HOD
+          ? { user: { departmentId: callerDepartmentId ?? undefined } }
+          : undefined,
       include: {
         user: {
           select: { id: true, fullName: true, email: true, departmentId: true },
         },
       },
     });
+  }
+
+  async assertHodCanAccessUser(
+    userId: string,
+    callerRole?: Role,
+    callerDepartmentId?: string | null,
+  ) {
+    if (callerRole !== Role.HOD) {
+      return;
+    }
+    const targetUser = await this.prisma.user.findUnique({
+      where: { id: userId },
+    });
+    if (!targetUser || targetUser.departmentId !== callerDepartmentId) {
+      throw new ForbiddenException(
+        'You can only access schedules for your own department',
+      );
+    }
   }
 
   findByUser(userId: string) {
@@ -74,10 +101,24 @@ export class SchedulesService {
     });
   }
 
-  async findOne(id: string) {
+  async findOne(
+    id: string,
+    callerRole?: Role,
+    callerDepartmentId?: string | null,
+  ) {
     const schedule = await this.prisma.schedule.findUnique({ where: { id } });
     if (!schedule) {
       throw new NotFoundException(`Schedule ${id} not found`);
+    }
+    if (callerRole === Role.HOD) {
+      const owner = await this.prisma.user.findUnique({
+        where: { id: schedule.userId },
+      });
+      if (!owner || owner.departmentId !== callerDepartmentId) {
+        throw new ForbiddenException(
+          'You can only view schedules in your own department',
+        );
+      }
     }
     return schedule;
   }
@@ -116,7 +157,7 @@ export class SchedulesService {
     callerRole?: Role,
     callerDepartmentId?: string | null,
   ) {
-    const existing = await this.findOne(id);
+    const existing = await this.findOne(id, callerRole, callerDepartmentId);
     if (callerRole === Role.HOD) {
       const owner = await this.prisma.user.findUnique({
         where: { id: existing.userId },
@@ -137,7 +178,12 @@ export class SchedulesService {
     return this.prisma.schedule.update({ where: { id }, data: dto });
   }
 
-  async remove(id: string) {
+  async remove(
+    id: string,
+    callerRole?: Role,
+    callerDepartmentId?: string | null,
+  ) {
+    await this.findOne(id, callerRole, callerDepartmentId);
     try {
       return await this.prisma.schedule.delete({ where: { id } });
     } catch (error) {
