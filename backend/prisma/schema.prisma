@@ -1,0 +1,130 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// ----------------------------------------
+// ENUMS (Les Roles & Statuses)
+// ----------------------------------------
+enum Role {
+  ADMIN
+  HOD       // Head of Department
+  FACULTY   // Faculty Member
+}
+
+enum RequestType {
+  MODIFICATION // Swapping/modifying a working day
+  ADDITIONAL   // Extra work days
+  COMPENSATION // Compensation arrangement
+}
+
+enum RequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+// ----------------------------------------
+// MODELS (Tables)
+// ----------------------------------------
+
+model Department {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  code      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  users  User[]
+  events Event[]
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  fullName  String
+  role      Role     @default(FACULTY)
+
+  departmentId String?
+  department   Department? @relation(fields: [departmentId], references: [id], onDelete: SetNull)
+
+  schedules Schedule[]
+  requests  ModificationRequest[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+model ModificationRequest {
+  id     String @id @default(uuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  scheduleId String?
+  schedule   Schedule? @relation(fields: [scheduleId], references: [id], onDelete: SetNull)
+
+  type   RequestType
+  status RequestStatus @default(PENDING)
+
+  originalDate DateTime?
+  proposedDate DateTime?
+  reason       String?
+
+  reviewedById String?   
+  reviewedAt   DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  scheduleException ScheduleException?
+}
+
+model Schedule {
+  id        String @id @default(uuid())
+  userId    String
+  user      User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  dayOfWeek Int
+  startTime String
+  endTime   String
+  subject   String?
+
+  requests  ModificationRequest[] 
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  exceptions ScheduleException[]
+}
+model ScheduleException {
+  id            String   @id @default(cuid())
+  scheduleId    String
+  schedule      Schedule @relation(fields: [scheduleId], references: [id])
+  weekStartDate DateTime
+  newDayOfWeek  Int
+  newStartTime  String
+  newEndTime    String
+  isSkipped     Boolean  @default(false)   // true = compensation day off, ignore day/time fields
+  requestId     String   @unique
+  request       ModificationRequest @relation(fields: [requestId], references: [id])
+  createdAt     DateTime @default(now())
+
+  @@unique([scheduleId, weekStartDate])
+}
+
+
+model Event {
+  id          String   @id @default(uuid())
+  title       String
+  description String?
+  eventDate   DateTime
+
+  departmentId String
+  department   Department @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
