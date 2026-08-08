@@ -7,7 +7,7 @@ interface EventItem {
   id: string;
   title: string;
   description?: string;
-  eventdate: string;
+  eventDate: string;
 }
 
 export default function FacultyEventsPage() {
@@ -25,7 +25,7 @@ export default function FacultyEventsPage() {
         {events?.map((event: EventItem) => (
           <div key={event.id} className="border p-4 rounded-lg shadow-sm bg-white">
             <h3 className="font-semibold text-lg">{event.title}</h3>
-            <p className="text-sm text-gray-500">{new Date(event.eventdate).toLocaleDateString()}</p>
+            <p className="text-sm text-gray-500">{new Date(event.eventDate).toLocaleDateString()}</p>
             {event.description && <p className="mt-2 text-gray-700">{event.description}</p>}
           </div>
         ))}

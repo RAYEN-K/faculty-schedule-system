@@ -16,6 +16,10 @@ import { RolesGuard } from '../auth/roles.guard';
 import { Roles } from '../auth/roles.decorator';
 import { Role } from '@prisma/client';
 import { UpdateDepartmentDto } from './dto/update-department.dto';
+import {
+  CurrentUser,
+  type AuthUser,
+} from '../common/decorators/current-user.decorator';
 
 @ApiTags('Departments')
 @ApiBearerAuth()
@@ -32,15 +36,17 @@ export class DepartmentsController {
   }
 
   @Get()
+  @Roles(Role.ADMIN, Role.HOD, Role.FACULTY)
   @ApiOperation({ summary: 'Get all departments' })
-  findAll() {
-    return this.departmentsService.findAll();
+  findAll(@CurrentUser() user: AuthUser) {
+    return this.departmentsService.findAll(user.role, user.departmentId);
   }
 
   @Get(':id')
+  @Roles(Role.ADMIN, Role.HOD)
   @ApiOperation({ summary: 'Get a department by ID' })
-  findOne(@Param('id') id: string) {
-    return this.departmentsService.findOne(id);
+  findOne(@Param('id') id: string, @CurrentUser() user: AuthUser) {
+    return this.departmentsService.findOne(id, user.role, user.departmentId);
   }
 
   @Post('assign-user')

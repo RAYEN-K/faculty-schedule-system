@@ -2,7 +2,9 @@ import {
   Injectable,
   ConflictException,
   NotFoundException,
+  ForbiddenException,
 } from '@nestjs/common';
+import { Role } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateDepartmentDto } from './dto/create-department.dto';
 import { UpdateDepartmentDto } from './dto/update-department.dto';
@@ -25,7 +27,31 @@ export class DepartmentsService {
     });
   }
 
-  async findAll() {
+  async findAll(callerRole: Role, callerDepartmentId: string | null) {
+    if (callerRole === Role.FACULTY) {
+      return this.prisma.department.findMany({
+        select: { id: true, name: true, code: true },
+      });
+    }
+
+    if (callerRole === Role.HOD) {
+      if (!callerDepartmentId) {
+        return [];
+      }
+      return this.prisma.department.findMany({
+        where: { id: callerDepartmentId },
+        include: {
+          users: {
+            select: {
+              id: true,
+              fullName: true,
+              role: true,
+            },
+          },
+        },
+      });
+    }
+
     return this.prisma.department.findMany({
       include: {
         users: {
@@ -40,10 +66,27 @@ export class DepartmentsService {
     });
   }
 
-  async findOne(id: string) {
+  async findOne(
+    id: string,
+    callerRole: Role,
+    callerDepartmentId: string | null,
+  ) {
+    if (callerRole === Role.HOD && id !== callerDepartmentId) {
+      throw new ForbiddenException('You can only view your own department');
+    }
+
     const department = await this.prisma.department.findUnique({
       where: { id },
-      include: { users: true },
+      include: {
+        users: {
+          select: {
+            id: true,
+            email: true,
+            fullName: true,
+            role: true,
+          },
+        },
+      },
     });
 
     if (!department) {

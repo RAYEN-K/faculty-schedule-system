@@ -9,7 +9,14 @@ export function useRequireRole(allowedRoles: string[]) {
   const router = useRouter();
 
   useEffect(() => {
-    if (!isLoading && user && !allowedRoles.includes(user.role)) {
+    if (isLoading) return;
+
+    if (!user) {
+      router.push('/login');
+      return;
+    }
+
+    if (!allowedRoles.includes(user.role)) {
       router.push('/dashboard');
     }
   }, [isLoading, user, allowedRoles, router]);

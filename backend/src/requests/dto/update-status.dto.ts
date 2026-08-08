@@ -1,5 +1,5 @@
 import {
-  IsEnum,
+  IsIn,
   IsNotEmpty,
   IsOptional,
   IsString,
@@ -8,7 +8,9 @@ import {
 import { RequestStatus } from '@prisma/client';
 
 export class UpdateStatusDto {
-  @IsEnum(RequestStatus)
+  @IsIn([RequestStatus.APPROVED, RequestStatus.REJECTED], {
+    message: 'Status must be APPROVED or REJECTED',
+  })
   @IsNotEmpty()
   status: RequestStatus;
 

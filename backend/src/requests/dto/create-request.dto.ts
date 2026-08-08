@@ -1,7 +1,6 @@
 import {
   IsEnum,
   IsNotEmpty,
-  IsOptional,
   IsDateString,
   ValidateIf,
 } from 'class-validator';
@@ -18,7 +17,7 @@ export class CreateRequestDto {
   scheduleId?: string;
 
   @ValidateIf((o: CreateRequestDto) => o.type === RequestType.MODIFICATION)
-  @IsOptional()
+  @IsNotEmpty({ message: 'originalDate is required for MODIFICATION requests' })
   @IsDateString()
   originalDate?: string;
 

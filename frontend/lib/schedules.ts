@@ -1,4 +1,5 @@
 import { apiClient } from './api-client';
+import { getStartOfWeekIso } from './date';
 
 export async function getMyScheduleForWeek(userId: string, weekStartDate: string) {
   const { data } = await apiClient.get(`/schedules/user/${userId}/week/${weekStartDate}`);
@@ -9,7 +10,5 @@ export async function getDepartmentSchedule(departmentId: string) {
   return data;
 }
 export async function getMySchedule(userId: string) {
-  const todayIso = new Date().toISOString().split('T')[0];
-  const { data } = await apiClient.get(`/schedules/user/${userId}/week/${todayIso}`);
-  return data;
+  return getMyScheduleForWeek(userId, getStartOfWeekIso());
 }

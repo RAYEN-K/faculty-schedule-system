@@ -10,7 +10,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   const handleLogout = () => {
     localStorage.removeItem('token');
-    localStorage.removeItem('user');
+    document.cookie = 'token=; path=/; max-age=0';
     window.location.href = '/login';
   };
 

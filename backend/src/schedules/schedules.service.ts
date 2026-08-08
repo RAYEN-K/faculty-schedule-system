@@ -127,17 +127,17 @@ export class SchedulesService {
 
     const recurring = await this.prisma.schedule.findMany({
       where: { userId },
-    });
-    const exceptions = await this.prisma.scheduleException.findMany({
-      where: {
-        schedule: { userId },
-        weekStartDate: normalizedWeekStart,
+      include: {
+        exceptions: {
+          where: { weekStartDate: normalizedWeekStart },
+          take: 1,
+        },
       },
     });
 
     return recurring
-      .map((slot) => {
-        const override = exceptions.find((e) => e.scheduleId === slot.id);
+      .map(({ exceptions, ...slot }) => {
+        const override = exceptions[0];
         if (!override) return slot;
         if (override.isSkipped) return null; // compensation day off — remove from this week
         return {

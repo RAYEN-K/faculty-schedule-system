@@ -3,6 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useCurrentUser } from "@/lib/hooks/use-current-user";
 import { getMyScheduleForWeek } from "@/lib/schedules";
+import { getStartOfWeekIso } from "@/lib/date";
 
 interface ScheduleSlot {
   id: string;
@@ -23,7 +24,7 @@ const DAYS = [
 ];
 
 function weekAnchorIso(date = new Date()): string {
-  return date.toISOString().split("T")[0];
+  return getStartOfWeekIso(date);
 }
 
 export default function FacultySchedulePage() {
