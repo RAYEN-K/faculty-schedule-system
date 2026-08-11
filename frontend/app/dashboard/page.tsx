@@ -2,9 +2,14 @@
 
 import Link from "next/link";
 import { useCurrentUser } from "@/lib/hooks/use-current-user";
+import { useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
+
 
 export default function DashboardPage() {
+  const pathname = usePathname();
   const { data: user, isLoading } = useCurrentUser();
+  const router = useRouter()
 
   if (isLoading) {
     return (

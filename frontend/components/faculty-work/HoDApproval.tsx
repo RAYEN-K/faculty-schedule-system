@@ -40,9 +40,17 @@ export function HoDApproval() {
   const [compScheduleId, setCompScheduleId] = useState('');
   const [compWeek, setCompWeek] = useState('');
 
+  const [errorRequestId, setErrorRequestId] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState('');
+
   const mutation = useMutation({
     mutationFn: ({ id, status }: { id: string; status: 'APPROVED' | 'REJECTED' }) =>
       updateRequestStatus(id, status, compScheduleId || undefined, compWeek || undefined),
+    onMutate: ({ id }) => {
+      setErrorRequestId(null); // clear any previous error banner right when a new attempt starts
+      setErrorMessage('');
+      return { id };
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['department-requests'] });
       queryClient.invalidateQueries({ queryKey: ['department-schedule'] });
@@ -50,13 +58,14 @@ export function HoDApproval() {
       setCompScheduleId('');
       setCompWeek('');
     },
-    onError: (error: any) => {
+    onError: (error: any, variables) => {
       const serverMessage = error?.response?.data?.message;
-      if (serverMessage) {
-        alert(`Error: ${Array.isArray(serverMessage) ? serverMessage.join(', ') : serverMessage}`);
-      } else {
-        alert('Conflict: Request already processed or invalid compensation slot selected.');
-      }
+      setErrorRequestId(variables.id);
+      setErrorMessage(
+        Array.isArray(serverMessage)
+          ? serverMessage.join(', ')
+          : serverMessage || 'This request could not be processed. It may already be resolved, or the schedule slot conflicts with an existing change.',
+      );
     },
   });
 
@@ -103,6 +112,8 @@ export function HoDApproval() {
                         onClick={() => {
                           if (req.type === 'COMPENSATION' && approvingId !== req.id) {
                             setApprovingId(req.id);
+                            setCompScheduleId('');
+                            setCompWeek('');
                             return;
                           }
                           mutation.mutate({ id: req.id, status: 'APPROVED' });
@@ -114,10 +125,10 @@ export function HoDApproval() {
                       </button>
                       <button
                         onClick={() => mutation.mutate({ id: req.id, status: 'REJECTED' })}
-                        className="px-3 py-1.5 rounded-lg text-xs font-semibold text-white"
-                        style={{ background: '#ef4444' }}
-                      >
-                        Reject
+                        disabled={mutation.isPending}
+                        className="px-3 py-1.5 rounded-lg text-xs font-semibold text-white disabled:opacity-50"
+                        style={{ background: '#22c55e' }}>
+                        {req.type === 'COMPENSATION' && approvingId !== req.id ? 'Reject…' : 'Confirm Reject'}
                       </button>
                     </div>
                   )}
@@ -133,7 +144,7 @@ export function HoDApproval() {
                       style={{ borderColor: '#dce6f5' }}
                     >
                       <option value="">Select a slot</option>
-                      {deptSlots?.map((s: any) => (
+                      {deptSlots?.filter((s: any) => s.userId === req.userId).map((s: any) => (
                         <option key={s.id} value={s.id}>
                           {s.user?.fullName} — {DAY_NAMES[s.dayOfWeek]} {s.startTime}
                         </option>
