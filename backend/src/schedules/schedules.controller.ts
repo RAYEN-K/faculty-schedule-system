@@ -89,6 +89,21 @@ export class SchedulesController {
     );
   }
 
+  @Get('department/:departmentId/week/:weekStartDate')
+  @Roles(Role.ADMIN, Role.HOD)
+  @ApiOperation({ summary: 'Get department timetable for a specific week (with exceptions applied)' })
+  findByDepartmentForWeek(
+    @Param('departmentId') departmentId: string,
+    @Param('weekStartDate') weekStartDate: string,
+    @CurrentUser() user: AuthUser,
+  ) {
+    return this.schedulesService.findByDepartmentForWeek(
+      departmentId,
+      new Date(weekStartDate),
+      user.role,
+    );
+  }
+
   @Get('department/:departmentId')
   @Roles(Role.ADMIN, Role.HOD)
   @ApiOperation({ summary: 'Get timetable for a specific department' })
@@ -103,12 +118,6 @@ export class SchedulesController {
     );
   }
 
-  @Get(':id')
-  @Roles(Role.ADMIN, Role.HOD)
-  @ApiOperation({ summary: 'Get a specific schedule slot by ID' })
-  findOne(@Param('id') id: string, @CurrentUser() user: AuthUser) {
-    return this.schedulesService.findOne(id, user.role, user.departmentId);
-  }
   @Get('user/:userId')
   @ApiOperation({ summary: 'Get all schedule slots for a specific user' })
   async findByUser(
@@ -130,6 +139,13 @@ export class SchedulesController {
     }
 
     return this.schedulesService.findByUser(userId);
+  }
+
+  @Get(':id')
+  @Roles(Role.ADMIN, Role.HOD)
+  @ApiOperation({ summary: 'Get a specific schedule slot by ID' })
+  findOne(@Param('id') id: string, @CurrentUser() user: AuthUser) {
+    return this.schedulesService.findOne(id, user.role, user.departmentId);
   }
 
   @Patch(':id')

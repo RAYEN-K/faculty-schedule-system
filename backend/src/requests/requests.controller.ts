@@ -1,4 +1,3 @@
-import { BadRequestException } from '@nestjs/common';
 import {
   Controller,
   Get,
@@ -61,12 +60,10 @@ export class RequestsController {
   @ApiOperation({ summary: 'get requests by department' })
   @Roles(Role.HOD, Role.ADMIN)
   findDepartmentRequests(@CurrentUser() user: AuthUser) {
-    if (!user.departmentId) {
-      throw new BadRequestException(
-        'This account is not assigned to a department',
-      );
-    }
-    return this.requestsService.findDepartmentRequests(user.departmentId);
+    return this.requestsService.findDepartmentRequests(
+      user.departmentId,
+      user.role,
+    );
   }
 
   @Patch(':id/status')

@@ -63,7 +63,7 @@ export function AdminDashboard() {
     },
   });
 
-  const users = usersPage?.items ?? usersPage ?? [];
+  const users = usersPage?.data ?? [];
   const departmentCount = departments?.length ?? 0;
   const facultyCount = users.filter((u: any) => u.role === 'FACULTY').length;
   const hodCount = users.filter((u: any) => u.role === 'HOD').length;

@@ -33,7 +33,7 @@ export function FacultyDashboard() {
   const { data: requests } = useQuery({ queryKey: ['my-requests'], queryFn: getMyRequests });
   const { data: events } = useQuery({ queryKey: ['events'], queryFn: getEvents });
 
-  const pendingCount = requests?.filter((r: any) => r.status === 'PENDING').length ?? 0;
+  const pendingCount = (requests ?? []).filter((r: any) => r.status === 'PENDING').length;
   const approvedThisMonth = requests?.filter((r: any) => {
     const d = new Date(r.updatedAt);
     const now = new Date();

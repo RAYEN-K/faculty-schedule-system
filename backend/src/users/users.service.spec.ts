@@ -6,10 +6,16 @@ import { Role } from '@prisma/client';
 
 describe('UsersService', () => {
   let service: UsersService;
-  let prisma: { user: { findUnique: jest.Mock; create: jest.Mock } };
+  let prisma: {
+    user: { findUnique: jest.Mock; create: jest.Mock };
+    department: { findUnique: jest.Mock };
+  };
 
   beforeEach(async () => {
-    prisma = { user: { findUnique: jest.fn(), create: jest.fn() } };
+    prisma = {
+      user: { findUnique: jest.fn(), create: jest.fn() },
+      department: { findUnique: jest.fn() },
+    };
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [UsersService, { provide: PrismaService, useValue: prisma }],
@@ -20,18 +26,21 @@ describe('UsersService', () => {
 
   it('throws ConflictException if the email already exists', async () => {
     prisma.user.findUnique.mockResolvedValue({ id: '1', email: 'a@a.com' });
+    prisma.department.findUnique.mockResolvedValue({ id: 'dept-1' });
     await expect(
       service.create({
         email: 'a@a.com',
         password: 'password123',
         fullName: 'A',
         role: Role.FACULTY,
+        departmentId: 'dept-1',
       }),
     ).rejects.toThrow(ConflictException);
   });
 
   it('hashes the password before creating the user', async () => {
     prisma.user.findUnique.mockResolvedValue(null);
+    prisma.department.findUnique.mockResolvedValue({ id: 'dept-1' });
     prisma.user.create.mockResolvedValue({ id: '1', email: 'b@b.com' });
 
     await service.create({
@@ -39,6 +48,7 @@ describe('UsersService', () => {
       password: 'password123',
       fullName: 'B',
       role: Role.FACULTY,
+      departmentId: 'dept-1',
     });
 
     const [[createArgs]] = prisma.user.create.mock.calls as unknown as [

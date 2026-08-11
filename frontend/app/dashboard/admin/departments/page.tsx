@@ -15,35 +15,13 @@ export default function DepartmentsPage() {
   const [name, setName] = useState('');
   const [code, setCode] = useState('');
 
-  // Fetching Departments
   const { data: departments, isLoading, isError } = useQuery({
     queryKey: ['departments'],
-    queryFn: getUsersDepartments,
+    queryFn: getDepartments,
   });
 
-  // Helper for safety fallback if API is fetching
-  async function getUsersDepartments(): Promise<Department[]> {
-    if (typeof getDepartments === 'function') {
-      return await getDepartments();
-    }
-    // Default fallback list if API is not yet linked
-    return [
-      { id: '1', name: 'Computer Science', code: 'CS' },
-      { id: '2', name: 'Electrical Engineering', code: 'EE' },
-      { id: '3', name: 'Industrial Engineering', code: 'IE' },
-      { id: '4', name: 'Telecommunications Engineering', code: 'TEL' },
-      { id: '5', name: 'Mechanical Engineering', code: 'ME' },
-    ];
-  }
-
-  // Mutation Create Department
-  const mutation = useMutation({
-    mutationFn: async (newDept: { name: string; code: string }) => {
-      if (typeof createDepartment === 'function') {
-        return await createDepartment(newDept);
-      }
-      return newDept;
-    },
+  const createMutation = useMutation({
+    mutationFn: createDepartment,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['departments'] });
       setName('');
@@ -54,7 +32,7 @@ export default function DepartmentsPage() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!name || !code) return;
-    mutation.mutate({ name, code: code.toUpperCase() });
+    createMutation.mutate({ name, code: code.toUpperCase() });
   };
 
   const deptList: Department[] = departments ?? [];
@@ -64,7 +42,6 @@ export default function DepartmentsPage() {
 
   return (
     <div className="max-w-6xl mx-auto p-4 sm:p-6 space-y-8">
-      {/* Top Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-200/80 pb-5">
         <div>
           <h1 className="text-2xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
@@ -81,7 +58,6 @@ export default function DepartmentsPage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        {/* Left Form: Create Department */}
         <div className="lg:col-span-4 bg-white border border-slate-200/80 rounded-2xl p-6 shadow-sm">
           <div className="flex items-center gap-2 mb-5">
             <div className="p-2 bg-indigo-50 text-indigo-600 rounded-xl">
@@ -126,15 +102,14 @@ export default function DepartmentsPage() {
 
             <button
               type="submit"
-              disabled={mutation.isPending}
+              disabled={createMutation.isPending}
               className="w-full mt-2 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-slate-900 hover:bg-slate-800 active:bg-black text-white font-medium text-xs rounded-xl shadow-sm transition-all cursor-pointer disabled:opacity-50"
             >
-              {mutation.isPending ? 'Creating...' : '+ Create Department'}
+              {createMutation.isPending ? 'Creating...' : '+ Create Department'}
             </button>
           </form>
         </div>
 
-        {/* Right Directory: All Departments */}
         <div className="lg:col-span-8 bg-white border border-slate-200/80 rounded-2xl shadow-sm overflow-hidden">
           <div className="p-5 border-b border-slate-100 flex items-center justify-between">
             <div>
@@ -167,7 +142,6 @@ export default function DepartmentsPage() {
                     </div>
                   </div>
 
-                  {/* Code Badge */}
                   <span className="px-3 py-1 bg-white border border-slate-200/80 group-hover:border-indigo-200 text-slate-700 group-hover:text-indigo-700 font-mono font-bold text-xs rounded-lg shadow-2xs whitespace-nowrap">
                     {d.code}
                   </span>

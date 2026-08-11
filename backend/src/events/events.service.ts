@@ -17,7 +17,11 @@ export class EventsService {
     callerRole: Role,
     callerDepartmentId: string | null,
   ) {
-    if (callerRole === Role.HOD && dto.departmentId !== callerDepartmentId) {
+    if (
+      callerRole === Role.HOD &&
+      callerDepartmentId &&
+      dto.departmentId !== callerDepartmentId
+    ) {
       throw new ForbiddenException(
         'You can only create events for your own department',
       );
@@ -28,15 +32,21 @@ export class EventsService {
   }
 
   async findAll(callerRole: Role, callerDepartmentId: string | null) {
-    if (callerRole !== Role.ADMIN && !callerDepartmentId) {
-      return [];
+    if (callerRole === Role.ADMIN || callerRole === Role.HOD) {
+      return this.prisma.event.findMany({
+        orderBy: { eventDate: 'asc' },
+      });
     }
 
+    if (callerDepartmentId) {
+      return this.prisma.event.findMany({
+        where: { departmentId: callerDepartmentId },
+        orderBy: { eventDate: 'asc' },
+      });
+    }
+
+    // Faculty without a department assignment still see all published events
     return this.prisma.event.findMany({
-      where:
-        callerRole === Role.ADMIN
-          ? undefined
-          : { departmentId: callerDepartmentId! },
       orderBy: { eventDate: 'asc' },
     });
   }
@@ -61,7 +71,11 @@ export class EventsService {
     const event = await this.prisma.event.findUnique({ where: { id } });
     if (!event) throw new NotFoundException('Event not found');
 
-    if (callerRole === Role.HOD && event.departmentId !== callerDepartmentId) {
+    if (
+      callerRole === Role.HOD &&
+      callerDepartmentId &&
+      event.departmentId !== callerDepartmentId
+    ) {
       throw new ForbiddenException(
         'You can only update events belonging to your department',
       );
@@ -78,7 +92,11 @@ export class EventsService {
     const event = await this.prisma.event.findUnique({ where: { id } });
     if (!event) throw new NotFoundException('Event not found');
 
-    if (callerRole === Role.HOD && event.departmentId !== callerDepartmentId) {
+    if (
+      callerRole === Role.HOD &&
+      callerDepartmentId &&
+      event.departmentId !== callerDepartmentId
+    ) {
       throw new ForbiddenException(
         'You can only delete events belonging to your department',
       );
@@ -92,11 +110,12 @@ export class EventsService {
     callerRole: Role,
     callerDepartmentId: string | null,
   ) {
-    if (callerRole === Role.ADMIN) {
+    if (callerRole === Role.ADMIN || callerRole === Role.HOD) {
       return;
     }
-    if (!callerDepartmentId || event.departmentId !== callerDepartmentId) {
-      throw new ForbiddenException('You cannot access this event');
+    if (!callerDepartmentId || event.departmentId === callerDepartmentId) {
+      return;
     }
+    throw new ForbiddenException('You cannot access this event');
   }
 }

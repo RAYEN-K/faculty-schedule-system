@@ -1,22 +1,34 @@
 'use client';
-import { useState } from 'react';
+
+import { useMemo, useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useCurrentUser } from '@/lib/hooks/use-current-user';
 import { getDepartmentRequests, updateRequestStatus } from '@/lib/requests';
-import { getDepartmentSchedule } from '@/lib/schedules';
+import { getUserScheduleSlots } from '@/lib/schedules';
+import { getStartOfWeekIso } from '@/lib/date';
+import { getApiErrorMessage } from '@/lib/api-error';
 
+type StatusTab = 'PENDING' | 'APPROVED' | 'REJECTED' | 'ALL';
+const PAGE_SIZE = 8;
 const DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 function StatusBadge({ status }: { status: string }) {
-  const map: Record<string, { bg: string; color: string }> = {
-    PENDING: { bg: '#fef3c7', color: '#d97706' },
-    APPROVED: { bg: '#dcfce7', color: '#16a34a' },
-    REJECTED: { bg: '#fee2e2', color: '#dc2626' },
+  const styles: Record<string, string> = {
+    PENDING: 'bg-amber-100 text-amber-800 border-amber-200',
+    APPROVED: 'bg-emerald-100 text-emerald-800 border-emerald-200',
+    REJECTED: 'bg-red-100 text-red-800 border-red-200',
   };
-  const s = map[status] || { bg: '#e8f0fe', color: '#2a4a8c' };
   return (
-    <span className="px-2 py-0.5 rounded-full text-xs font-medium" style={{ background: s.bg, color: s.color }}>
+    <span className={`px-2.5 py-0.5 rounded-full text-[11px] font-semibold border ${styles[status] ?? 'bg-slate-100 text-slate-600'}`}>
       {status}
+    </span>
+  );
+}
+
+function TypeBadge({ type }: { type: string }) {
+  return (
+    <span className="px-2 py-0.5 rounded-md text-[10px] font-medium bg-slate-100 text-slate-600 border border-slate-200">
+      {type}
     </span>
   );
 }
@@ -28,187 +40,343 @@ export function HoDApproval() {
   const { data: requests, isLoading, isError } = useQuery({
     queryKey: ['department-requests'],
     queryFn: getDepartmentRequests,
+    enabled: user?.role === 'HOD' || user?.role === 'ADMIN',
   });
 
-  const { data: deptSlots } = useQuery({
-    queryKey: ['department-schedule', user?.departmentId],
-    queryFn: () => getDepartmentSchedule(user!.departmentId!),
-    enabled: !!user?.departmentId,
-  });
-
+  const [activeTab, setActiveTab] = useState<StatusTab>('PENDING');
+  const [page, setPage] = useState(1);
   const [approvingId, setApprovingId] = useState<string | null>(null);
+  const [rejectingId, setRejectingId] = useState<string | null>(null);
+  const [rejectReason, setRejectReason] = useState('');
   const [compScheduleId, setCompScheduleId] = useState('');
   const [compWeek, setCompWeek] = useState('');
+  const [compUserId, setCompUserId] = useState<string | null>(null);
+
+  const { data: compUserSlots } = useQuery({
+    queryKey: ['compensation-slots', compUserId],
+    queryFn: () => getUserScheduleSlots(compUserId!),
+    enabled: !!compUserId,
+  });
 
   const [errorRequestId, setErrorRequestId] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState('');
 
   const mutation = useMutation({
-    mutationFn: ({ id, status }: { id: string; status: 'APPROVED' | 'REJECTED' }) =>
-      updateRequestStatus(id, status, compScheduleId || undefined, compWeek || undefined),
-    onMutate: ({ id }) => {
-      setErrorRequestId(null); // clear any previous error banner right when a new attempt starts
+    mutationFn: ({
+      id,
+      status,
+      reviewComment,
+    }: {
+      id: string;
+      status: 'APPROVED' | 'REJECTED';
+      reviewComment?: string;
+    }) =>
+      updateRequestStatus(id, status, {
+        compensationScheduleId: compScheduleId || undefined,
+        compensationWeekStartDate: compWeek || undefined,
+        reviewComment,
+      }),
+    onMutate: async ({ id, status, reviewComment }) => {
+      setErrorRequestId(null);
       setErrorMessage('');
-      return { id };
+      await queryClient.cancelQueries({ queryKey: ['department-requests'] });
+      const previous = queryClient.getQueryData<any[]>(['department-requests']);
+      queryClient.setQueryData(['department-requests'], (old: any[] | undefined) =>
+        (old ?? []).map((r) =>
+          r.id === id ? { ...r, status, reviewComment: reviewComment ?? r.reviewComment } : r,
+        ),
+      );
+      return { previous };
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['department-requests'] });
       queryClient.invalidateQueries({ queryKey: ['department-schedule'] });
+      queryClient.invalidateQueries({ queryKey: ['my-schedule-week'] });
+      queryClient.invalidateQueries({ queryKey: ['my-schedule-list'] });
       setApprovingId(null);
+      setRejectingId(null);
+      setRejectReason('');
       setCompScheduleId('');
       setCompWeek('');
+      setCompUserId(null);
     },
-    onError: (error: any, variables) => {
-      const serverMessage = error?.response?.data?.message;
+    onError: (error: any, variables, context) => {
+      if (context?.previous) {
+        queryClient.setQueryData(['department-requests'], context.previous);
+      }
       setErrorRequestId(variables.id);
       setErrorMessage(
-        Array.isArray(serverMessage)
-          ? serverMessage.join(', ')
-          : serverMessage || 'This request could not be processed. It may already be resolved, or the schedule slot conflicts with an existing change.',
+        getApiErrorMessage(error, 'This request could not be processed.'),
       );
     },
   });
 
-  const pendingCount = requests?.filter((r: any) => r.status === 'PENDING').length ?? 0;
+  const requestList = requests ?? [];
+  const pendingCount = requestList.filter((r: any) => r.status === 'PENDING').length;
+  const approvedCount = requestList.filter((r: any) => r.status === 'APPROVED').length;
+  const rejectedCount = requestList.filter((r: any) => r.status === 'REJECTED').length;
+
+  const filtered = useMemo(() => {
+    if (activeTab === 'ALL') return requestList;
+    return requestList.filter((r: any) => r.status === activeTab);
+  }, [requestList, activeTab]);
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const paginated = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+
+  const tabs: { id: StatusTab; label: string; count: number }[] = [
+    { id: 'PENDING', label: 'Pending', count: pendingCount },
+    { id: 'APPROVED', label: 'Approved', count: approvedCount },
+    { id: 'REJECTED', label: 'Rejected', count: rejectedCount },
+    { id: 'ALL', label: 'All Requests', count: requestList.length },
+  ];
+
+  function switchTab(tab: StatusTab) {
+    setActiveTab(tab);
+    setPage(1);
+    setApprovingId(null);
+    setRejectingId(null);
+  }
+
+  function handleApprove(req: any) {
+    if (req.type === 'COMPENSATION' && approvingId !== req.id) {
+      setApprovingId(req.id);
+      setCompUserId(req.userId);
+      setCompScheduleId('');
+      setCompWeek(getStartOfWeekIso());
+      setErrorRequestId(null);
+      setErrorMessage('');
+      return;
+    }
+    mutation.mutate({ id: req.id, status: 'APPROVED' });
+  }
+
+  function handleReject(req: any) {
+    if (rejectingId !== req.id) {
+      setRejectingId(req.id);
+      setRejectReason('');
+      return;
+    }
+    if (rejectReason.trim().length < 3) return;
+    mutation.mutate({
+      id: req.id,
+      status: 'REJECTED',
+      reviewComment: rejectReason.trim(),
+    });
+  }
 
   return (
-    <div style={{ fontFamily: "'Inter', sans-serif" }}>
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-2xl font-bold" style={{ fontFamily: "'Georgia', serif", color: '#1a2f5e' }}>Pending Requests</h1>
-          <p className="text-sm mt-0.5" style={{ color: '#4a5569' }}>{pendingCount} request{pendingCount === 1 ? '' : 's'} awaiting your decision</p>
-        </div>
+    <div className="max-w-4xl mx-auto space-y-6">
+      <div>
+        <h1 className="text-2xl font-bold text-slate-900 font-serif">Faculty Requests</h1>
+        <p className="text-sm text-slate-500 mt-1">
+          Review, approve, or reject schedule change requests from your faculty.
+        </p>
       </div>
 
-      {isLoading && <p className="text-sm" style={{ color: '#4a5569' }}>Loading requests…</p>}
-      {isError && <p className="text-sm" style={{ color: '#dc2626' }}>Could not load requests. Please try again.</p>}
+      <div className="flex flex-wrap gap-2 border-b border-slate-200 pb-1">
+        {tabs.map((tab) => (
+          <button
+            key={tab.id}
+            onClick={() => switchTab(tab.id)}
+            className={`px-3.5 py-2 text-xs font-semibold rounded-t-lg transition-colors ${
+              activeTab === tab.id
+                ? 'bg-slate-900 text-white'
+                : 'text-slate-600 hover:bg-slate-100'
+            }`}
+          >
+            {tab.label}
+            <span className={`ml-1.5 px-1.5 py-0.5 rounded-full text-[10px] ${
+              activeTab === tab.id ? 'bg-slate-700' : 'bg-slate-200'
+            }`}>
+              {tab.count}
+            </span>
+          </button>
+        ))}
+      </div>
+
+      {isLoading && <p className="text-sm text-slate-500">Loading requests…</p>}
+      {isError && <p className="text-sm text-red-600">Could not load requests. Please try again.</p>}
 
       {!isLoading && !isError && (
-        <div className="bg-white rounded-xl border mb-5" style={{ borderColor: '#dce6f5' }}>
-          <div className="px-5 py-3 border-b" style={{ borderColor: '#f0f4f9' }}>
-            <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: '#4a5569' }}>All Requests</p>
-          </div>
-          <div className="divide-y" style={{ borderColor: '#f0f4f9' }}>
-            {requests?.length ? requests.map((req: any) => (
-              <div key={req.id} className="px-5 py-4">
-                <div className="flex items-center gap-4">
-                  <div className="w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold shrink-0" style={{ background: '#e8f0fe', color: '#1a2f5e' }}>
-                    {req.user?.fullName?.slice(0, 2).toUpperCase() ?? '??'}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm font-semibold" style={{ color: '#1a2f5e' }}>{req.user?.fullName ?? req.user?.email}</span>
-                      <span className="text-xs px-2 py-0.5 rounded font-medium" style={{ background: '#f0f4f9', color: '#4a5569' }}>{req.type}</span>
+        <>
+          <div className="space-y-3">
+            {paginated.length === 0 ? (
+              <div className="bg-white rounded-xl border border-slate-200 p-10 text-center text-sm text-slate-400">
+                No {activeTab === 'ALL' ? '' : activeTab.toLowerCase()} requests found.
+              </div>
+            ) : (
+              paginated.map((req: any) => (
+                <div
+                  key={req.id}
+                  className={`bg-white rounded-xl border shadow-sm p-4 transition-all ${
+                    req.status === 'PENDING'
+                      ? 'border-amber-200 ring-1 ring-amber-100'
+                      : req.status === 'REJECTED'
+                      ? 'border-red-100'
+                      : 'border-slate-200'
+                  }`}
+                >
+                  {errorRequestId === req.id && errorMessage && (
+                    <div className="mb-3 px-3 py-2 rounded-lg text-xs bg-red-50 text-red-700 border border-red-200">
+                      {errorMessage}
                     </div>
-                    <p className="text-xs mt-0.5 truncate" style={{ color: '#4a5569' }}>{req.reason || 'No comment provided'}</p>
-                    <p className="text-xs mt-0.5" style={{ color: '#94a3b8' }}>
-                      Submitted {new Date(req.createdAt).toLocaleDateString()}
-                    </p>
+                  )}
+
+                  <div className="flex items-start gap-3">
+                    <div className="w-10 h-10 rounded-full bg-indigo-50 text-indigo-700 flex items-center justify-center text-xs font-bold shrink-0">
+                      {req.user?.fullName?.slice(0, 2).toUpperCase() ?? '??'}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex flex-wrap items-center gap-2 mb-1">
+                        <span className="text-sm font-semibold text-slate-900">
+                          {req.user?.fullName ?? req.user?.email}
+                        </span>
+                        <TypeBadge type={req.type} />
+                        <StatusBadge status={req.status} />
+                      </div>
+                      <p className="text-xs text-slate-600">{req.reason || 'No comment provided'}</p>
+                      {req.proposedDate && (
+                        <p className="text-xs text-slate-500 mt-1">
+                          Target: {new Date(req.proposedDate).toLocaleDateString(undefined, {
+                            weekday: 'short', month: 'short', day: 'numeric',
+                          })}
+                        </p>
+                      )}
+                      <p className="text-[11px] text-slate-400 mt-1">
+                        Submitted {new Date(req.createdAt).toLocaleDateString()}
+                      </p>
+                      {req.status === 'REJECTED' && req.reviewComment && (
+                        <div className="mt-2 px-3 py-2 rounded-lg text-xs bg-red-50 text-red-700 border border-red-100">
+                          <span className="font-semibold">HoD feedback:</span> {req.reviewComment}
+                        </div>
+                      )}
+                    </div>
+
+                    {req.status === 'PENDING' && (
+                      <div className="flex items-center gap-2 shrink-0">
+                        <button
+                          onClick={() => handleApprove(req)}
+                          disabled={mutation.isPending}
+                          className="px-3 py-1.5 rounded-lg text-xs font-semibold text-white bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50"
+                        >
+                          Approve
+                        </button>
+                        <button
+                          onClick={() => handleReject(req)}
+                          disabled={mutation.isPending}
+                          className="px-3 py-1.5 rounded-lg text-xs font-semibold text-white bg-red-600 hover:bg-red-700 disabled:opacity-50"
+                        >
+                          Reject
+                        </button>
+                      </div>
+                    )}
                   </div>
-                  <StatusBadge status={req.status} />
-                  {req.status === 'PENDING' && (
-                    <div className="flex items-center gap-2 ml-2">
+
+                  {req.type === 'COMPENSATION' && approvingId === req.id && (
+                    <div className="mt-3 p-3 rounded-lg bg-slate-50 border border-slate-200 space-y-3">
+                      <p className="text-xs text-slate-600">
+                        Choose which regular slot to skip and in which week. The faculty member&apos;s extra day ({req.proposedDate ? new Date(req.proposedDate).toLocaleDateString() : 'proposed date'}) will be added after approval.
+                      </p>
+                      <div className="flex flex-wrap items-end gap-3">
+                      <div>
+                        <label className="block text-[10px] font-semibold text-slate-500 uppercase mb-1">Skip slot</label>
+                        <select
+                          value={compScheduleId}
+                          onChange={(e) => setCompScheduleId(e.target.value)}
+                          className="text-xs px-2 py-1.5 rounded-lg border border-slate-200 bg-white"
+                        >
+                          <option value="">Select a slot</option>
+                          {(compUserSlots ?? []).map((s: any) => (
+                            <option key={s.id} value={s.id}>
+                              {DAY_NAMES[s.dayOfWeek]} {s.startTime}–{s.endTime}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-[10px] font-semibold text-slate-500 uppercase mb-1">In week of</label>
+                        <input
+                          type="date"
+                          value={compWeek}
+                          onChange={(e) => setCompWeek(e.target.value)}
+                          className="text-xs px-2 py-1.5 rounded-lg border border-slate-200"
+                        />
+                      </div>
                       <button
-                        onClick={() => {
-                          if (req.type === 'COMPENSATION' && approvingId !== req.id) {
-                            setApprovingId(req.id);
-                            setCompScheduleId('');
-                            setCompWeek('');
-                            return;
-                          }
-                          mutation.mutate({ id: req.id, status: 'APPROVED' });
-                        }}
-                        className="px-3 py-1.5 rounded-lg text-xs font-semibold text-white"
-                        style={{ background: '#22c55e' }}
+                        onClick={() => mutation.mutate({ id: req.id, status: 'APPROVED' })}
+                        disabled={mutation.isPending || !compScheduleId || !compWeek}
+                        className="px-3 py-1.5 rounded-lg text-xs font-semibold text-white bg-emerald-600 disabled:opacity-50"
                       >
-                        {req.type === 'COMPENSATION' && approvingId !== req.id ? 'Approve…' : 'Confirm Approve'}
+                        Confirm Approve
                       </button>
                       <button
-                        onClick={() => mutation.mutate({ id: req.id, status: 'REJECTED' })}
-                        disabled={mutation.isPending}
-                        className="px-3 py-1.5 rounded-lg text-xs font-semibold text-white disabled:opacity-50"
-                        style={{ background: '#22c55e' }}>
-                        {req.type === 'COMPENSATION' && approvingId !== req.id ? 'Reject…' : 'Confirm Reject'}
+                        onClick={() => { setApprovingId(null); setCompUserId(null); }}
+                        className="px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-200 text-slate-600"
+                      >
+                        Cancel
                       </button>
+                      </div>
+                    </div>
+                  )}
+
+                  {rejectingId === req.id && (
+                    <div className="mt-3 p-3 rounded-lg bg-red-50 border border-red-100 space-y-2">
+                      <label className="block text-xs font-semibold text-red-800">Rejection reason (required)</label>
+                      <textarea
+                        value={rejectReason}
+                        onChange={(e) => setRejectReason(e.target.value)}
+                        rows={2}
+                        placeholder="Explain why this request is rejected…"
+                        className="w-full text-xs px-3 py-2 rounded-lg border border-red-200 bg-white"
+                      />
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => handleReject(req)}
+                          disabled={mutation.isPending || rejectReason.trim().length < 3}
+                          className="px-3 py-1.5 rounded-lg text-xs font-semibold text-white bg-red-600 disabled:opacity-50"
+                        >
+                          Confirm Reject
+                        </button>
+                        <button
+                          onClick={() => { setRejectingId(null); setRejectReason(''); }}
+                          className="px-3 py-1.5 rounded-lg text-xs font-semibold border border-red-200 text-red-700"
+                        >
+                          Cancel
+                        </button>
+                      </div>
                     </div>
                   )}
                 </div>
-
-                {req.type === 'COMPENSATION' && approvingId === req.id && (
-                  <div className="mt-3 ml-13 p-3 rounded-lg flex items-center gap-2 flex-wrap" style={{ background: '#f8faff' }}>
-                    <span className="text-xs font-semibold" style={{ color: '#1a2f5e' }}>Skip which slot?</span>
-                    <select
-                      value={compScheduleId}
-                      onChange={(e) => setCompScheduleId(e.target.value)}
-                      className="text-xs px-2 py-1.5 rounded border"
-                      style={{ borderColor: '#dce6f5' }}
-                    >
-                      <option value="">Select a slot</option>
-                      {deptSlots?.filter((s: any) => s.userId === req.userId).map((s: any) => (
-                        <option key={s.id} value={s.id}>
-                          {s.user?.fullName} — {DAY_NAMES[s.dayOfWeek]} {s.startTime}
-                        </option>
-                      ))}
-                    </select>
-                    <span className="text-xs font-semibold" style={{ color: '#1a2f5e' }}>In week of</span>
-                    <input
-                      type="date"
-                      value={compWeek}
-                      onChange={(e) => setCompWeek(e.target.value)}
-                      className="text-xs px-2 py-1.5 rounded border"
-                      style={{ borderColor: '#dce6f5' }}
-                    />
-                  </div>
-                )}
-              </div>
-            )) : (
-              <p className="px-5 py-6 text-sm text-center" style={{ color: '#94a3b8' }}>No requests yet.</p>
+              ))
             )}
           </div>
-        </div>
-      )}
 
-      {/* Department schedule grid */}
-      <div className="bg-white rounded-xl border p-5" style={{ borderColor: '#dce6f5' }}>
-        <h2 className="font-semibold text-sm mb-4" style={{ color: '#1a2f5e' }}>Departmental Schedule — This Week</h2>
-        {deptSlots?.length ? (
-          <table className="w-full text-sm">
-            <thead>
-              <tr>
-                <th className="text-left text-xs font-semibold pb-3 w-36" style={{ color: '#4a5569' }}>Faculty</th>
-                {DAY_NAMES.slice(1, 6).map((d) => (
-                  <th key={d} className="text-center text-xs font-semibold pb-3" style={{ color: '#4a5569' }}>{d.toUpperCase()}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {Object.values(
-                deptSlots.reduce((acc: any, s: any) => {
-                  const key = s.userId;
-                  if (!acc[key]) acc[key] = { name: s.user?.fullName ?? 'Unknown', days: new Set() };
-                  acc[key].days.add(s.dayOfWeek);
-                  return acc;
-                }, {}),
-              ).map((row: any, ri: number) => (
-                <tr key={ri} className="border-t" style={{ borderColor: '#f0f4f9' }}>
-                  <td className="py-3 text-xs font-medium" style={{ color: '#1a2f5e' }}>{row.name}</td>
-                  {[1, 2, 3, 4, 5].map((day) => (
-                    <td key={day} className="text-center py-3">
-                      {row.days.has(day) ? (
-                        <div className="w-8 h-8 rounded-lg mx-auto flex items-center justify-center text-xs font-bold text-white" style={{ background: '#1a2f5e' }}>✓</div>
-                      ) : (
-                        <div className="w-8 h-8 rounded-lg mx-auto" style={{ background: '#f0f4f9' }} />
-                      )}
-                    </td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        ) : (
-          <p className="text-sm" style={{ color: '#94a3b8' }}>No schedule data for this department yet.</p>
-        )}
-      </div>
+          {filtered.length > PAGE_SIZE && (
+            <div className="flex items-center justify-between pt-2">
+              <span className="text-xs text-slate-500">
+                Page {page} of {totalPages} · {filtered.length} request{filtered.length !== 1 ? 's' : ''}
+              </span>
+              <div className="flex gap-2">
+                <button
+                  disabled={page === 1}
+                  onClick={() => setPage((p) => p - 1)}
+                  className="px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-200 bg-white disabled:opacity-40"
+                >
+                  Previous
+                </button>
+                <button
+                  disabled={page >= totalPages}
+                  onClick={() => setPage((p) => p + 1)}
+                  className="px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-200 bg-white disabled:opacity-40"
+                >
+                  Next
+                </button>
+              </div>
+            </div>
+          )}
+        </>
+      )}
     </div>
   );
 }

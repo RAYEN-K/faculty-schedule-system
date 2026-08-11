@@ -11,6 +11,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CreateScheduleDto } from './dto/create-schedule.dto';
 import { UpdateScheduleDto } from './dto/update-schedule.dto';
 import { startOfWeek } from '../common/utils/date.util';
+import { paginate } from '../common/utils/pagination.util';
 
 @Injectable()
 export class SchedulesService {
@@ -46,19 +47,32 @@ export class SchedulesService {
     callerRole?: Role,
     callerDepartmentId?: string | null,
   ) {
-    return this.prisma.schedule.findMany({
-      skip: (page - 1) * pageSize,
-      take: pageSize,
-      where:
-        callerRole === Role.HOD
-          ? { user: { departmentId: callerDepartmentId ?? undefined } }
-          : undefined,
-      include: {
-        user: {
-          select: { id: true, fullName: true, email: true, departmentId: true },
-        },
-      },
-    });
+    const where =
+      callerRole === Role.HOD
+        ? { user: { departmentId: callerDepartmentId ?? undefined } }
+        : undefined;
+
+    return paginate(
+      page,
+      pageSize,
+      (skip, take) =>
+        this.prisma.schedule.findMany({
+          skip,
+          take,
+          where,
+          include: {
+            user: {
+              select: {
+                id: true,
+                fullName: true,
+                email: true,
+                departmentId: true,
+              },
+            },
+          },
+        }),
+      () => this.prisma.schedule.count({ where }),
+    );
   }
 
   async assertHodCanAccessUser(
@@ -66,7 +80,7 @@ export class SchedulesService {
     callerRole?: Role,
     callerDepartmentId?: string | null,
   ) {
-    if (callerRole !== Role.HOD) {
+    if (callerRole === Role.HOD) {
       return;
     }
     const targetUser = await this.prisma.user.findUnique({
@@ -88,11 +102,22 @@ export class SchedulesService {
     callerRole?: Role,
     callerDepartmentId?: string | null,
   ) {
-    if (callerRole === Role.HOD && departmentId !== callerDepartmentId) {
+    if (
+      callerRole === Role.HOD &&
+      callerDepartmentId &&
+      departmentId !== callerDepartmentId
+    ) {
       throw new ForbiddenException('You can only view your own department');
     }
+
+    // HoD without a department filter sees all faculty schedules globally
+    const where =
+      callerRole === Role.HOD && !callerDepartmentId
+        ? { user: { role: { in: [Role.FACULTY, Role.HOD] } } }
+        : { user: { departmentId } };
+
     return this.prisma.schedule.findMany({
-      where: { user: { departmentId } },
+      where,
       include: {
         user: {
           select: { id: true, fullName: true, email: true },
@@ -135,20 +160,75 @@ export class SchedulesService {
       },
     });
 
-    return recurring
-      .map(({ exceptions, ...slot }) => {
-        const override = exceptions[0];
-        if (!override) return slot;
-        if (override.isSkipped) return null; // compensation day off — remove from this week
-        return {
+    return recurring.flatMap(({ exceptions, weekSpecificOnly, ...slot }) => {
+      const override = exceptions[0];
+
+      if (weekSpecificOnly) {
+        if (!override || override.isSkipped) return [];
+        return [
+          {
+            ...slot,
+            dayOfWeek: override.newDayOfWeek,
+            startTime: override.newStartTime,
+            endTime: override.newEndTime,
+            isException: true,
+          },
+        ];
+      }
+
+      if (!override) return [slot];
+      if (override.isSkipped) return [];
+      return [
+        {
           ...slot,
           dayOfWeek: override.newDayOfWeek,
           startTime: override.newStartTime,
           endTime: override.newEndTime,
           isException: true,
-        };
-      })
-      .filter((slot) => slot !== null);
+        },
+      ];
+    });
+  }
+
+  async findByDepartmentForWeek(
+    departmentId: string | null,
+    weekStartDate: Date,
+    callerRole?: Role,
+  ) {
+    const userWhere =
+      callerRole === Role.HOD && !departmentId
+        ? { role: { in: [Role.FACULTY, Role.HOD] as Role[] } }
+        : { departmentId: departmentId ?? undefined };
+
+    const users = await this.prisma.user.findMany({
+      where: userWhere,
+      select: { id: true, fullName: true, email: true },
+    });
+
+    const weekStart = startOfWeek(weekStartDate);
+    const rows: Array<{
+      id: string;
+      dayOfWeek: number;
+      startTime: string;
+      endTime: string;
+      subject: string | null;
+      isException?: boolean;
+      userId: string;
+      user: { id: string; fullName: string; email: string };
+    }> = [];
+
+    for (const user of users) {
+      const slots = await this.getScheduleForWeek(user.id, weekStart);
+      for (const slot of slots) {
+        rows.push({
+          ...slot,
+          userId: user.id,
+          user,
+        });
+      }
+    }
+
+    return rows;
   }
 
   async update(

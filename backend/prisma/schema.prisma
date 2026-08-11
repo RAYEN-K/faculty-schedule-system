@@ -8,123 +8,105 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
-// ----------------------------------------
-// ENUMS (Les Roles & Statuses)
-// ----------------------------------------
+model Department {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  code      String   @unique
+  events    Event[]
+  users     User[]
+}
+
+model User {
+  id           String                @id @default(uuid())
+  email        String                @unique
+  password     String
+  fullName     String
+  role         Role                  @default(FACULTY)
+  departmentId String?
+  createdAt    DateTime              @default(now())
+  updatedAt    DateTime              @updatedAt
+  requests     ModificationRequest[]
+  schedules    Schedule[]
+  department   Department?           @relation(fields: [departmentId], references: [id])
+}
+
+model ModificationRequest {
+  id                String             @id @default(uuid())
+  userId            String
+  type              RequestType
+  status            RequestStatus      @default(PENDING)
+  originalDate      DateTime?
+  proposedDate      DateTime?
+  reason            String?
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  scheduleId        String?
+  reviewedAt        DateTime?
+  reviewedById      String?
+  reviewComment     String?
+  schedule          Schedule?          @relation(fields: [scheduleId], references: [id])
+  user              User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  scheduleException ScheduleException?
+}
+
+model Schedule {
+  id         String                @id @default(uuid())
+  userId     String
+  dayOfWeek  Int
+  startTime  String
+  endTime    String
+  createdAt  DateTime              @default(now())
+  updatedAt  DateTime              @updatedAt
+  subject           String?
+  weekSpecificOnly  Boolean               @default(false)
+  requests          ModificationRequest[]
+  user       User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  exceptions ScheduleException[]
+}
+
+model ScheduleException {
+  id            String              @id @default(cuid())
+  scheduleId    String
+  weekStartDate DateTime
+  newDayOfWeek  Int
+  newStartTime  String
+  newEndTime    String
+  isSkipped     Boolean             @default(false)
+  requestId     String?              @unique
+  createdAt     DateTime            @default(now())
+  request       ModificationRequest? @relation(fields: [requestId], references: [id])
+  schedule      Schedule            @relation(fields: [scheduleId], references: [id])
+
+  @@unique([scheduleId, weekStartDate])
+}
+
+model Event {
+  id           String     @id @default(uuid())
+  title        String
+  description  String?
+  eventDate    DateTime
+  departmentId String
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  department   Department @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+}
+
 enum Role {
   ADMIN
-  HOD       // Head of Department
-  FACULTY   // Faculty Member
+  HOD
+  FACULTY
 }
 
 enum RequestType {
-  MODIFICATION // Swapping/modifying a working day
-  ADDITIONAL   // Extra work days
-  COMPENSATION // Compensation arrangement
+  MODIFICATION
+  ADDITIONAL
+  COMPENSATION
 }
 
 enum RequestStatus {
   PENDING
   APPROVED
   REJECTED
-}
-
-// ----------------------------------------
-// MODELS (Tables)
-// ----------------------------------------
-
-model Department {
-  id        String   @id @default(uuid())
-  name      String   @unique
-  code      String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  users  User[]
-  events Event[]
-}
-
-model User {
-  id        String   @id @default(uuid())
-  email     String   @unique
-  password  String
-  fullName  String
-  role      Role     @default(FACULTY)
-
-  departmentId String?
-  department   Department? @relation(fields: [departmentId], references: [id], onDelete: SetNull)
-
-  schedules Schedule[]
-  requests  ModificationRequest[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-model ModificationRequest {
-  id     String @id @default(uuid())
-  userId String
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  scheduleId String?
-  schedule   Schedule? @relation(fields: [scheduleId], references: [id], onDelete: SetNull)
-
-  type   RequestType
-  status RequestStatus @default(PENDING)
-
-  originalDate DateTime?
-  proposedDate DateTime?
-  reason       String?
-
-  reviewedById String?   
-  reviewedAt   DateTime?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  scheduleException ScheduleException?
-}
-
-model Schedule {
-  id        String @id @default(uuid())
-  userId    String
-  user      User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  dayOfWeek Int
-  startTime String
-  endTime   String
-  subject   String?
-
-  requests  ModificationRequest[] 
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  exceptions ScheduleException[]
-}
-model ScheduleException {
-  id            String   @id @default(cuid())
-  scheduleId    String
-  schedule      Schedule @relation(fields: [scheduleId], references: [id])
-  weekStartDate DateTime
-  newDayOfWeek  Int
-  newStartTime  String
-  newEndTime    String
-  isSkipped     Boolean  @default(false)   // true = compensation day off, ignore day/time fields
-  requestId     String   @unique
-  request       ModificationRequest @relation(fields: [requestId], references: [id])
-  createdAt     DateTime @default(now())
-
-  @@unique([scheduleId, weekStartDate])
-}
-
-
-model Event {
-  id          String   @id @default(uuid())
-  title       String
-  description String?
-  eventDate   DateTime
-
-  departmentId String
-  department   Department @relation(fields: [departmentId], references: [id], onDelete: Cascade)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 }

@@ -13,7 +13,7 @@ interface User {
   department?: {
     name: string;
     code?: string;
-  };
+  } | null;
 }
 
 interface Department {
@@ -29,31 +29,19 @@ export default function AssignmentsPage() {
   const [selectedDept, setSelectedDept] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Fetch Users
-  const { data: users, isLoading: usersLoading } = useQuery({
-    queryKey: ['users'],
+  const { data: usersPage, isLoading: usersLoading } = useQuery({
+    queryKey: ['users', 'assignments'],
     queryFn: () => getUsers(1, 100),
   });
 
-  // Fetch Departments
   const { data: departments, isLoading: deptsLoading } = useQuery({
     queryKey: ['departments'],
-    queryFn: async () => {
-      if (typeof getDepartments === 'function') {
-        return await getDepartments();
-      }
-      return [];
-    },
+    queryFn: getDepartments,
   });
 
-  // Mutation Assign
   const mutation = useMutation({
-    mutationFn: async ({ userId, departmentId }: { userId: string; departmentId: string }) => {
-      if (typeof assignUserToDepartment === 'function') {
-        return await assignUserToDepartment(userId, departmentId);
-      }
-      return { userId, departmentId };
-    },
+    mutationFn: ({ userId, departmentId }: { userId: string; departmentId: string }) =>
+      assignUserToDepartment(userId, departmentId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['users'] });
       queryClient.invalidateQueries({ queryKey: ['departments'] });
@@ -68,10 +56,9 @@ export default function AssignmentsPage() {
     mutation.mutate({ userId: selectedUser, departmentId: selectedDept });
   };
 
-  const userList: User[] = users ?? [];
+  const userList: User[] = usersPage?.data ?? [];
   const deptList: Department[] = departments ?? [];
 
-  // Filter users in assignment directory
   const filteredUsers = userList.filter((u) => {
     const search = searchQuery.toLowerCase();
     return (
@@ -87,7 +74,6 @@ export default function AssignmentsPage() {
 
   return (
     <div className="max-w-6xl mx-auto p-4 sm:p-6 space-y-8">
-      {/* Top Header */}
       <div className="border-b border-slate-200/80 pb-5">
         <h1 className="text-2xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
           <span>🔗</span> Faculty Assignments
@@ -98,7 +84,6 @@ export default function AssignmentsPage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        {/* Left Form Card */}
         <div className="lg:col-span-5 bg-white border border-slate-200/80 rounded-2xl p-6 shadow-sm space-y-5">
           <div className="flex items-center gap-3 border-b border-slate-100 pb-4">
             <div className="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold text-base">
@@ -111,7 +96,6 @@ export default function AssignmentsPage() {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            {/* User Select */}
             <div>
               <label className="block text-xs font-semibold text-slate-700 mb-1.5 uppercase tracking-wider">
                 Select User / Faculty <span className="text-red-500">*</span>
@@ -131,7 +115,6 @@ export default function AssignmentsPage() {
               </select>
             </div>
 
-            {/* Department Select */}
             <div>
               <label className="block text-xs font-semibold text-slate-700 mb-1.5 uppercase tracking-wider">
                 Target Department <span className="text-red-500">*</span>
@@ -151,7 +134,6 @@ export default function AssignmentsPage() {
               </select>
             </div>
 
-            {/* Submit Button */}
             <button
               type="submit"
               disabled={mutation.isPending}
@@ -162,7 +144,6 @@ export default function AssignmentsPage() {
           </form>
         </div>
 
-        {/* Right Active Directory Card */}
         <div className="lg:col-span-7 bg-white border border-slate-200/80 rounded-2xl shadow-sm overflow-hidden">
           <div className="p-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
@@ -170,7 +151,6 @@ export default function AssignmentsPage() {
               <p className="text-xs text-slate-400 mt-0.5">Real-time overview of assigned faculty members</p>
             </div>
 
-            {/* Search Input */}
             <input
               type="text"
               placeholder="Search faculty or dept..."
@@ -180,7 +160,6 @@ export default function AssignmentsPage() {
             />
           </div>
 
-          {/* List Feed */}
           <div className="divide-y divide-slate-100 max-h-[480px] overflow-y-auto">
             {filteredUsers.length === 0 ? (
               <div className="p-8 text-center text-xs text-slate-400">

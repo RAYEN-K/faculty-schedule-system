@@ -22,10 +22,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
         ? exception.getStatus()
         : HttpStatus.INTERNAL_SERVER_ERROR;
 
-    const message =
-      exception instanceof HttpException
-        ? exception.getResponse()
-        : 'Internal server error';
+    const message = this.extractMessage(exception);
 
     if (exception instanceof HttpException) {
       if (Number(status) >= HttpStatus.INTERNAL_SERVER_ERROR) {
@@ -46,5 +43,25 @@ export class AllExceptionsFilter implements ExceptionFilter {
       timestamp: new Date().toISOString(),
       message,
     });
+  }
+
+  private extractMessage(exception: unknown): string | string[] {
+    if (!(exception instanceof HttpException)) {
+      return 'Internal server error';
+    }
+
+    const response = exception.getResponse();
+    if (typeof response === 'string') {
+      return response;
+    }
+
+    if (typeof response === 'object' && response !== null) {
+      const payload = response as { message?: string | string[] };
+      if (typeof payload.message === 'string' || Array.isArray(payload.message)) {
+        return payload.message;
+      }
+    }
+
+    return exception.message;
   }
 }

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { login, getCurrentUser } from '@/lib/auth';
+import { getApiErrorMessage } from '@/lib/api-error';
 
 export function Login() {
   const [email, setEmail] = useState('');
@@ -26,15 +27,8 @@ export function Login() {
       } else {
         router.push('/dashboard/faculty');
       }
-    } catch (err: any) {
-      const apiMessage = err?.response?.data?.message || err?.message || err;
-      if (typeof apiMessage === 'string') {
-        setError(apiMessage);
-      } else if (Array.isArray(apiMessage)) {
-        setError(apiMessage.join(', '));
-      } else {
-        setError('Invalid email or password');
-      }
+    } catch (err: unknown) {
+      setError(getApiErrorMessage(err, 'Invalid email or password'));
     } finally {
       setSubmitting(false);
     }

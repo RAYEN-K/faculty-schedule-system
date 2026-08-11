@@ -3,7 +3,9 @@ import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useCurrentUser } from '@/lib/hooks/use-current-user';
 import { getMySchedule } from '@/lib/schedules';
-import { createRequest } from '@/lib/requests';
+import { createRequest, getMyRequests } from '@/lib/requests';
+import { getApiErrorMessage } from '@/lib/api-error';
+import { dateForDayInWeek, getStartOfWeekIso, isSameWeek } from '@/lib/date';
 
 const REQUEST_TYPES = [
   { id: 'MODIFICATION', icon: '🔄', title: 'Working Day Swap', desc: 'Replace a scheduled day with another day in the same week' },
@@ -12,6 +14,20 @@ const REQUEST_TYPES = [
 ] as const;
 
 const DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+function StatusBadge({ status }: { status: string }) {
+  const map: Record<string, { bg: string; color: string }> = {
+    PENDING: { bg: '#fef3c7', color: '#d97706' },
+    APPROVED: { bg: '#dcfce7', color: '#16a34a' },
+    REJECTED: { bg: '#fee2e2', color: '#dc2626' },
+  };
+  const s = map[status] || { bg: '#e8f0fe', color: '#2a4a8c' };
+  return (
+    <span className="px-2 py-0.5 rounded-full text-xs font-medium" style={{ background: s.bg, color: s.color }}>
+      {status}
+    </span>
+  );
+}
 
 export function ScheduleRequest() {
   const { data: user } = useCurrentUser();
@@ -23,16 +39,24 @@ export function ScheduleRequest() {
     enabled: !!user,
   });
 
+  const { data: myRequests } = useQuery({
+    queryKey: ['my-requests'],
+    queryFn: getMyRequests,
+  });
+
   const [selectedType, setSelectedType] = useState<(typeof REQUEST_TYPES)[number]['id']>('MODIFICATION');
   const [scheduleId, setScheduleId] = useState('');
   const [proposedDate, setProposedDate] = useState('');
   const [reason, setReason] = useState('');
   const [submitted, setSubmitted] = useState(false);
+  const [validationError, setValidationError] = useState('');
 
   const mutation = useMutation({
     mutationFn: createRequest,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['my-requests'] });
+      queryClient.invalidateQueries({ queryKey: ['my-schedule-week'] });
+      queryClient.invalidateQueries({ queryKey: ['my-schedule-list'] });
       setSubmitted(true);
       setScheduleId('');
       setProposedDate('');
@@ -41,6 +65,7 @@ export function ScheduleRequest() {
   });
 
   function handleSubmit() {
+    setValidationError('');
     const payload: {
       type: typeof selectedType;
       reason: string;
@@ -48,15 +73,52 @@ export function ScheduleRequest() {
       scheduleId?: string;
       originalDate?: string;
     } = { type: selectedType, reason: reason.trim() };
-    if (!payload.reason) return;
-    if (proposedDate) {
-      const iso = new Date(proposedDate).toISOString();
-      payload.proposedDate = iso;
-      if (selectedType === 'MODIFICATION') {
-        payload.originalDate = iso;
+
+    if (!payload.reason || !proposedDate) {
+      setValidationError('Please fill in all required fields.');
+      return;
+    }
+
+    const proposed = new Date(proposedDate);
+    payload.proposedDate = proposed.toISOString();
+
+    if (selectedType === 'MODIFICATION') {
+      if (!scheduleId || !selectedSlot) {
+        setValidationError('Select an existing working day to replace.');
+        return;
+      }
+
+      const original = dateForDayInWeek(selectedSlot.dayOfWeek, getStartOfWeekIso());
+      payload.originalDate = original.toISOString();
+      payload.scheduleId = scheduleId;
+
+      if (!isSameWeek(original, proposed)) {
+        setValidationError('The replacement day must be in the same week as your current schedule.');
+        return;
+      }
+
+      const proposedDay = proposed.getUTCDay();
+      const workingDays = new Set((mySlots ?? []).map((s: any) => s.dayOfWeek));
+      if (workingDays.has(proposedDay)) {
+        setValidationError('The target day must be a non-working day (not already in your schedule).');
+        return;
+      }
+
+      if (proposedDay === selectedSlot.dayOfWeek) {
+        setValidationError('The target day must differ from the day being replaced.');
+        return;
       }
     }
-    if (selectedType === 'MODIFICATION' && scheduleId) payload.scheduleId = scheduleId;
+
+    if (selectedType === 'ADDITIONAL' || selectedType === 'COMPENSATION') {
+      const proposedDay = proposed.getUTCDay();
+      const workingDays = new Set((mySlots ?? []).map((s: any) => s.dayOfWeek));
+      if (workingDays.has(proposedDay)) {
+        setValidationError('The selected date must be a day you do not normally work.');
+        return;
+      }
+    }
+
     mutation.mutate(payload);
   }
 
@@ -141,12 +203,18 @@ export function ScheduleRequest() {
 
             <div>
               <label className="block text-xs font-semibold mb-2" style={{ color: '#1a2f5e' }}>
-                {selectedType === 'MODIFICATION' ? 'NEW WORKING DAY (date)' : 'DATE'}
+                {selectedType === 'MODIFICATION' ? 'NEW WORKING DAY (must be a non-working day this week)' : 'DATE'}
               </label>
               <input
                 type="date"
                 value={proposedDate}
                 onChange={(e) => setProposedDate(e.target.value)}
+                min={selectedType === 'MODIFICATION' ? getStartOfWeekIso() : undefined}
+                max={selectedType === 'MODIFICATION' ? (() => {
+                  const end = new Date(getStartOfWeekIso() + 'T00:00:00.000Z');
+                  end.setUTCDate(end.getUTCDate() + 6);
+                  return end.toISOString().split('T')[0];
+                })() : undefined}
                 className="px-3 py-2.5 rounded-lg border text-sm w-full"
                 style={{ borderColor: '#dce6f5', color: '#1a2f5e' }}
               />
@@ -166,9 +234,15 @@ export function ScheduleRequest() {
             />
           </div>
 
+          {validationError && (
+            <div className="px-3 py-2 rounded-lg text-xs" style={{ background: '#fee2e2', color: '#dc2626' }}>
+              {validationError}
+            </div>
+          )}
+
           {mutation.isError && (
             <div className="px-3 py-2 rounded-lg text-xs" style={{ background: '#fee2e2', color: '#dc2626' }}>
-              {(mutation.error as any)?.response?.data?.message || 'Could not submit request. Please check the fields above.'}
+              {getApiErrorMessage(mutation.error, 'Could not submit request. Please check the fields above.')}
             </div>
           )}
 
@@ -233,6 +307,41 @@ export function ScheduleRequest() {
             )}
           </div>
         </div>
+      </div>
+
+      <div className="mt-8 bg-white rounded-xl p-5 border" style={{ borderColor: '#dce6f5' }}>
+        <h2 className="font-semibold text-sm mb-4" style={{ color: '#1a2f5e' }}>My Request History</h2>
+        {myRequests?.length ? (
+          <div className="divide-y" style={{ borderColor: '#f0f4f9' }}>
+            {myRequests.map((r: any) => (
+              <div key={r.id} className="py-3 flex items-center justify-between gap-4">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-semibold" style={{ color: '#1a2f5e' }}>{r.type}</span>
+                    <StatusBadge status={r.status} />
+                  </div>
+                  <p className="text-xs mt-0.5" style={{ color: '#4a5569' }}>{r.reason || 'No comment'}</p>
+                  {r.proposedDate && (
+                    <p className="text-xs mt-0.5" style={{ color: '#64748b' }}>
+                      Target: {new Date(r.proposedDate).toLocaleDateString()}
+                    </p>
+                  )}
+                  <p className="text-xs mt-0.5" style={{ color: '#94a3b8' }}>
+                    Submitted {new Date(r.createdAt).toLocaleDateString()}
+                    {r.reviewedAt && ` · Reviewed ${new Date(r.reviewedAt).toLocaleDateString()}`}
+                  </p>
+                  {r.status === 'REJECTED' && r.reviewComment && (
+                    <p className="text-xs mt-1 px-2 py-1 rounded" style={{ background: '#fee2e2', color: '#dc2626' }}>
+                      HoD feedback: {r.reviewComment}
+                    </p>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="text-xs" style={{ color: '#94a3b8' }}>No requests submitted yet.</p>
+        )}
       </div>
     </div>
   );

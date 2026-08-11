@@ -1,14 +1,24 @@
 "use client";
 
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
+import { useQuery } from '@tanstack/react-query';
 import { useCurrentUser } from '@/lib/hooks/use-current-user';
-
+import { getDepartmentRequests } from '@/lib/requests';
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const router = useRouter();
   const { data: user, isLoading } = useCurrentUser();
+
+  const { data: deptRequests } = useQuery({
+    queryKey: ['department-requests'],
+    queryFn: getDepartmentRequests,
+    enabled: user?.role === 'HOD',
+  });
+
+  const pendingRequestCount = (deptRequests ?? []).filter(
+    (r: { status: string }) => r.status === 'PENDING',
+  ).length;
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -16,7 +26,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     window.location.href = '/login';
   };
 
-  const NAV_ITEMS_BY_ROLE: Record<string, { label: string; href: string; icon: string }[]> = {
+  const NAV_ITEMS_BY_ROLE: Record<string, { label: string; href: string; icon: string; badge?: number }[]> = {
     ADMIN: [
       { label: 'Dashboard', href: '/dashboard/admin', icon: '📊' },
       { label: 'Departments', href: '/dashboard/admin/departments', icon: '🏢' },
@@ -24,7 +34,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       { label: 'Assignments', href: '/dashboard/admin/assignments', icon: '🔗' },
     ],
     HOD: [
-      { label: 'Requests', href: '/dashboard/hod/requests', icon: '📋' },
+      { label: 'Requests', href: '/dashboard/hod/requests', icon: '📋', badge: pendingRequestCount },
       { label: 'Department Schedule', href: '/dashboard/hod/schedule', icon: '🗓️' },
       { label: 'Events', href: '/dashboard/hod/events', icon: '📌' },
     ],
@@ -44,10 +54,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   return (
     <div className="flex min-h-screen bg-slate-50 text-slate-800">
-      {/* FIXED SIDEBAR ON THE LEFT */}
       <aside className="w-64 bg-[#1b2a4e] text-white flex flex-col justify-between p-5 h-screen fixed left-0 top-0 bottom-0 z-50 shadow-lg">
         <div className="space-y-8">
-          {/* IIT BRANDING LOGO HEADER */}
           <div className="flex items-center gap-3 pt-2 px-2 pb-4 border-b border-[#2b3e6d]">
             <div className="bg-white p-1.5 rounded-xl shadow-sm flex items-center justify-center shrink-0">
               <img
@@ -66,7 +74,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             </div>
           </div>
 
-          {/* NAVIGATION LINKS */}
           <nav className="space-y-1.5">
             {navItems.map((item) => {
               const isActive = pathname === item.href;
@@ -81,14 +88,18 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                   }`}
                 >
                   <span className="text-base">{item.icon}</span>
-                  <span>{item.label}</span>
+                  <span className="flex-1">{item.label}</span>
+                  {item.badge != null && item.badge > 0 && (
+                    <span className="min-w-[1.25rem] h-5 px-1.5 rounded-full bg-amber-500 text-white text-[10px] font-bold flex items-center justify-center">
+                      {item.badge}
+                    </span>
+                  )}
                 </Link>
               );
             })}
           </nav>
         </div>
 
-        {/* LOGOUT BUTTON AT THE BOTTOM */}
         <div className="pt-4 border-t border-[#2b3e6d]">
           <button
             onClick={handleLogout}
@@ -100,7 +111,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         </div>
       </aside>
 
-      {/* MAIN CONTENT AREA */}
       <main className="flex-1 ml-64 p-8 bg-slate-50 min-h-screen">
         {children}
       </main>

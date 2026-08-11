@@ -15,21 +15,30 @@ export async function createRequest(payload: {
   const { data } = await apiClient.post('/requests', payload);
   return data;
 }
+
 export async function getDepartmentRequests() {
-    const { data } = await apiClient.get('/requests/department');
-    return data;
+  const { data } = await apiClient.get('/requests/department');
+  return data;
 }
-  
+
 export async function updateRequestStatus(
   id: string,
   status: 'APPROVED' | 'REJECTED',
-  compensationScheduleId?: string,
-  compensationWeekStartDate?: string,
+  options?: {
+    compensationScheduleId?: string;
+    compensationWeekStartDate?: string;
+    reviewComment?: string;
+  },
 ) {
   const { data } = await apiClient.patch(`/requests/${id}/status`, {
     status,
-    ...(compensationScheduleId && { compensationScheduleId }),
-    ...(compensationWeekStartDate && { compensationWeekStartDate }),
+    ...(options?.compensationScheduleId && {
+      compensationScheduleId: options.compensationScheduleId,
+    }),
+    ...(options?.compensationWeekStartDate && {
+      compensationWeekStartDate: options.compensationWeekStartDate,
+    }),
+    ...(options?.reviewComment && { reviewComment: options.reviewComment }),
   });
   return data;
 }
