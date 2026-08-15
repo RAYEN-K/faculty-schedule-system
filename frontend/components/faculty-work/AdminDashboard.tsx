@@ -1,10 +1,8 @@
 'use client';
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useCurrentUser } from '@/lib/hooks/use-current-user';
 import { getDepartments, createDepartment } from '@/lib/departments';
 import { getUsers, createUser } from '@/lib/users';
-import { logout } from '@/lib/auth';
 
 function StatusBadge({ status }: { status: string }) {
   const map: Record<string, { bg: string; color: string }> = {
@@ -21,7 +19,6 @@ function StatusBadge({ status }: { status: string }) {
 }
 
 export function AdminDashboard() {
-  const { data: user } = useCurrentUser();
   const queryClient = useQueryClient();
 
   const { data: departments, isLoading: deptsLoading } = useQuery({ queryKey: ['departments'], queryFn: getDepartments });

@@ -2,7 +2,6 @@ import {
   Injectable,
   NotFoundException,
   BadRequestException,
-  ForbiddenException,
   ConflictException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
@@ -125,7 +124,7 @@ export class RequestsService {
     page = 1,
     pageSize = 20,
     callerRole?: Role,
-    callerDepartmentId?: string | null,
+    _callerDepartmentId?: string | null,
   ) {
     const where = callerRole === Role.HOD ? {} : undefined;
 
@@ -157,8 +156,8 @@ export class RequestsService {
     id: string,
     dto: UpdateStatusDto,
     reviewerId: string,
-    callerRole: Role,
-    callerDepartmentId: string | null,
+    _callerRole: Role,
+    _callerDepartmentId: string | null,
   ) {
     return this.prisma.$transaction(async (tx) => {
       const request = await tx.modificationRequest.findUnique({

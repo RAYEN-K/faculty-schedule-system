@@ -3,6 +3,7 @@ import {
   Get,
   Post,
   Patch,
+  Delete,
   Body,
   Param,
   UseGuards,
@@ -62,5 +63,12 @@ export class DepartmentsController {
     @Body() updateDepartmentDto: UpdateDepartmentDto,
   ) {
     return this.departmentsService.update(id, updateDepartmentDto);
+  }
+
+  @Delete(':id')
+  @Roles(Role.ADMIN)
+  @ApiOperation({ summary: 'Delete a department' })
+  remove(@Param('id') id: string) {
+    return this.departmentsService.remove(id);
   }
 }

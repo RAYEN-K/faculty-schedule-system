@@ -4,7 +4,6 @@ import { useCurrentUser } from '@/lib/hooks/use-current-user';
 import { getMySchedule } from '@/lib/schedules';
 import { getMyRequests } from '@/lib/requests';
 import { getEvents } from '@/lib/events';
-import { logout } from '@/lib/auth';
 
 const DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 

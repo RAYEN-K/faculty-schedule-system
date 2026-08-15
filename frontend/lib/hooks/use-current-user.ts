@@ -6,6 +6,8 @@ export function useCurrentUser() {
   return useQuery({
     queryKey: ['currentUser'],
     queryFn: getCurrentUser,
-    retry: false, // no point retrying an invalid/expired token
+    retry: false,
+    refetchOnWindowFocus: false,
+    staleTime: 60_000,
   });
 }

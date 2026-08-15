@@ -96,7 +96,7 @@ model Event {
 }
 
 model Notification {
-  id                               String           @id
+  id                               String           @id @default(uuid())
   userId                           String
   senderId                         String?
   title                            String

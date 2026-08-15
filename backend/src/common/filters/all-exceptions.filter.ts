@@ -25,7 +25,8 @@ export class AllExceptionsFilter implements ExceptionFilter {
     const message = this.extractMessage(exception);
 
     if (exception instanceof HttpException) {
-      if (Number(status) >= HttpStatus.INTERNAL_SERVER_ERROR) {
+      const statusCode = Number(status);
+      if (statusCode >= 500) {
         this.logger.error(
           `${request.method} ${request.url} → ${status}`,
           exception.stack,

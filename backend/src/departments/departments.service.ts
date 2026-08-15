@@ -110,9 +110,34 @@ export class DepartmentsService {
     });
   }
   async update(id: string, dto: UpdateDepartmentDto) {
+    const department = await this.prisma.department.findUnique({
+      where: { id },
+    });
+    if (!department) {
+      throw new NotFoundException('Département non trouvé');
+    }
+
     return this.prisma.department.update({
       where: { id },
       data: dto,
     });
+  }
+
+  async remove(id: string) {
+    const department = await this.prisma.department.findUnique({
+      where: { id },
+      include: { _count: { select: { users: true, events: true } } },
+    });
+    if (!department) {
+      throw new NotFoundException('Département non trouvé');
+    }
+
+    if (department._count.users > 0 || department._count.events > 0) {
+      throw new ConflictException(
+        'Cannot delete a department that still has users or events',
+      );
+    }
+
+    return this.prisma.department.delete({ where: { id } });
   }
 }
