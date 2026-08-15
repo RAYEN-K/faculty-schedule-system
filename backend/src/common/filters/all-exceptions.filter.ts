@@ -13,14 +13,16 @@ export class AllExceptionsFilter implements ExceptionFilter {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
 
+    // Safely derive status: prefer HttpException.getStatus when available
     const status =
       exception instanceof HttpException
         ? exception.getStatus()
         : HttpStatus.INTERNAL_SERVER_ERROR;
 
+    // getResponse can be string | object — narrow it for consumers
     const message =
       exception instanceof HttpException
-        ? exception.getResponse()
+        ? (exception.getResponse() as string | Record<string, any>)
         : 'Internal server error';
 
     response.status(status).json({
