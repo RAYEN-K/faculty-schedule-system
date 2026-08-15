@@ -2,7 +2,6 @@ import {
   Injectable,
   NotFoundException,
   BadRequestException,
-  ForbiddenException,
   ConflictException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
@@ -107,7 +106,7 @@ export class RequestsService {
         callerRole === Role.HOD &&
         request.user.departmentId !== callerDepartmentId
       ) {
-        throw new ForbiddenException(
+        throw new BadRequestException(
           'You can only manage requests from your own department',
         );
       }
@@ -122,7 +121,7 @@ export class RequestsService {
         },
       });
 
-      // If REJECTED, stop here
+      // If not approved, stop here
       if (dto.status !== RequestStatus.APPROVED) {
         return updatedRequest;
       }
@@ -188,7 +187,6 @@ export class RequestsService {
           existingUserSchedules,
         );
 
-        // 1. Declare newSlot b-st3mal dayOfWeek el-jaḥedh
         const newSlot: CreateScheduleDto = {
           userId: request.userId,
           dayOfWeek,
@@ -196,9 +194,8 @@ export class RequestsService {
           endTime: '10:00',
         };
 
-        // 2. Call el-service
         await this.schedulesService.create(newSlot);
-      } // <-- Hedhi el-accolade elli kān't na9sa!
+      }
 
       return updatedRequest;
     });
