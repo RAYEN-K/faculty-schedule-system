@@ -19,17 +19,19 @@ model Department {
 }
 
 model User {
-  id           String                @id @default(uuid())
-  email        String                @unique
-  password     String
-  fullName     String
-  role         Role                  @default(FACULTY)
-  departmentId String?
-  createdAt    DateTime              @default(now())
-  updatedAt    DateTime              @updatedAt
-  requests     ModificationRequest[]
-  schedules    Schedule[]
-  department   Department?           @relation(fields: [departmentId], references: [id])
+  id                                       String                @id @default(uuid())
+  email                                    String                @unique
+  password                                 String
+  fullName                                 String
+  role                                     Role                  @default(FACULTY)
+  departmentId                             String?
+  createdAt                                DateTime              @default(now())
+  updatedAt                                DateTime              @updatedAt
+  requests                                 ModificationRequest[]
+  Notification_Notification_senderIdToUser Notification[]        @relation("Notification_senderIdToUser")
+  Notification_Notification_userIdToUser   Notification[]        @relation("Notification_userIdToUser")
+  schedules                                Schedule[]
+  department                               Department?           @relation(fields: [departmentId], references: [id])
 }
 
 model ModificationRequest {
@@ -52,32 +54,32 @@ model ModificationRequest {
 }
 
 model Schedule {
-  id         String                @id @default(uuid())
-  userId     String
-  dayOfWeek  Int
-  startTime  String
-  endTime    String
-  createdAt  DateTime              @default(now())
-  updatedAt  DateTime              @updatedAt
-  subject           String?
-  weekSpecificOnly  Boolean               @default(false)
-  requests          ModificationRequest[]
-  user       User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
-  exceptions ScheduleException[]
+  id               String                @id @default(uuid())
+  userId           String
+  dayOfWeek        Int
+  startTime        String
+  endTime          String
+  createdAt        DateTime              @default(now())
+  updatedAt        DateTime              @updatedAt
+  subject          String?
+  weekSpecificOnly Boolean               @default(false)
+  requests         ModificationRequest[]
+  user             User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  exceptions       ScheduleException[]
 }
 
 model ScheduleException {
-  id            String              @id @default(cuid())
+  id            String               @id @default(cuid())
   scheduleId    String
   weekStartDate DateTime
   newDayOfWeek  Int
   newStartTime  String
   newEndTime    String
-  isSkipped     Boolean             @default(false)
+  isSkipped     Boolean              @default(false)
   requestId     String?              @unique
-  createdAt     DateTime            @default(now())
+  createdAt     DateTime             @default(now())
   request       ModificationRequest? @relation(fields: [requestId], references: [id])
-  schedule      Schedule            @relation(fields: [scheduleId], references: [id])
+  schedule      Schedule             @relation(fields: [scheduleId], references: [id])
 
   @@unique([scheduleId, weekStartDate])
 }
@@ -91,6 +93,21 @@ model Event {
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt
   department   Department @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+}
+
+model Notification {
+  id                               String           @id
+  userId                           String
+  senderId                         String?
+  title                            String
+  message                          String
+  type                             NotificationType @default(GENERAL)
+  read                             Boolean          @default(false)
+  createdAt                        DateTime         @default(now())
+  User_Notification_senderIdToUser User?            @relation("Notification_senderIdToUser", fields: [senderId], references: [id])
+  User_Notification_userIdToUser   User             @relation("Notification_userIdToUser", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, type, senderId, createdAt])
 }
 
 enum Role {
@@ -109,4 +126,10 @@ enum RequestStatus {
   PENDING
   APPROVED
   REJECTED
+}
+
+enum NotificationType {
+  GENERAL
+  NEW_FACULTY
+  SCHEDULE_REMINDER
 }

@@ -91,7 +91,10 @@ export class SchedulesController {
 
   @Get('department/:departmentId/week/:weekStartDate')
   @Roles(Role.ADMIN, Role.HOD)
-  @ApiOperation({ summary: 'Get department timetable for a specific week (with exceptions applied)' })
+  @ApiOperation({
+    summary:
+      'Get department timetable for a specific week (with exceptions applied)',
+  })
   findByDepartmentForWeek(
     @Param('departmentId') departmentId: string,
     @Param('weekStartDate') weekStartDate: string,

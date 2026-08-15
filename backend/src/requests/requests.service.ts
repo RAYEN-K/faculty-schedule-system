@@ -76,7 +76,9 @@ export class RequestsService {
       dto.type === RequestType.COMPENSATION
     ) {
       if (!dto.proposedDate) {
-        throw new BadRequestException('proposedDate is required for this request type');
+        throw new BadRequestException(
+          'proposedDate is required for this request type',
+        );
       }
 
       const proposedDate = new Date(dto.proposedDate);
@@ -103,10 +105,7 @@ export class RequestsService {
     });
   }
 
-  async findDepartmentRequests(
-    departmentId: string | null,
-    callerRole?: Role,
-  ) {
+  async findDepartmentRequests(departmentId: string | null, callerRole?: Role) {
     // HoD has global visibility — all faculty requests across the system
     const where =
       callerRole === Role.HOD
@@ -128,10 +127,7 @@ export class RequestsService {
     callerRole?: Role,
     callerDepartmentId?: string | null,
   ) {
-    const where =
-      callerRole === Role.HOD
-        ? {}
-        : undefined;
+    const where = callerRole === Role.HOD ? {} : undefined;
 
     return paginate(
       page,
@@ -181,10 +177,7 @@ export class RequestsService {
       }
 
       // HoD has global approval rights for demo/unified setup
-      if (
-        dto.status === RequestStatus.REJECTED &&
-        !dto.reviewComment?.trim()
-      ) {
+      if (dto.status === RequestStatus.REJECTED && !dto.reviewComment?.trim()) {
         throw new BadRequestException('A rejection reason is required');
       }
 

@@ -103,7 +103,9 @@ export class UsersService {
         where: { email: dto.email },
       });
       if (emailTaken) {
-        throw new ConflictException('Un utilisateur avec cet email existe déjà');
+        throw new ConflictException(
+          'Un utilisateur avec cet email existe déjà',
+        );
       }
     }
 

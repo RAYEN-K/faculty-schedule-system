@@ -57,7 +57,10 @@ export class AllExceptionsFilter implements ExceptionFilter {
 
     if (typeof response === 'object' && response !== null) {
       const payload = response as { message?: string | string[] };
-      if (typeof payload.message === 'string' || Array.isArray(payload.message)) {
+      if (
+        typeof payload.message === 'string' ||
+        Array.isArray(payload.message)
+      ) {
         return payload.message;
       }
     }
