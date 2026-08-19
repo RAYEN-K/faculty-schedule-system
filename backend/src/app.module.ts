@@ -8,7 +8,7 @@ import { DepartmentsModule } from './departments/departments.module';
 import { EventsModule } from './events/events.module';
 import { NotificationsModule } from './notifications/notifications.module';
 import { ConfigModule } from '@nestjs/config';
-import { envValidationSchema } from './config/env.validation';
+import { validateEnv } from './config/env.validation';
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/jwt.guard';
@@ -17,7 +17,7 @@ import { JwtAuthGuard } from './auth/jwt.guard';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      validationSchema: envValidationSchema,
+      validate: validateEnv,
     }),
     ThrottlerModule.forRoot([{ ttl: 60000, limit: 100 }]),
     PrismaModule,

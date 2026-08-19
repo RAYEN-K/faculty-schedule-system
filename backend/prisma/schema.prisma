@@ -48,6 +48,9 @@ model ModificationRequest {
   reviewedAt        DateTime?
   reviewedById      String?
   reviewComment     String?
+  aiRecommendation  String?            @default("Pending")
+  aiConfidenceScore Float?
+  aiReason          String?
   schedule          Schedule?          @relation(fields: [scheduleId], references: [id])
   user              User               @relation(fields: [userId], references: [id], onDelete: Cascade)
   scheduleException ScheduleException?

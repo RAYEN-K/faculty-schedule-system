@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { ValidationPipe } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import { AllExceptionsFilter } from './common/filters/all-exceptions.filter';
 import helmet from 'helmet';
 
@@ -48,7 +48,8 @@ async function bootstrap() {
 
   const port = process.env.PORT || 3000;
   await app.listen(port);
-  console.log(`🚀 Server running on: http://localhost:${port}`);
-  console.log(`📚 Swagger Documentation: http://localhost:${port}/api`);
+  const logger = new Logger('Bootstrap');
+  logger.log(`Server running on: http://localhost:${port}`);
+  logger.log(`Swagger documentation: http://localhost:${port}/api`);
 }
 void bootstrap();

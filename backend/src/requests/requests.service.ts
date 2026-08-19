@@ -3,6 +3,7 @@ import {
   NotFoundException,
   BadRequestException,
   ConflictException,
+  Logger,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateRequestDto } from './dto/create-request.dto';
@@ -11,13 +12,19 @@ import { RequestStatus, RequestType, Role, Prisma } from '@prisma/client';
 import { assertNoScheduleOverlap } from '../common/utils/schedule-overlap.util';
 import { startOfWeek } from '../common/utils/date.util';
 import { paginate } from '../common/utils/pagination.util';
+import { AiService } from '../ai/ai.service';
 
 const DEFAULT_SLOT_START = '08:30';
 const DEFAULT_SLOT_END = '10:00';
 
 @Injectable()
 export class RequestsService {
-  constructor(private readonly prisma: PrismaService) {}
+  private readonly logger = new Logger(RequestsService.name);
+
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly aiService: AiService,
+  ) {}
 
   async create(userId: string, dto: CreateRequestDto) {
     if (dto.type === RequestType.MODIFICATION) {
@@ -92,9 +99,28 @@ export class RequestsService {
       }
     }
 
-    return this.prisma.modificationRequest.create({
-      data: { ...dto, userId },
+    const created = await this.prisma.modificationRequest.create({
+      data: {
+        userId,
+        type: dto.type,
+        reason: dto.reason,
+        scheduleId: dto.scheduleId,
+        originalDate: dto.originalDate,
+        proposedDate: dto.proposedDate,
+        aiRecommendation: 'Pending',
+      },
     });
+
+    try {
+      return await this.attachAiRecommendation(created.id, userId, dto);
+    } catch (error) {
+      this.logger.warn(
+        `AI enrichment skipped for request ${created.id}: ${
+          error instanceof Error ? error.message : String(error)
+        }`,
+      );
+      return created;
+    }
   }
 
   async findMyRequests(userId: string) {
@@ -159,25 +185,31 @@ export class RequestsService {
     _callerRole: Role,
     _callerDepartmentId: string | null,
   ) {
+    const request = await this.prisma.modificationRequest.findUnique({
+      where: { id },
+      include: { user: true, schedule: true },
+    });
+
+    if (!request) {
+      throw new NotFoundException(`Request #${id} not found`);
+    }
+
+    if (request.status !== RequestStatus.PENDING) {
+      throw new BadRequestException('This request has already been processed');
+    }
+
+    if (dto.status === RequestStatus.REJECTED && !dto.reviewComment?.trim()) {
+      throw new BadRequestException('A rejection reason is required');
+    }
+
     return this.prisma.$transaction(async (tx) => {
-      const request = await tx.modificationRequest.findUnique({
+      const stillPending = await tx.modificationRequest.findUnique({
         where: { id },
-        include: { user: true, schedule: true },
       });
-
-      if (!request) {
-        throw new NotFoundException(`Request #${id} not found`);
-      }
-
-      if (request.status !== RequestStatus.PENDING) {
+      if (!stillPending || stillPending.status !== RequestStatus.PENDING) {
         throw new BadRequestException(
           'This request has already been processed',
         );
-      }
-
-      // HoD has global approval rights for demo/unified setup
-      if (dto.status === RequestStatus.REJECTED && !dto.reviewComment?.trim()) {
-        throw new BadRequestException('A rejection reason is required');
       }
 
       const updatedRequest = await tx.modificationRequest.update({
@@ -207,6 +239,38 @@ export class RequestsService {
 
       return updatedRequest;
     });
+  }
+
+  private async attachAiRecommendation(
+    requestId: string,
+    userId: string,
+    dto: CreateRequestDto,
+  ) {
+    const prediction = await this.aiService.recommendForRequest(
+      userId,
+      dto,
+      requestId,
+    );
+
+    try {
+      return await this.prisma.modificationRequest.update({
+        where: { id: requestId },
+        data: {
+          aiRecommendation: prediction.recommendation,
+          aiConfidenceScore: prediction.confidence_score,
+          aiReason: prediction.reason,
+        },
+      });
+    } catch (error) {
+      this.logger.warn(
+        `Could not persist AI fields for request ${requestId}: ${
+          error instanceof Error ? error.message : String(error)
+        }`,
+      );
+      return this.prisma.modificationRequest.findUniqueOrThrow({
+        where: { id: requestId },
+      });
+    }
   }
 
   private async applyModificationApproval(
