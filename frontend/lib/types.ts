@@ -30,4 +30,14 @@ export interface User {
     proposedDate?: string;
     reason: string;
     createdAt: string;
+    aiRecommendation?: 'Approve' | 'Reject' | 'Pending' | null;
+    aiConfidenceScore?: number | null;
+    aiReason?: string | null;
+    user?: {
+      id: string;
+      fullName?: string;
+      email?: string;
+    };
+    userId?: string;
+    reviewComment?: string | null;
   }

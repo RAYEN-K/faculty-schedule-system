@@ -7,6 +7,7 @@ import { getDepartmentRequests, updateRequestStatus } from '@/lib/requests';
 import { getUserScheduleSlots } from '@/lib/schedules';
 import { getStartOfWeekIso } from '@/lib/date';
 import { getApiErrorMessage } from '@/lib/api-error';
+import { AiRecommendationBadge } from '@/components/faculty-work/AiRecommendationBadge';
 
 type StatusTab = 'PENDING' | 'APPROVED' | 'REJECTED' | 'ALL';
 const PAGE_SIZE = 8;
@@ -234,6 +235,11 @@ export function HoDApproval() {
                         </span>
                         <TypeBadge type={req.type} />
                         <StatusBadge status={req.status} />
+                        <AiRecommendationBadge
+                          recommendation={req.aiRecommendation}
+                          confidenceScore={req.aiConfidenceScore}
+                          reason={req.aiReason}
+                        />
                       </div>
                       <p className="text-xs text-slate-600">{req.reason || 'No comment provided'}</p>
                       {req.proposedDate && (
