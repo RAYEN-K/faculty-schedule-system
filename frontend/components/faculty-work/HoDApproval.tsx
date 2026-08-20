@@ -1,13 +1,15 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { Sparkles } from 'lucide-react';
 import { useCurrentUser } from '@/lib/hooks/use-current-user';
 import { getDepartmentRequests, updateRequestStatus } from '@/lib/requests';
 import { getUserScheduleSlots } from '@/lib/schedules';
 import { getStartOfWeekIso } from '@/lib/date';
 import { getApiErrorMessage } from '@/lib/api-error';
 import { AiRecommendationBadge } from '@/components/faculty-work/AiRecommendationBadge';
+import type { ModificationRequest } from '@/lib/types';
 
 type StatusTab = 'PENDING' | 'APPROVED' | 'REJECTED' | 'ALL';
 const PAGE_SIZE = 8;
@@ -34,6 +36,39 @@ function TypeBadge({ type }: { type: string }) {
   );
 }
 
+function getAiRejectionPrefill(req: ModificationRequest): string {
+  return req.aiReason?.trim() ?? '';
+}
+
+function CollapsiblePanel({ open, children }: { open: boolean; children: ReactNode }) {
+  const [rendered, setRendered] = useState(open);
+  const [entered, setEntered] = useState(open);
+
+  useEffect(() => {
+    if (open) {
+      setRendered(true);
+      const frame = requestAnimationFrame(() => setEntered(true));
+      return () => cancelAnimationFrame(frame);
+    }
+
+    setEntered(false);
+    const timeout = window.setTimeout(() => setRendered(false), 280);
+    return () => window.clearTimeout(timeout);
+  }, [open]);
+
+  if (!rendered) return null;
+
+  return (
+    <div
+      className={`grid transition-[grid-template-rows,opacity,margin] duration-300 ease-out ${
+        entered ? 'grid-rows-[1fr] opacity-100 mt-3' : 'grid-rows-[0fr] opacity-0 mt-0'
+      }`}
+    >
+      <div className="overflow-hidden">{children}</div>
+    </div>
+  );
+}
+
 export function HoDApproval() {
   const { data: user } = useCurrentUser();
   const queryClient = useQueryClient();
@@ -49,6 +84,7 @@ export function HoDApproval() {
   const [approvingId, setApprovingId] = useState<string | null>(null);
   const [rejectingId, setRejectingId] = useState<string | null>(null);
   const [rejectReason, setRejectReason] = useState('');
+  const [rejectReasonFromAi, setRejectReasonFromAi] = useState(false);
   const [compScheduleId, setCompScheduleId] = useState('');
   const [compWeek, setCompWeek] = useState('');
   const [compUserId, setCompUserId] = useState<string | null>(null);
@@ -81,8 +117,8 @@ export function HoDApproval() {
       setErrorRequestId(null);
       setErrorMessage('');
       await queryClient.cancelQueries({ queryKey: ['department-requests'] });
-      const previous = queryClient.getQueryData<any[]>(['department-requests']);
-      queryClient.setQueryData(['department-requests'], (old: any[] | undefined) =>
+      const previous = queryClient.getQueryData<ModificationRequest[]>(['department-requests']);
+      queryClient.setQueryData<ModificationRequest[]>(['department-requests'], (old) =>
         (old ?? []).map((r) =>
           r.id === id ? { ...r, status, reviewComment: reviewComment ?? r.reviewComment } : r,
         ),
@@ -97,6 +133,7 @@ export function HoDApproval() {
       setApprovingId(null);
       setRejectingId(null);
       setRejectReason('');
+      setRejectReasonFromAi(false);
       setCompScheduleId('');
       setCompWeek('');
       setCompUserId(null);
@@ -113,13 +150,13 @@ export function HoDApproval() {
   });
 
   const requestList = requests ?? [];
-  const pendingCount = requestList.filter((r: any) => r.status === 'PENDING').length;
-  const approvedCount = requestList.filter((r: any) => r.status === 'APPROVED').length;
-  const rejectedCount = requestList.filter((r: any) => r.status === 'REJECTED').length;
+  const pendingCount = requestList.filter((r) => r.status === 'PENDING').length;
+  const approvedCount = requestList.filter((r) => r.status === 'APPROVED').length;
+  const rejectedCount = requestList.filter((r) => r.status === 'REJECTED').length;
 
   const filtered = useMemo(() => {
     if (activeTab === 'ALL') return requestList;
-    return requestList.filter((r: any) => r.status === activeTab);
+    return requestList.filter((r) => r.status === activeTab);
   }, [requestList, activeTab]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
@@ -132,17 +169,24 @@ export function HoDApproval() {
     { id: 'ALL', label: 'All Requests', count: requestList.length },
   ];
 
+  function resetRejectForm() {
+    setRejectingId(null);
+    setRejectReason('');
+    setRejectReasonFromAi(false);
+  }
+
   function switchTab(tab: StatusTab) {
     setActiveTab(tab);
     setPage(1);
     setApprovingId(null);
-    setRejectingId(null);
+    resetRejectForm();
   }
 
-  function handleApprove(req: any) {
+  function handleApprove(req: ModificationRequest) {
     if (req.type === 'COMPENSATION' && approvingId !== req.id) {
+      resetRejectForm();
       setApprovingId(req.id);
-      setCompUserId(req.userId);
+      setCompUserId(req.userId ?? null);
       setCompScheduleId('');
       setCompWeek(getStartOfWeekIso());
       setErrorRequestId(null);
@@ -152,17 +196,28 @@ export function HoDApproval() {
     mutation.mutate({ id: req.id, status: 'APPROVED' });
   }
 
-  function handleReject(req: any) {
+  function openRejectForm(req: ModificationRequest) {
+    setApprovingId(null);
+    setCompUserId(null);
+    const aiPrefill = getAiRejectionPrefill(req);
+    setRejectingId(req.id);
+    setRejectReason(aiPrefill);
+    setRejectReasonFromAi(aiPrefill.length > 0);
+    setErrorRequestId(null);
+    setErrorMessage('');
+  }
+
+  function handleReject(req: ModificationRequest) {
     if (rejectingId !== req.id) {
-      setRejectingId(req.id);
-      setRejectReason('');
+      openRejectForm(req);
       return;
     }
-    if (rejectReason.trim().length < 3) return;
+    const finalReason = rejectReason.trim();
+    if (finalReason.length < 3) return;
     mutation.mutate({
       id: req.id,
       status: 'REJECTED',
-      reviewComment: rejectReason.trim(),
+      reviewComment: finalReason,
     });
   }
 
@@ -207,7 +262,7 @@ export function HoDApproval() {
                 No {activeTab === 'ALL' ? '' : activeTab.toLowerCase()} requests found.
               </div>
             ) : (
-              paginated.map((req: any) => (
+              paginated.map((req) => (
                 <div
                   key={req.id}
                   className={`bg-white rounded-xl border shadow-sm p-4 transition-all ${
@@ -326,32 +381,54 @@ export function HoDApproval() {
                     </div>
                   )}
 
-                  {rejectingId === req.id && (
-                    <div className="mt-3 p-3 rounded-lg bg-red-50 border border-red-100 space-y-2">
-                      <label className="block text-xs font-semibold text-red-800">Rejection reason (required)</label>
-                      <textarea
-                        value={rejectReason}
-                        onChange={(e) => setRejectReason(e.target.value)}
-                        rows={2}
-                        placeholder="Explain why this request is rejected…"
-                        className="w-full text-xs px-3 py-2 rounded-lg border border-red-200 bg-white"
-                      />
-                      <div className="flex gap-2">
-                        <button
-                          onClick={() => handleReject(req)}
-                          disabled={mutation.isPending || rejectReason.trim().length < 3}
-                          className="px-3 py-1.5 rounded-lg text-xs font-semibold text-white bg-red-600 disabled:opacity-50"
-                        >
-                          Confirm Reject
-                        </button>
-                        <button
-                          onClick={() => { setRejectingId(null); setRejectReason(''); }}
-                          className="px-3 py-1.5 rounded-lg text-xs font-semibold border border-red-200 text-red-700"
-                        >
-                          Cancel
-                        </button>
+                  {req.status === 'PENDING' && (
+                    <CollapsiblePanel open={rejectingId === req.id}>
+                      <div className="p-3 rounded-lg bg-red-50 border border-red-100 space-y-2">
+                        <div className="flex flex-wrap items-center justify-between gap-2">
+                          <label
+                            htmlFor={`reject-reason-${req.id}`}
+                            className="block text-xs font-semibold text-red-800"
+                          >
+                            Rejection reason (required)
+                          </label>
+                          {rejectReasonFromAi && (
+                            <span className="inline-flex items-center gap-1 rounded-full border border-violet-200 bg-violet-50 px-2 py-0.5 text-[10px] font-semibold text-violet-700">
+                              <Sparkles className="h-3 w-3" aria-hidden />
+                              ✨ Pre-filled by AI Assistant (Editable)
+                            </span>
+                          )}
+                        </div>
+                        <textarea
+                          id={`reject-reason-${req.id}`}
+                          value={rejectReason}
+                          onChange={(e) => setRejectReason(e.target.value)}
+                          rows={3}
+                          placeholder={
+                            rejectReasonFromAi
+                              ? 'Edit the AI suggestion, or write your own reason…'
+                              : 'Explain why this request is rejected…'
+                          }
+                          className="w-full text-xs px-3 py-2 rounded-lg border border-red-200 bg-white text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-red-200"
+                        />
+                        <div className="flex gap-2">
+                          <button
+                            type="button"
+                            onClick={() => handleReject(req)}
+                            disabled={mutation.isPending || rejectReason.trim().length < 3}
+                            className="px-3 py-1.5 rounded-lg text-xs font-semibold text-white bg-red-600 disabled:opacity-50"
+                          >
+                            Confirm Reject
+                          </button>
+                          <button
+                            type="button"
+                            onClick={resetRejectForm}
+                            className="px-3 py-1.5 rounded-lg text-xs font-semibold border border-red-200 text-red-700"
+                          >
+                            Cancel
+                          </button>
+                        </div>
                       </div>
-                    </div>
+                    </CollapsiblePanel>
                   )}
                 </div>
               ))

@@ -15,9 +15,10 @@ async function bootstrap() {
   // Enable Global Error Filter
   app.useGlobalFilters(new AllExceptionsFilter());
 
-  // Enable CORS
+  // Enable CORS — Next.js runs on 3000; NestJS on 3001
+  const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
   app.enableCors({
-    origin: ['http://localhost:3001', 'http://localhost:3000'],
+    origin: [...new Set([frontendUrl, 'http://localhost:3000', 'http://localhost:3001'])],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
   });
@@ -46,7 +47,7 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
-  const port = process.env.PORT || 3000;
+  const port = process.env.PORT || 3001;
   await app.listen(port);
   const logger = new Logger('Bootstrap');
   logger.log(`Server running on: http://localhost:${port}`);

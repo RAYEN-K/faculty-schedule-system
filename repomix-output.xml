@@ -40,6 +40,20 @@ The content is organized as follows:
 </file_summary>
 
 <directory_structure>
+ai-service/
+  app/
+    __init__.py
+    config.py
+    data.py
+    evaluation.py
+    pipeline.py
+    rationale.py
+    schemas.py
+  .gitignore
+  best_schedule_ai_model.pkl
+  main.py
+  requirements.txt
+  train.py
 backend/
   .agents/
     skills/
@@ -129,6 +143,401 @@ backend/
           removed-features.md
           schema-changes.md
         SKILL.md
+  .git/
+    hooks/
+      applypatch-msg.sample
+      commit-msg.sample
+      fsmonitor-watchman.sample
+      post-update.sample
+      pre-applypatch.sample
+      pre-commit.sample
+      pre-merge-commit.sample
+      pre-push.sample
+      pre-rebase.sample
+      pre-receive.sample
+      prepare-commit-msg.sample
+      push-to-checkout.sample
+      sendemail-validate.sample
+      update.sample
+    info/
+      exclude
+    objects/
+      00/
+        1c448839a5dbf6fe1b00e25acab31a99c5253b
+      01/
+        ab25058eda47814527765f3d304fe97b07239c
+      04/
+        4d57cdb0d5b5bff3475112359a4ee70439bf78
+        6a622a0994c94add4e295038cbc27910e60ee5
+        ed19ad7154bab6d6ce8d7e06d61f7a28c1058b
+      05/
+        57696b87f4bfc4ca86855868868d262f1ca94b
+      06/
+        87ef5bc1e435b88b75ee6df43dc57159f5949e
+      09/
+        7c87c715be5e2c3c9b777df7c04dab5324be17
+      0c/
+        472e0a5d370ce52b71585ccda08486c8b7fabb
+        a9825d64c8657fd71d5a2efeac9aa085371325
+      0d/
+        77eafc7439583a26a19010bddacf5f8aeeab50
+      0f/
+        2da8757ccb2cc173e72b1e5800dad0ccefd145
+      10/
+        28aa6c24816c8c6c9e5e28b9879705804d2e7c
+        7ff529d10bc4750b44064c0e5a0e6bd0cad7f4
+        9a88f6b298e4fa996ae656d0644969f9239507
+      11/
+        53f761d974c1a0c6ebeacd7287fffb4d826579
+      12/
+        d3dae54f1c7c4caa20529500dd932073955d77
+      13/
+        e063e5af3887a47c50d0749ff6b0a0734bab6a
+      14/
+        b694bcbf9fcbb925364113c53a29383ac6d09c
+      15/
+        a1ca58d420397d3c769f28d27f010d7a884f61
+      16/
+        18a5e957ffaed7bce6599d4bd50a6b42d41a7d
+        d81d1bc2e7fd360bca45922d67e7360fdc1700
+      17/
+        595be1468900da88120a52c835fef53857b535
+        beb1f555d23a39560e9a0b890aacb9dfb5a1ce
+      19/
+        35933baeb106bf1872c883c378a09ee09a9d50
+      1b/
+        a0a528cde11f98a5db43dae49bbf723400fb25
+      1c/
+        2b0afc023edf13d3cb3c8673703e87562e5db0
+      1d/
+        b2e921002f1930ca798cf0e2dd018bbc6b8fae
+      20/
+        afc3d48e75f8d9e030480090fe828696929824
+      21/
+        32075526014f5e77eaca0dfbba379512abae4f
+        985aae91ae6ebc8cb3e1fe2d82e494a2d1e270
+        e444a86da61c16f9c785595614f4cd3bf3e938
+      23/
+        d4956a59049d9de69182da866b23ad419637d0
+      24/
+        13c6f8c1d75bcbaba34e0f04bfede1cbc6bdf7
+        2d2bda327db541838f007681113200ebab7abe
+      25/
+        6cc4cbd638cad4eded8ff98efd5441d1a14451
+        864a4bb598ea6d82d44ce48dfd1534a9bc4dbf
+        ccc10e598f807e4f428898f374ef9e23fdaad8
+      26/
+        cb963fa96f73ac75394b90d785d135d865a0bd
+      27/
+        2fff40a89d47a5ec26c920de58d7b6170b6955
+        6e9b6317f21d0a3cb1710a94185484b217fa7c
+      29/
+        dc2a0e91175c08deb7a60d389c2f380e9804a7
+      2a/
+        9aa034b930e36ea03dbec5069d8633d6e5b0d8
+      2c/
+        35195486e73f3c0e825763d04aba6c74671af4
+        c10ab292e3ab2a543e4fae2a96d5a82c7855bd
+      2f/
+        41b8e5f10cc9d82109521d4a3f588afcc52f8d
+        9925e897e73aa555fedcdb449834ac0ea88723
+      30/
+        e3e0040abee308585036ad9cedf6c814d6e943
+      34/
+        d647e41871f1afea14758516b6bac6a3168455
+      36/
+        3365e393a5316b9991dbbdf1e93c2dd1da8cdc
+      37/
+        92054547df91d49e163d4c8ce12e853d5f2404
+        af6e16e80ebd48e78cd9a8745a7a86a5a831d7
+        c2ccca271747aa232f9e397caae8bd16d6e79e
+      38/
+        6a97761aa24456a267e1b23ad2acfef9f3ba8a
+        be60d01dbce121f0ff1e64b230f98006d15d5e
+        d38597a7267d08e1b25a8956643c4389a61b8a
+        d6fbdc29c58f127e084de6be8e7082491601b6
+      39/
+        160d783d0af796228247a5a68aebdf551030bb
+        36c848d065a856963618d41e1af889025cc020
+      3a/
+        e6a33251ce52d07d47197f6069e95fcd9295f1
+      3b/
+        54149f669b772f439ffd01e018ac713fbc1cc1
+      3d/
+        371cf674232fa5540a7154c429d0762abce76c
+        bf4a16f6f6b02d562b45e7d5f373cb91907a27
+      3e/
+        e0381c6b39405b2ab8f4c117fad3a48479daf1
+      3f/
+        737c6aa25c385829fe9c94cb0b4549e60facdf
+      40/
+        25d12bc39272a690f51855f61cca24274fbbcd
+      43/
+        144c3f99c390c8ae71d057371c7c8689ba0060
+        1a0a43d8ee4891f3e54ef8e2903c7d49f3792b
+      44/
+        d907651349b9516b2144718df582b6c28a5b15
+        f60c565b72c8cc92581ee8ba9d83c1f6130edb
+      45/
+        49649d610847346976096466ed2687a822e578
+        88750296854b2761a0bcca689f4c9e9843a828
+      46/
+        20e971b9a75a63a4081f213f59a8822fc487d1
+      47/
+        19da2e0a0ae65ef0a4d1f1f8c1d560c0f99f57
+      49/
+        0166888824dd161cf91be9652f4e7771db17a0
+      4a/
+        d9157fbaa4e1981e492558001fcee1a140e09f
+      4b/
+        1d72629e5a554d95649e7265e8a9cc033c4777
+      51/
+        643e74498e516be35b6dd3221749b0ca608c3f
+        acdbb2a43e42755dfab0b8bbe4e8a8e06ed2b5
+      52/
+        8d9f9e2ed5eb1726b985035c8d1b1216a35664
+      54/
+        2bd6fe1829c62a7e3b889da011198dc39c8c16
+      57/
+        155b1cc32f201c97a2093ae2b593da3fbb76e0
+        81974e6325b5fb5db6e4846a1200be4bd3a0ce
+      58/
+        a6e47d09d103fd5d41db2dd2d29108c5de5a09
+      59/
+        e84a06575d3ee46b2644bc887ebded20937cf0
+      5a/
+        9cf981e4f83d379406841821c1fdae1c385f38
+      5b/
+        2dd051d9220c3ecee6424885dbdcaa31bc40b5
+      5d/
+        3a220b84411855df2b36f0be59627e1e9c0420
+      60/
+        5af5201b60d1ff41a4b7fc94ae4a424f54a75a
+        afa62b861f2afc2323098931c9ba336b168ff2
+      61/
+        156c6d485d622378cdad4e96f456c5a85d515b
+        8cf56d5b6da78bb53497fe302434ef762e842a
+        bd6d54942c9b7ba84f889b2e12a370581503fb
+      63/
+        3a60337359a126098f8e4bbe07d563477e8ff7
+        c6b91b0d59c743207ab6bf417fcfbdb0e0535d
+        fd67dd00514a27d9bfe111a0b4869184070033
+      64/
+        f86c6bd2bb30e3d22e752295eb7c7923fc191e
+      65/
+        b5128155120305c57746fdf89ed2f7fe3b039c
+      66/
+        ae1393e21e85779df53a3bdbbe085befc89daa
+      6b/
+        6352b4334e1bdef7f0d4e89b17853189880df5
+        65f65fadd1e48e092b089cef58e7f2fd6c5e17
+      6c/
+        817a58180ffb811a2d4f1f3828a0b238c7d66a
+      6d/
+        d9c8be018e136a6a12698bcfc30ba50dc3369e
+      6f/
+        bc003c9f309a30adb34782427eead773d536ec
+        eae7d1c2c9354c2de989778ae620dd6f9e1d36
+        f40d63059c9fdc446fd58ee066ee0e6f9dee8b
+      70/
+        48f4f440e2f10826e0241527a6b9f3e97d0efa
+        50791bb4e1996ef19677ea43274f4012ac5495
+      72/
+        07426f6047cbbb1a10ea157db19a17442f4b0b
+      73/
+        59b78586d6867545351933811278cfcf3f932a
+      76/
+        57cff9b6b0c928a9c13868c1b2ab9a23f1fdf6
+        79c3825359313819dfbee03e2851145cdc7f9d
+        7ac4953aa9bbdbeaf37e27b2650965630d1dc5
+      78/
+        0cad781c1d971e89057e6778066a4f611ab2b6
+        561998798a1892969d55747caebfa72078dbef
+        655c6f4cb9aa9a2613ae47ded100e83f607e14
+        8b5b03fc0cde2bc75346f0cf0690785f777492
+        cff2123db3e950574e0b580d9740f26fa6c2c0
+      7c/
+        7825f373fc2959622b908123c6a77823715dc9
+      7f/
+        3db083d1593be04e555960288ef29985b17e84
+        d87bcc0404be65444f807ccd18f409c27ff7cc
+      80/
+        a7ffa7a30cdddce3cf0d9effff0b8b43229fae
+      83/
+        25eeacef87ad044d0b0b88021f1624bf8361ea
+        daedb15181b7fd2633a0fe6b4e7d28af8e4a26
+      84/
+        860d1a7b8d93cd06cb5b321552f91e2e964a14
+      85/
+        0576dc86e23930bf32113db09327dd050a2547
+        ae923bb97ee7ad64f2738934b5329f92f18b96
+      87/
+        0efb960fcea45e160ff4986d08fb7a297eef4c
+        16e1416b600e043478e0aec7ccd3f306e47a07
+        3107ec8dd11644769ef9c27ec1baaa2689268f
+      88/
+        7ef1a5a54a9a56b465c56bdae2df075e34fc27
+      89/
+        3e341d73236a68bd8507c9a7eb3e170dcf258f
+        52cba46ff94e9144a403d85d0179c558145499
+        6b1ec17e346b9f057174c5352af5f6ce7195b6
+      8b/
+        c229271d1a047643f24ee05884c9e418cd0c73
+      8c/
+        3040d82f62b4b4085d0933310589abdc0abd09
+      91/
+        5cf1778ff4f05056c7967183640484430edd2a
+        b87dbd1b2f163f3772c584e3a4fa6511a05e3a
+      92/
+        481113028cbfd4ba8292983d7c8f311e136ddf
+        7d7cca0badb13577152bf8753ce3552358f53b
+      93/
+        feda29816f4382f7d9311238f605f249f5a4e6
+      94/
+        70da560ad52c6630d6aefe118d1cc352d25aaf
+      99/
+        1b1add85cd1114c0252892871b537797a89a13
+        b65374cb76fb946e960593badcbeca63a3bb8f
+        e1be7fe67d3f41ebe63c7ecba7ef50716c774d
+        e5607d9c7e1c723eee86cf06518e8af0269bec
+      9b/
+        194aed1a6d40c74c510accff9874f325984c99
+      9c/
+        7fcb565582d36809db656c54075350b0244441
+      a2/
+        0502b7f06d848452da0d93ce8830c1d86b05dd
+        55c7b5259eca8b5cad7387048f06f35e1d11d0
+        f7786846134620126d03849d0c603f9cfd6ced
+      a5/
+        e0ac1d9593c907c214d1e3c947cdd1fe2d07e3
+      a6/
+        8cb9e37e1764ab8eae3bca8fa2deee5bd5c375
+        f654a06dac9ecbfb2f600974c3dafc95a920e5
+        fdb8d282e91e33a39553ded636e7ec76f2eb63
+      a7/
+        67839c02b16ded8a186d909bc2ac6dd04c5af1
+        c967895d52be1959cd459c011cc9234957e0dc
+      a9/
+        7aca3da46fd22dbbcc0489d686470c121159e3
+        b7eeab29264e6b271ea689fc9fbaebea28aec1
+      aa/
+        1ae7f398ce404af655a95e5b820b878a208445
+      ab/
+        46c17b1f7cb4f353af2fe4cbcddf15011a3d3e
+        a29b0e7fc2bf29ccdb90b6e28aea6b11e60167
+      ac/
+        a47602ed78a7fba409be36f57e3bb456a64111
+      ae/
+        09f928add80e404a3748ef38a507387fefce13
+      af/
+        93a5a5b6ca83de6fdeedac85e9450af22a6c1c
+      b1/
+        634ead8c7ffe872ac68bf1950b0c01c8ea1743
+      b3/
+        41a41296bdeaa7091dace400527e529197c52b
+      b5/
+        19d95b1318c37c07edfd06553a9afb8bb7da98
+      ba/
+        00c9fab039712b390d8b69d10c2c8d413943f3
+        71c9d8869d6b6099713ac20fa26d3b88d146fe
+      bb/
+        3693223dc590d2d8643ec96b95633911ec1158
+      bc/
+        5b892d56dd1ab2dd754a1292240c952b4d958c
+      bf/
+        2697b1448b126a6006b79a45c5103392e1daf4
+      c0/
+        7e9055eacd8e8d2dfdd2920f85be11c7517ba5
+      c2/
+        a981ae3baf863411b8afa362a7b4801ff4e766
+      c3/
+        316454b97ee3161529539abed8ee6e2de256cb
+        4da26f025e0eae5c87c9f43038bf55476bd465
+      c4/
+        65ca8645ae48374e5494f64aabd14d6bba3b03
+      c6/
+        2dcd54a993ed84f8a9cbc7f4b8cf230389ba53
+        66428e98f3bf45c9f167972cb28ac0fcec51b9
+      c7/
+        686a9aa2016241d72e912fc15138021768b8b6
+      c9/
+        66f23e59c0cfdbf6dbf77d9c9caf0e3b5bcc8f
+        f3f132fda7be317f6cac433f7b777d019f4276
+      ca/
+        b25a1dae534323f0092524c79dc3d61bec0c9f
+      cb/
+        6a31f762f6547c7e4e8a4e41e6fb0b55120c0e
+        e8c4514637bfd0c7d5cf3b9840799806fe4867
+      cc/
+        e879ee622146012901c9adb47ef40c0fd3a555
+      d0/
+        9869339e898fb9a6a53af2a9acf1c88e89a60e
+      d2/
+        2f3890a380cea30641cfecc329b5c794ef5fb2
+      d3/
+        4641b53d1e703ffa3582d4b8dd124630d55fb7
+      d4/
+        820bb211c5e33b9c9cf0697bed3bb7d5db7f13
+        ad6bb096840ca971a39f1d82f133d69a6f9445
+      d5/
+        f8974225e2465b5f0d7d82025d28f9095d7e4f
+      d7/
+        47c785c633df9214e0c53f37092db8b0fcba61
+      da/
+        0b8f0f6406da68bfd9d1895fd24e9365516d77
+      db/
+        eb9faa94a15c0e6dd0f4b23b80e3dd3aff6aba
+      dc/
+        939e5d9e7593753a8b42d5ebe89dfb0a542b1d
+      dd/
+        06d74e25f3c97ec2c7069caaa9bb2784949ccd
+      de/
+        09005eefa538418a130742102d96d078d27ead
+        e9fb4e6ee73e8cf939cd6877220af5c2c29556
+      df/
+        9a575069671524ef7d60373636bc53766d7950
+      e3/
+        11df4fe956c407434293fc96cf0acdcdb23ae5
+      e4/
+        cbc5036bc8e987aa54110d44f830a56619625b
+      e9/
+        d912f3e3cefc18505d3cd19b3a5a9f567f5de0
+      ea/
+        575f683952ae0396507022028904839fe676ff
+        906e9241b5f0cde3a29bbf56a246900936f9d3
+      eb/
+        67b186c3e2d6c62232dfa5db9decc534c54c90
+      ed/
+        52ead0cb962c8487b5e00183a8549573db7ab5
+        7fce1e27f0ae8586e2d6e93cbf7c6ca80ea8fd
+      f2/
+        82917f1dc0843b625dc2b9bb0233398cec22d3
+      f4/
+        b4fbe95fed9696d10d99296bd63cb4c49b7c1d
+      f5/
+        c97135b92c845307fe736192ba036f04a318ed
+      f7/
+        60cf795586c6005ad7f0ce529e3685df10de30
+        a91686976726721f87444babdb3e3aab4ba47c
+      f8/
+        7034391e1d38755f266545cc064091971962c5
+      f9/
+        3c81d07bb9e0def7cecadc2cd01996f086fdc8
+        aa683b1ad5cffc76da9ad4b77c562ac4c2b399
+      fa/
+        d9088625e8542858a306b567a97ac4c7e18716
+        e18bb36a9b0dfb4217e844206c957e819a07d3
+      fb/
+        67e89952e95dbc8b360ba2574990c51fdb9554
+    refs/
+      heads/
+        main
+    COMMIT_EDITMSG
+    config
+    description
+    FETCH_HEAD
+    HEAD
+    index
   prisma/
     migrations/
       20260729153820_add_faculty_models/
@@ -143,12 +552,19 @@ backend/
         migration.sql
       20260815120000_add_notifications/
         migration.sql
+      20260819120000_add_ai_recommendation_fields/
+        migration.sql
       migration_lock.toml
     schema.prisma
     seed.ts
   scripts/
     fix-pending-requests.ts
   src/
+    ai/
+      ai.module.ts
+      ai.service.spec.ts
+      ai.service.ts
+      ai.types.ts
     auth/
       dto/
         login.dto.ts
@@ -293,6 +709,7 @@ frontend/
   components/
     faculty-work/
       AdminDashboard.tsx
+      AiRecommendationBadge.tsx
       facultydashboard.tsx
       HoDApproval.tsx
       ScheduleRequest.tsx
@@ -334,6 +751,1590 @@ README.md
 
 <files>
 This section contains the contents of the repository's files.
+
+<file path="backend/.git/hooks/applypatch-msg.sample">
+#!/bin/sh
+#
+# An example hook script to check the commit log message taken by
+# applypatch from an e-mail message.
+#
+# The hook should exit with non-zero status after issuing an
+# appropriate message if it wants to stop the commit.  The hook is
+# allowed to edit the commit message file.
+#
+# To enable this hook, rename this file to "applypatch-msg".
+
+. git-sh-setup
+commitmsg="$(git rev-parse --git-path hooks/commit-msg)"
+test -x "$commitmsg" && exec "$commitmsg" ${1+"$@"}
+:
+</file>
+
+<file path="backend/.git/hooks/commit-msg.sample">
+#!/bin/sh
+#
+# An example hook script to check the commit log message.
+# Called by "git commit" with one argument, the name of the file
+# that has the commit message.  The hook should exit with non-zero
+# status after issuing an appropriate message if it wants to stop the
+# commit.  The hook is allowed to edit the commit message file.
+#
+# To enable this hook, rename this file to "commit-msg".
+
+# Uncomment the below to add a Signed-off-by line to the message.
+# Doing this in a hook is a bad idea in general, but the prepare-commit-msg
+# hook is more suited to it.
+#
+# SOB=$(git var GIT_AUTHOR_IDENT | sed -n 's/^\(.*>\).*$/Signed-off-by: \1/p')
+# grep -qs "^$SOB" "$1" || echo "$SOB" >> "$1"
+
+# This example catches duplicate Signed-off-by lines.
+
+test "" = "$(grep '^Signed-off-by: ' "$1" |
+	 sort | uniq -c | sed -e '/^[ 	]*1[ 	]/d')" || {
+	echo >&2 Duplicate Signed-off-by lines.
+	exit 1
+}
+</file>
+
+<file path="backend/.git/hooks/fsmonitor-watchman.sample">
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+use IPC::Open2;
+
+# An example hook script to integrate Watchman
+# (https://facebook.github.io/watchman/) with git to speed up detecting
+# new and modified files.
+#
+# The hook is passed a version (currently 2) and last update token
+# formatted as a string and outputs to stdout a new update token and
+# all files that have been modified since the update token. Paths must
+# be relative to the root of the working tree and separated by a single NUL.
+#
+# To enable this hook, rename this file to "query-watchman" and set
+# 'git config core.fsmonitor .git/hooks/query-watchman'
+#
+my ($version, $last_update_token) = @ARGV;
+
+# Uncomment for debugging
+# print STDERR "$0 $version $last_update_token\n";
+
+# Check the hook interface version
+if ($version ne 2) {
+	die "Unsupported query-fsmonitor hook version '$version'.\n" .
+	    "Falling back to scanning...\n";
+}
+
+my $git_work_tree = get_working_dir();
+
+my $retry = 1;
+
+my $json_pkg;
+eval {
+	require JSON::XS;
+	$json_pkg = "JSON::XS";
+	1;
+} or do {
+	require JSON::PP;
+	$json_pkg = "JSON::PP";
+};
+
+launch_watchman();
+
+sub launch_watchman {
+	my $o = watchman_query();
+	if (is_work_tree_watched($o)) {
+		output_result($o->{clock}, @{$o->{files}});
+	}
+}
+
+sub output_result {
+	my ($clockid, @files) = @_;
+
+	# Uncomment for debugging watchman output
+	# open (my $fh, ">", ".git/watchman-output.out");
+	# binmode $fh, ":utf8";
+	# print $fh "$clockid\n@files\n";
+	# close $fh;
+
+	binmode STDOUT, ":utf8";
+	print $clockid;
+	print "\0";
+	local $, = "\0";
+	print @files;
+}
+
+sub watchman_clock {
+	my $response = qx/watchman clock "$git_work_tree"/;
+	die "Failed to get clock id on '$git_work_tree'.\n" .
+		"Falling back to scanning...\n" if $? != 0;
+
+	return $json_pkg->new->utf8->decode($response);
+}
+
+sub watchman_query {
+	my $pid = open2(\*CHLD_OUT, \*CHLD_IN, 'watchman -j --no-pretty')
+	or die "open2() failed: $!\n" .
+	"Falling back to scanning...\n";
+
+	# In the query expression below we're asking for names of files that
+	# changed since $last_update_token but not from the .git folder.
+	#
+	# To accomplish this, we're using the "since" generator to use the
+	# recency index to select candidate nodes and "fields" to limit the
+	# output to file names only. Then we're using the "expression" term to
+	# further constrain the results.
+	my $last_update_line = "";
+	if (substr($last_update_token, 0, 1) eq "c") {
+		$last_update_token = "\"$last_update_token\"";
+		$last_update_line = qq[\n"since": $last_update_token,];
+	}
+	my $query = <<"	END";
+		["query", "$git_work_tree", {$last_update_line
+			"fields": ["name"],
+			"expression": ["not", ["dirname", ".git"]]
+		}]
+	END
+
+	# Uncomment for debugging the watchman query
+	# open (my $fh, ">", ".git/watchman-query.json");
+	# print $fh $query;
+	# close $fh;
+
+	print CHLD_IN $query;
+	close CHLD_IN;
+	my $response = do {local $/; <CHLD_OUT>};
+
+	# Uncomment for debugging the watch response
+	# open ($fh, ">", ".git/watchman-response.json");
+	# print $fh $response;
+	# close $fh;
+
+	die "Watchman: command returned no output.\n" .
+	"Falling back to scanning...\n" if $response eq "";
+	die "Watchman: command returned invalid output: $response\n" .
+	"Falling back to scanning...\n" unless $response =~ /^\{/;
+
+	return $json_pkg->new->utf8->decode($response);
+}
+
+sub is_work_tree_watched {
+	my ($output) = @_;
+	my $error = $output->{error};
+	if ($retry > 0 and $error and $error =~ m/unable to resolve root .* directory (.*) is not watched/) {
+		$retry--;
+		my $response = qx/watchman watch "$git_work_tree"/;
+		die "Failed to make watchman watch '$git_work_tree'.\n" .
+		    "Falling back to scanning...\n" if $? != 0;
+		$output = $json_pkg->new->utf8->decode($response);
+		$error = $output->{error};
+		die "Watchman: $error.\n" .
+		"Falling back to scanning...\n" if $error;
+
+		# Uncomment for debugging watchman output
+		# open (my $fh, ">", ".git/watchman-output.out");
+		# close $fh;
+
+		# Watchman will always return all files on the first query so
+		# return the fast "everything is dirty" flag to git and do the
+		# Watchman query just to get it over with now so we won't pay
+		# the cost in git to look up each individual file.
+		my $o = watchman_clock();
+		$error = $output->{error};
+
+		die "Watchman: $error.\n" .
+		"Falling back to scanning...\n" if $error;
+
+		output_result($o->{clock}, ("/"));
+		$last_update_token = $o->{clock};
+
+		eval { launch_watchman() };
+		return 0;
+	}
+
+	die "Watchman: $error.\n" .
+	"Falling back to scanning...\n" if $error;
+
+	return 1;
+}
+
+sub get_working_dir {
+	my $working_dir;
+	if ($^O =~ 'msys' || $^O =~ 'cygwin') {
+		$working_dir = Win32::GetCwd();
+		$working_dir =~ tr/\\/\//;
+	} else {
+		require Cwd;
+		$working_dir = Cwd::cwd();
+	}
+
+	return $working_dir;
+}
+</file>
+
+<file path="backend/.git/hooks/post-update.sample">
+#!/bin/sh
+#
+# An example hook script to prepare a packed repository for use over
+# dumb transports.
+#
+# To enable this hook, rename this file to "post-update".
+
+exec git update-server-info
+</file>
+
+<file path="backend/.git/hooks/pre-applypatch.sample">
+#!/bin/sh
+#
+# An example hook script to verify what is about to be committed
+# by applypatch from an e-mail message.
+#
+# The hook should exit with non-zero status after issuing an
+# appropriate message if it wants to stop the commit.
+#
+# To enable this hook, rename this file to "pre-applypatch".
+
+. git-sh-setup
+precommit="$(git rev-parse --git-path hooks/pre-commit)"
+test -x "$precommit" && exec "$precommit" ${1+"$@"}
+:
+</file>
+
+<file path="backend/.git/hooks/pre-commit.sample">
+#!/bin/sh
+#
+# An example hook script to verify what is about to be committed.
+# Called by "git commit" with no arguments.  The hook should
+# exit with non-zero status after issuing an appropriate message if
+# it wants to stop the commit.
+#
+# To enable this hook, rename this file to "pre-commit".
+
+if git rev-parse --verify HEAD >/dev/null 2>&1
+then
+	against=HEAD
+else
+	# Initial commit: diff against an empty tree object
+	against=$(git hash-object -t tree /dev/null)
+fi
+
+# If you want to allow non-ASCII filenames set this variable to true.
+allownonascii=$(git config --type=bool hooks.allownonascii)
+
+# Redirect output to stderr.
+exec 1>&2
+
+# Cross platform projects tend to avoid non-ASCII filenames; prevent
+# them from being added to the repository. We exploit the fact that the
+# printable range starts at the space character and ends with tilde.
+if [ "$allownonascii" != "true" ] &&
+	# Note that the use of brackets around a tr range is ok here, (it's
+	# even required, for portability to Solaris 10's /usr/bin/tr), since
+	# the square bracket bytes happen to fall in the designated range.
+	test $(git diff-index --cached --name-only --diff-filter=A -z $against |
+	  LC_ALL=C tr -d '[ -~]\0' | wc -c) != 0
+then
+	cat <<\EOF
+Error: Attempt to add a non-ASCII file name.
+
+This can cause problems if you want to work with people on other platforms.
+
+To be portable it is advisable to rename the file.
+
+If you know what you are doing you can disable this check using:
+
+  git config hooks.allownonascii true
+EOF
+	exit 1
+fi
+
+# If there are whitespace errors, print the offending file names and fail.
+exec git diff-index --check --cached $against --
+</file>
+
+<file path="backend/.git/hooks/pre-merge-commit.sample">
+#!/bin/sh
+#
+# An example hook script to verify what is about to be committed.
+# Called by "git merge" with no arguments.  The hook should
+# exit with non-zero status after issuing an appropriate message to
+# stderr if it wants to stop the merge commit.
+#
+# To enable this hook, rename this file to "pre-merge-commit".
+
+. git-sh-setup
+test -x "$GIT_DIR/hooks/pre-commit" &&
+        exec "$GIT_DIR/hooks/pre-commit"
+:
+</file>
+
+<file path="backend/.git/hooks/pre-push.sample">
+#!/bin/sh
+
+# An example hook script to verify what is about to be pushed.  Called by "git
+# push" after it has checked the remote status, but before anything has been
+# pushed.  If this script exits with a non-zero status nothing will be pushed.
+#
+# This hook is called with the following parameters:
+#
+# $1 -- Name of the remote to which the push is being done
+# $2 -- URL to which the push is being done
+#
+# If pushing without using a named remote those arguments will be equal.
+#
+# Information about the commits which are being pushed is supplied as lines to
+# the standard input in the form:
+#
+#   <local ref> <local oid> <remote ref> <remote oid>
+#
+# This sample shows how to prevent push of commits where the log message starts
+# with "WIP" (work in progress).
+
+remote="$1"
+url="$2"
+
+zero=$(git hash-object --stdin </dev/null | tr '[0-9a-f]' '0')
+
+while read local_ref local_oid remote_ref remote_oid
+do
+	if test "$local_oid" = "$zero"
+	then
+		# Handle delete
+		:
+	else
+		if test "$remote_oid" = "$zero"
+		then
+			# New branch, examine all commits
+			range="$local_oid"
+		else
+			# Update to existing branch, examine new commits
+			range="$remote_oid..$local_oid"
+		fi
+
+		# Check for WIP commit
+		commit=$(git rev-list -n 1 --grep '^WIP' "$range")
+		if test -n "$commit"
+		then
+			echo >&2 "Found WIP commit in $local_ref, not pushing"
+			exit 1
+		fi
+	fi
+done
+
+exit 0
+</file>
+
+<file path="backend/.git/hooks/pre-rebase.sample">
+#!/bin/sh
+#
+# Copyright (c) 2006, 2008 Junio C Hamano
+#
+# The "pre-rebase" hook is run just before "git rebase" starts doing
+# its job, and can prevent the command from running by exiting with
+# non-zero status.
+#
+# The hook is called with the following parameters:
+#
+# $1 -- the upstream the series was forked from.
+# $2 -- the branch being rebased (or empty when rebasing the current branch).
+#
+# This sample shows how to prevent topic branches that are already
+# merged to 'next' branch from getting rebased, because allowing it
+# would result in rebasing already published history.
+
+publish=next
+basebranch="$1"
+if test "$#" = 2
+then
+	topic="refs/heads/$2"
+else
+	topic=`git symbolic-ref HEAD` ||
+	exit 0 ;# we do not interrupt rebasing detached HEAD
+fi
+
+case "$topic" in
+refs/heads/??/*)
+	;;
+*)
+	exit 0 ;# we do not interrupt others.
+	;;
+esac
+
+# Now we are dealing with a topic branch being rebased
+# on top of master.  Is it OK to rebase it?
+
+# Does the topic really exist?
+git show-ref -q "$topic" || {
+	echo >&2 "No such branch $topic"
+	exit 1
+}
+
+# Is topic fully merged to master?
+not_in_master=`git rev-list --pretty=oneline ^master "$topic"`
+if test -z "$not_in_master"
+then
+	echo >&2 "$topic is fully merged to master; better remove it."
+	exit 1 ;# we could allow it, but there is no point.
+fi
+
+# Is topic ever merged to next?  If so you should not be rebasing it.
+only_next_1=`git rev-list ^master "^$topic" ${publish} | sort`
+only_next_2=`git rev-list ^master           ${publish} | sort`
+if test "$only_next_1" = "$only_next_2"
+then
+	not_in_topic=`git rev-list "^$topic" master`
+	if test -z "$not_in_topic"
+	then
+		echo >&2 "$topic is already up to date with master"
+		exit 1 ;# we could allow it, but there is no point.
+	else
+		exit 0
+	fi
+else
+	not_in_next=`git rev-list --pretty=oneline ^${publish} "$topic"`
+	/usr/bin/perl -e '
+		my $topic = $ARGV[0];
+		my $msg = "* $topic has commits already merged to public branch:\n";
+		my (%not_in_next) = map {
+			/^([0-9a-f]+) /;
+			($1 => 1);
+		} split(/\n/, $ARGV[1]);
+		for my $elem (map {
+				/^([0-9a-f]+) (.*)$/;
+				[$1 => $2];
+			} split(/\n/, $ARGV[2])) {
+			if (!exists $not_in_next{$elem->[0]}) {
+				if ($msg) {
+					print STDERR $msg;
+					undef $msg;
+				}
+				print STDERR " $elem->[1]\n";
+			}
+		}
+	' "$topic" "$not_in_next" "$not_in_master"
+	exit 1
+fi
+
+<<\DOC_END
+
+This sample hook safeguards topic branches that have been
+published from being rewound.
+
+The workflow assumed here is:
+
+ * Once a topic branch forks from "master", "master" is never
+   merged into it again (either directly or indirectly).
+
+ * Once a topic branch is fully cooked and merged into "master",
+   it is deleted.  If you need to build on top of it to correct
+   earlier mistakes, a new topic branch is created by forking at
+   the tip of the "master".  This is not strictly necessary, but
+   it makes it easier to keep your history simple.
+
+ * Whenever you need to test or publish your changes to topic
+   branches, merge them into "next" branch.
+
+The script, being an example, hardcodes the publish branch name
+to be "next", but it is trivial to make it configurable via
+$GIT_DIR/config mechanism.
+
+With this workflow, you would want to know:
+
+(1) ... if a topic branch has ever been merged to "next".  Young
+    topic branches can have stupid mistakes you would rather
+    clean up before publishing, and things that have not been
+    merged into other branches can be easily rebased without
+    affecting other people.  But once it is published, you would
+    not want to rewind it.
+
+(2) ... if a topic branch has been fully merged to "master".
+    Then you can delete it.  More importantly, you should not
+    build on top of it -- other people may already want to
+    change things related to the topic as patches against your
+    "master", so if you need further changes, it is better to
+    fork the topic (perhaps with the same name) afresh from the
+    tip of "master".
+
+Let's look at this example:
+
+		   o---o---o---o---o---o---o---o---o---o "next"
+		  /       /           /           /
+		 /   a---a---b A     /           /
+		/   /               /           /
+	       /   /   c---c---c---c B         /
+	      /   /   /             \         /
+	     /   /   /   b---b C     \       /
+	    /   /   /   /             \     /
+    ---o---o---o---o---o---o---o---o---o---o---o "master"
+
+
+A, B and C are topic branches.
+
+ * A has one fix since it was merged up to "next".
+
+ * B has finished.  It has been fully merged up to "master" and "next",
+   and is ready to be deleted.
+
+ * C has not merged to "next" at all.
+
+We would want to allow C to be rebased, refuse A, and encourage
+B to be deleted.
+
+To compute (1):
+
+	git rev-list ^master ^topic next
+	git rev-list ^master        next
+
+	if these match, topic has not merged in next at all.
+
+To compute (2):
+
+	git rev-list master..topic
+
+	if this is empty, it is fully merged to "master".
+
+DOC_END
+</file>
+
+<file path="backend/.git/hooks/pre-receive.sample">
+#!/bin/sh
+#
+# An example hook script to make use of push options.
+# The example simply echoes all push options that start with 'echoback='
+# and rejects all pushes when the "reject" push option is used.
+#
+# To enable this hook, rename this file to "pre-receive".
+
+if test -n "$GIT_PUSH_OPTION_COUNT"
+then
+	i=0
+	while test "$i" -lt "$GIT_PUSH_OPTION_COUNT"
+	do
+		eval "value=\$GIT_PUSH_OPTION_$i"
+		case "$value" in
+		echoback=*)
+			echo "echo from the pre-receive-hook: ${value#*=}" >&2
+			;;
+		reject)
+			exit 1
+		esac
+		i=$((i + 1))
+	done
+fi
+</file>
+
+<file path="backend/.git/hooks/prepare-commit-msg.sample">
+#!/bin/sh
+#
+# An example hook script to prepare the commit log message.
+# Called by "git commit" with the name of the file that has the
+# commit message, followed by the description of the commit
+# message's source.  The hook's purpose is to edit the commit
+# message file.  If the hook fails with a non-zero status,
+# the commit is aborted.
+#
+# To enable this hook, rename this file to "prepare-commit-msg".
+
+# This hook includes three examples. The first one removes the
+# "# Please enter the commit message..." help message.
+#
+# The second includes the output of "git diff --name-status -r"
+# into the message, just before the "git status" output.  It is
+# commented because it doesn't cope with --amend or with squashed
+# commits.
+#
+# The third example adds a Signed-off-by line to the message, that can
+# still be edited.  This is rarely a good idea.
+
+COMMIT_MSG_FILE=$1
+COMMIT_SOURCE=$2
+SHA1=$3
+
+/usr/bin/perl -i.bak -ne 'print unless(m/^. Please enter the commit message/..m/^#$/)' "$COMMIT_MSG_FILE"
+
+# case "$COMMIT_SOURCE,$SHA1" in
+#  ,|template,)
+#    /usr/bin/perl -i.bak -pe '
+#       print "\n" . `git diff --cached --name-status -r`
+# 	 if /^#/ && $first++ == 0' "$COMMIT_MSG_FILE" ;;
+#  *) ;;
+# esac
+
+# SOB=$(git var GIT_COMMITTER_IDENT | sed -n 's/^\(.*>\).*$/Signed-off-by: \1/p')
+# git interpret-trailers --in-place --trailer "$SOB" "$COMMIT_MSG_FILE"
+# if test -z "$COMMIT_SOURCE"
+# then
+#   /usr/bin/perl -i.bak -pe 'print "\n" if !$first_line++' "$COMMIT_MSG_FILE"
+# fi
+</file>
+
+<file path="backend/.git/hooks/push-to-checkout.sample">
+#!/bin/sh
+
+# An example hook script to update a checked-out tree on a git push.
+#
+# This hook is invoked by git-receive-pack(1) when it reacts to git
+# push and updates reference(s) in its repository, and when the push
+# tries to update the branch that is currently checked out and the
+# receive.denyCurrentBranch configuration variable is set to
+# updateInstead.
+#
+# By default, such a push is refused if the working tree and the index
+# of the remote repository has any difference from the currently
+# checked out commit; when both the working tree and the index match
+# the current commit, they are updated to match the newly pushed tip
+# of the branch. This hook is to be used to override the default
+# behaviour; however the code below reimplements the default behaviour
+# as a starting point for convenient modification.
+#
+# The hook receives the commit with which the tip of the current
+# branch is going to be updated:
+commit=$1
+
+# It can exit with a non-zero status to refuse the push (when it does
+# so, it must not modify the index or the working tree).
+die () {
+	echo >&2 "$*"
+	exit 1
+}
+
+# Or it can make any necessary changes to the working tree and to the
+# index to bring them to the desired state when the tip of the current
+# branch is updated to the new commit, and exit with a zero status.
+#
+# For example, the hook can simply run git read-tree -u -m HEAD "$1"
+# in order to emulate git fetch that is run in the reverse direction
+# with git push, as the two-tree form of git read-tree -u -m is
+# essentially the same as git switch or git checkout that switches
+# branches while keeping the local changes in the working tree that do
+# not interfere with the difference between the branches.
+
+# The below is a more-or-less exact translation to shell of the C code
+# for the default behaviour for git's push-to-checkout hook defined in
+# the push_to_deploy() function in builtin/receive-pack.c.
+#
+# Note that the hook will be executed from the repository directory,
+# not from the working tree, so if you want to perform operations on
+# the working tree, you will have to adapt your code accordingly, e.g.
+# by adding "cd .." or using relative paths.
+
+if ! git update-index -q --ignore-submodules --refresh
+then
+	die "Up-to-date check failed"
+fi
+
+if ! git diff-files --quiet --ignore-submodules --
+then
+	die "Working directory has unstaged changes"
+fi
+
+# This is a rough translation of:
+#
+#   head_has_history() ? "HEAD" : EMPTY_TREE_SHA1_HEX
+if git cat-file -e HEAD 2>/dev/null
+then
+	head=HEAD
+else
+	head=$(git hash-object -t tree --stdin </dev/null)
+fi
+
+if ! git diff-index --quiet --cached --ignore-submodules $head --
+then
+	die "Working directory has staged changes"
+fi
+
+if ! git read-tree -u -m "$commit"
+then
+	die "Could not update working tree to new HEAD"
+fi
+</file>
+
+<file path="backend/.git/hooks/sendemail-validate.sample">
+#!/bin/sh
+
+# An example hook script to validate a patch (and/or patch series) before
+# sending it via email.
+#
+# The hook should exit with non-zero status after issuing an appropriate
+# message if it wants to prevent the email(s) from being sent.
+#
+# To enable this hook, rename this file to "sendemail-validate".
+#
+# By default, it will only check that the patch(es) can be applied on top of
+# the default upstream branch without conflicts in a secondary worktree. After
+# validation (successful or not) of the last patch of a series, the worktree
+# will be deleted.
+#
+# The following config variables can be set to change the default remote and
+# remote ref that are used to apply the patches against:
+#
+#   sendemail.validateRemote (default: origin)
+#   sendemail.validateRemoteRef (default: HEAD)
+#
+# Replace the TODO placeholders with appropriate checks according to your
+# needs.
+
+validate_cover_letter () {
+	file="$1"
+	# TODO: Replace with appropriate checks (e.g. spell checking).
+	true
+}
+
+validate_patch () {
+	file="$1"
+	# Ensure that the patch applies without conflicts.
+	git am -3 "$file" || return
+	# TODO: Replace with appropriate checks for this patch
+	# (e.g. checkpatch.pl).
+	true
+}
+
+validate_series () {
+	# TODO: Replace with appropriate checks for the whole series
+	# (e.g. quick build, coding style checks, etc.).
+	true
+}
+
+# main -------------------------------------------------------------------------
+
+if test "$GIT_SENDEMAIL_FILE_COUNTER" = 1
+then
+	remote=$(git config --default origin --get sendemail.validateRemote) &&
+	ref=$(git config --default HEAD --get sendemail.validateRemoteRef) &&
+	worktree=$(mktemp --tmpdir -d sendemail-validate.XXXXXXX) &&
+	git worktree add -fd --checkout "$worktree" "refs/remotes/$remote/$ref" &&
+	git config --replace-all sendemail.validateWorktree "$worktree"
+else
+	worktree=$(git config --get sendemail.validateWorktree)
+fi || {
+	echo "sendemail-validate: error: failed to prepare worktree" >&2
+	exit 1
+}
+
+unset GIT_DIR GIT_WORK_TREE
+cd "$worktree" &&
+
+if grep -q "^diff --git " "$1"
+then
+	validate_patch "$1"
+else
+	validate_cover_letter "$1"
+fi &&
+
+if test "$GIT_SENDEMAIL_FILE_COUNTER" = "$GIT_SENDEMAIL_FILE_TOTAL"
+then
+	git config --unset-all sendemail.validateWorktree &&
+	trap 'git worktree remove -ff "$worktree"' EXIT &&
+	validate_series
+fi
+</file>
+
+<file path="backend/.git/hooks/update.sample">
+#!/bin/sh
+#
+# An example hook script to block unannotated tags from entering.
+# Called by "git receive-pack" with arguments: refname sha1-old sha1-new
+#
+# To enable this hook, rename this file to "update".
+#
+# Config
+# ------
+# hooks.allowunannotated
+#   This boolean sets whether unannotated tags will be allowed into the
+#   repository.  By default they won't be.
+# hooks.allowdeletetag
+#   This boolean sets whether deleting tags will be allowed in the
+#   repository.  By default they won't be.
+# hooks.allowmodifytag
+#   This boolean sets whether a tag may be modified after creation. By default
+#   it won't be.
+# hooks.allowdeletebranch
+#   This boolean sets whether deleting branches will be allowed in the
+#   repository.  By default they won't be.
+# hooks.denycreatebranch
+#   This boolean sets whether remotely creating branches will be denied
+#   in the repository.  By default this is allowed.
+#
+
+# --- Command line
+refname="$1"
+oldrev="$2"
+newrev="$3"
+
+# --- Safety check
+if [ -z "$GIT_DIR" ]; then
+	echo "Don't run this script from the command line." >&2
+	echo " (if you want, you could supply GIT_DIR then run" >&2
+	echo "  $0 <ref> <oldrev> <newrev>)" >&2
+	exit 1
+fi
+
+if [ -z "$refname" -o -z "$oldrev" -o -z "$newrev" ]; then
+	echo "usage: $0 <ref> <oldrev> <newrev>" >&2
+	exit 1
+fi
+
+# --- Config
+allowunannotated=$(git config --type=bool hooks.allowunannotated)
+allowdeletebranch=$(git config --type=bool hooks.allowdeletebranch)
+denycreatebranch=$(git config --type=bool hooks.denycreatebranch)
+allowdeletetag=$(git config --type=bool hooks.allowdeletetag)
+allowmodifytag=$(git config --type=bool hooks.allowmodifytag)
+
+# check for no description
+projectdesc=$(sed -e '1q' "$GIT_DIR/description")
+case "$projectdesc" in
+"Unnamed repository"* | "")
+	echo "*** Project description file hasn't been set" >&2
+	exit 1
+	;;
+esac
+
+# --- Check types
+# if $newrev is 0000...0000, it's a commit to delete a ref.
+zero=$(git hash-object --stdin </dev/null | tr '[0-9a-f]' '0')
+if [ "$newrev" = "$zero" ]; then
+	newrev_type=delete
+else
+	newrev_type=$(git cat-file -t $newrev)
+fi
+
+case "$refname","$newrev_type" in
+	refs/tags/*,commit)
+		# un-annotated tag
+		short_refname=${refname##refs/tags/}
+		if [ "$allowunannotated" != "true" ]; then
+			echo "*** The un-annotated tag, $short_refname, is not allowed in this repository" >&2
+			echo "*** Use 'git tag [ -a | -s ]' for tags you want to propagate." >&2
+			exit 1
+		fi
+		;;
+	refs/tags/*,delete)
+		# delete tag
+		if [ "$allowdeletetag" != "true" ]; then
+			echo "*** Deleting a tag is not allowed in this repository" >&2
+			exit 1
+		fi
+		;;
+	refs/tags/*,tag)
+		# annotated tag
+		if [ "$allowmodifytag" != "true" ] && git rev-parse $refname > /dev/null 2>&1
+		then
+			echo "*** Tag '$refname' already exists." >&2
+			echo "*** Modifying a tag is not allowed in this repository." >&2
+			exit 1
+		fi
+		;;
+	refs/heads/*,commit)
+		# branch
+		if [ "$oldrev" = "$zero" -a "$denycreatebranch" = "true" ]; then
+			echo "*** Creating a branch is not allowed in this repository" >&2
+			exit 1
+		fi
+		;;
+	refs/heads/*,delete)
+		# delete branch
+		if [ "$allowdeletebranch" != "true" ]; then
+			echo "*** Deleting a branch is not allowed in this repository" >&2
+			exit 1
+		fi
+		;;
+	refs/remotes/*,commit)
+		# tracking branch
+		;;
+	refs/remotes/*,delete)
+		# delete tracking branch
+		if [ "$allowdeletebranch" != "true" ]; then
+			echo "*** Deleting a tracking branch is not allowed in this repository" >&2
+			exit 1
+		fi
+		;;
+	*)
+		# Anything else (is there anything else?)
+		echo "*** Update hook: unknown type of update to ref $refname of type $newrev_type" >&2
+		exit 1
+		;;
+esac
+
+# --- Finished
+exit 0
+</file>
+
+<file path="backend/.git/info/exclude">
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+</file>
+
+<file path="backend/.git/refs/heads/main">
+39160d783d0af796228247a5a68aebdf551030bb
+</file>
+
+<file path="backend/.git/COMMIT_EDITMSG">
+feat: complete 4-tier faculty schedule system with AI integration
+</file>
+
+<file path="backend/.git/config">
+[core]
+	repositoryformatversion = 0
+	filemode = false
+	bare = false
+	logallrefupdates = true
+	symlinks = false
+	ignorecase = true
+[remote "origin"]
+	url = https://github.com/YOUR_USERNAME/faculty-schedule-system.git
+	fetch = +refs/heads/*:refs/remotes/origin/*
+</file>
+
+<file path="backend/.git/description">
+Unnamed repository; edit this file 'description' to name the repository.
+</file>
+
+<file path="backend/.git/FETCH_HEAD">
+
+</file>
+
+<file path="backend/.git/HEAD">
+ref: refs/heads/main
+</file>
+
+<file path="ai-service/app/__init__.py">
+"""Faculty schedule AI intelligence service (Tier 3)."""
+
+__version__ = "1.0.0"
+</file>
+
+<file path="ai-service/app/config.py">
+"""Shared configuration for training and inference."""
+
+from __future__ import annotations
+
+from pathlib import Path
+
+SERVICE_ROOT = Path(__file__).resolve().parent.parent
+MODEL_FILENAME = "best_schedule_ai_model.pkl"
+MODEL_PATH = SERVICE_ROOT / MODEL_FILENAME
+
+NUMERICAL_FEATURES: list[str] = [
+    "working_days_count",
+    "has_schedule_conflict",
+    "institutional_event_conflict",
+    "previous_requests_count",
+    "department_coverage",
+]
+CATEGORICAL_FEATURES: list[str] = ["reason_type"]
+FEATURE_COLUMNS: list[str] = NUMERICAL_FEATURES + CATEGORICAL_FEATURES
+TARGET_COLUMN = "decision"
+
+REASON_TYPES: tuple[str, ...] = ("Medical", "Personal", "Research")
+
+TEST_SIZE = 0.30
+RANDOM_STATE = 42
+N_SAMPLES = 4000
+
+API_HOST = "0.0.0.0"
+API_PORT = 8000
+</file>
+
+<file path="ai-service/app/data.py">
+"""Synthetic dataset generation aligned with HOD scheduling policy."""
+
+from __future__ import annotations
+
+import numpy as np
+import pandas as pd
+
+from app.config import (
+    FEATURE_COLUMNS,
+    N_SAMPLES,
+    RANDOM_STATE,
+    REASON_TYPES,
+    TARGET_COLUMN,
+)
+
+
+def _assign_decision(frame: pd.DataFrame, rng: np.random.Generator) -> np.ndarray:
+    """Label requests using domain rules plus light stochastic noise."""
+    medical = (frame["reason_type"] == "Medical").astype(float)
+    research = (frame["reason_type"] == "Research").astype(float)
+    personal = (frame["reason_type"] == "Personal").astype(float)
+
+    score = (
+        0.35
+        - 2.40 * frame["has_schedule_conflict"]
+        - 1.90 * frame["institutional_event_conflict"]
+        - 1.60 * (frame["department_coverage"] < 0.40).astype(float)
+        - 0.90 * (frame["department_coverage"] < 0.55).astype(float)
+        - 1.10 * (frame["previous_requests_count"] >= 4).astype(float)
+        - 0.55 * (frame["previous_requests_count"] >= 6).astype(float)
+        - 0.70 * (frame["working_days_count"] <= 2).astype(float)
+        - 0.45 * ((frame["working_days_count"] >= 5) & (frame["department_coverage"] < 0.60)).astype(float)
+        + 1.55 * medical
+        + 0.55 * research
+        - 0.15 * personal
+        + 0.70 * (frame["department_coverage"] >= 0.75).astype(float)
+    )
+    noise = rng.normal(0.0, 0.35, size=len(frame))
+    return (score + noise > 0.0).astype(int)
+
+
+def generate_raw_dataset(n_samples: int = N_SAMPLES, random_state: int = RANDOM_STATE) -> pd.DataFrame:
+    """Create a realistic but synthetic modification-request dataset."""
+    rng = np.random.default_rng(random_state)
+
+    reason_type = rng.choice(REASON_TYPES, size=n_samples, p=[0.28, 0.42, 0.30])
+    working_days_count = rng.integers(1, 7, size=n_samples)
+    has_schedule_conflict = rng.choice([0, 1], size=n_samples, p=[0.72, 0.28])
+    institutional_event_conflict = rng.choice([0, 1], size=n_samples, p=[0.80, 0.20])
+    previous_requests_count = rng.poisson(2.2, size=n_samples).clip(0, 12)
+    department_coverage = rng.beta(5.0, 2.4, size=n_samples).clip(0.05, 1.0)
+
+    frame = pd.DataFrame(
+        {
+            "working_days_count": working_days_count,
+            "has_schedule_conflict": has_schedule_conflict,
+            "institutional_event_conflict": institutional_event_conflict,
+            "previous_requests_count": previous_requests_count,
+            "department_coverage": department_coverage,
+            "reason_type": reason_type,
+        }
+    )
+    frame[TARGET_COLUMN] = _assign_decision(frame, rng)
+    return frame
+
+
+def inject_quality_issues(frame: pd.DataFrame, random_state: int = RANDOM_STATE) -> pd.DataFrame:
+    """Add missing values, duplicates, and invalid rows so cleaning can be demonstrated."""
+    rng = np.random.default_rng(random_state + 7)
+    dirty = frame.copy()
+
+    missing_idx = rng.choice(dirty.index, size=max(8, len(dirty) // 80), replace=False)
+    dirty.loc[missing_idx[: len(missing_idx) // 2], "department_coverage"] = np.nan
+    dirty.loc[missing_idx[len(missing_idx) // 2 :], "reason_type"] = None
+
+    duplicates = dirty.sample(n=max(5, len(dirty) // 120), random_state=random_state)
+    invalid_rows = pd.DataFrame(
+        {
+            "working_days_count": [-1, 12, 3],
+            "has_schedule_conflict": [0, 2, 1],
+            "institutional_event_conflict": [1, 0, -1],
+            "previous_requests_count": [-4, 2, 1],
+            "department_coverage": [1.4, -0.2, 0.5],
+            "reason_type": ["Medical", "Unknown", "Personal"],
+            TARGET_COLUMN: [1, 0, 1],
+        }
+    )
+    return pd.concat([dirty, duplicates, invalid_rows], ignore_index=True)
+
+
+def clean_dataset(frame: pd.DataFrame) -> pd.DataFrame:
+    """Drop duplicates and physically invalid rows; keep missing values for the imputer."""
+    cleaned = frame.copy()
+    cleaned = cleaned.drop_duplicates()
+    cleaned = cleaned[cleaned[TARGET_COLUMN].isin([0, 1])]
+
+    cleaned = cleaned[
+        cleaned["working_days_count"].isna()
+        | ((cleaned["working_days_count"] >= 0) & (cleaned["working_days_count"] <= 7))
+    ]
+    cleaned = cleaned[
+        cleaned["has_schedule_conflict"].isna()
+        | cleaned["has_schedule_conflict"].isin([0, 1])
+    ]
+    cleaned = cleaned[
+        cleaned["institutional_event_conflict"].isna()
+        | cleaned["institutional_event_conflict"].isin([0, 1])
+    ]
+    cleaned = cleaned[
+        cleaned["previous_requests_count"].isna()
+        | (cleaned["previous_requests_count"] >= 0)
+    ]
+    cleaned = cleaned[
+        cleaned["department_coverage"].isna()
+        | ((cleaned["department_coverage"] >= 0.0) & (cleaned["department_coverage"] <= 1.0))
+    ]
+    cleaned = cleaned[
+        cleaned["reason_type"].isna()
+        | cleaned["reason_type"].isin(REASON_TYPES)
+    ]
+
+    cleaned = cleaned.dropna(subset=[TARGET_COLUMN])
+    cleaned[TARGET_COLUMN] = cleaned[TARGET_COLUMN].astype(int)
+    return cleaned.reset_index(drop=True)[FEATURE_COLUMNS + [TARGET_COLUMN]]
+</file>
+
+<file path="ai-service/app/evaluation.py">
+"""Model evaluation helpers and console reporting."""
+
+from __future__ import annotations
+
+from dataclasses import dataclass
+
+import pandas as pd
+from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score
+from sklearn.pipeline import Pipeline
+
+
+@dataclass(frozen=True)
+class ModelMetrics:
+    name: str
+    accuracy: float
+    precision: float
+    recall: float
+    f1: float
+
+
+def evaluate_pipeline(name: str, pipeline: Pipeline, x_test: pd.DataFrame, y_test: pd.Series) -> ModelMetrics:
+    predictions = pipeline.predict(x_test)
+    return ModelMetrics(
+        name=name,
+        accuracy=float(accuracy_score(y_test, predictions)),
+        precision=float(precision_score(y_test, predictions, zero_division=0)),
+        recall=float(recall_score(y_test, predictions, zero_division=0)),
+        f1=float(f1_score(y_test, predictions, zero_division=0)),
+    )
+
+
+def select_best_model(results: list[ModelMetrics]) -> ModelMetrics:
+    """Prefer highest accuracy; break ties with F1, then recall."""
+    return max(results, key=lambda item: (item.accuracy, item.f1, item.recall))
+
+
+def format_comparison_table(results: list[ModelMetrics], winner: ModelMetrics) -> str:
+    header = f"{'Model':<24} {'Accuracy':>10} {'Precision':>10} {'Recall':>10} {'F1':>10}"
+    divider = "-" * len(header)
+    rows = [
+        f"{item.name:<24} {item.accuracy:>10.4f} {item.precision:>10.4f} {item.recall:>10.4f} {item.f1:>10.4f}"
+        for item in results
+    ]
+    footer = (
+        f"\nBest model: {winner.name} "
+        f"(Accuracy={winner.accuracy:.4f}, F1={winner.f1:.4f})"
+    )
+    return "\n".join([header, divider, *rows, divider, footer])
+</file>
+
+<file path="ai-service/app/pipeline.py">
+"""Preprocessing and model training pipelines."""
+
+from __future__ import annotations
+
+from sklearn.compose import ColumnTransformer
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.impute import SimpleImputer
+from sklearn.linear_model import LogisticRegression
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import OneHotEncoder, StandardScaler
+from sklearn.svm import SVC
+from sklearn.tree import DecisionTreeClassifier
+
+from app.config import CATEGORICAL_FEATURES, NUMERICAL_FEATURES, RANDOM_STATE
+
+
+def build_preprocessor() -> ColumnTransformer:
+    """Impute, scale numeric features, and one-hot encode categorical features."""
+    numeric_pipeline = Pipeline(
+        steps=[
+            ("imputer", SimpleImputer(strategy="median")),
+            ("scaler", StandardScaler()),
+        ]
+    )
+    categorical_pipeline = Pipeline(
+        steps=[
+            ("imputer", SimpleImputer(strategy="most_frequent")),
+            (
+                "encoder",
+                OneHotEncoder(handle_unknown="ignore", sparse_output=False),
+            ),
+        ]
+    )
+    return ColumnTransformer(
+        transformers=[
+            ("numerical", numeric_pipeline, NUMERICAL_FEATURES),
+            ("categorical", categorical_pipeline, CATEGORICAL_FEATURES),
+        ],
+        remainder="drop",
+    )
+
+
+def build_candidate_models() -> dict[str, object]:
+    """Return the four classifiers required for the comparison study."""
+    return {
+        "Decision Tree": DecisionTreeClassifier(max_depth=8, min_samples_leaf=12, random_state=RANDOM_STATE),
+        "Random Forest": RandomForestClassifier(
+            n_estimators=200,
+            max_depth=10,
+            min_samples_leaf=8,
+            random_state=RANDOM_STATE,
+            n_jobs=-1,
+        ),
+        "Support Vector Machine": SVC(
+            C=1.0,
+            kernel="rbf",
+            probability=True,
+            random_state=RANDOM_STATE,
+        ),
+        "Logistic Regression": LogisticRegression(
+            max_iter=1000,
+            random_state=RANDOM_STATE,
+        ),
+    }
+
+
+def wrap_with_preprocessor(estimator: object) -> Pipeline:
+    return Pipeline(
+        steps=[
+            ("preprocessor", build_preprocessor()),
+            ("classifier", estimator),
+        ]
+    )
+</file>
+
+<file path="ai-service/app/rationale.py">
+"""Human-readable recommendation rationale for HOD review."""
+
+from __future__ import annotations
+
+from typing import Mapping, Union
+
+Number = Union[int, float]
+
+
+def build_rationale(
+    features: Mapping[str, Number | str],
+    recommendation: str,
+    confidence_score: float,
+) -> str:
+    """Explain the decision using the most material conflict and fairness signals."""
+    drivers: list[str] = []
+
+    if int(features["has_schedule_conflict"]) == 1:
+        drivers.append("an overlapping faculty schedule conflict")
+    if int(features["institutional_event_conflict"]) == 1:
+        drivers.append("a clash with an institutional event")
+
+    coverage = float(features["department_coverage"])
+    if coverage < 0.45:
+        drivers.append(f"low department coverage ({coverage:.0%})")
+    elif coverage >= 0.80:
+        drivers.append(f"strong remaining department coverage ({coverage:.0%})")
+
+    previous_requests = int(features["previous_requests_count"])
+    if previous_requests >= 4:
+        drivers.append(f"a high recent request volume ({previous_requests})")
+
+    working_days = int(features["working_days_count"])
+    if working_days <= 2:
+        drivers.append(f"already light weekly load ({working_days} working days)")
+    elif working_days >= 5:
+        drivers.append(f"a heavy weekly load ({working_days} working days)")
+
+    reason_type = str(features["reason_type"])
+    if reason_type == "Medical":
+        drivers.append("a medical justification")
+    elif reason_type == "Research":
+        drivers.append("a research-related justification")
+    elif reason_type == "Personal":
+        drivers.append("a personal justification")
+
+    if not drivers:
+        drivers.append("balanced workload and conflict indicators")
+
+    lead = (
+        "Recommend Approve"
+        if recommendation == "Approve"
+        else "Recommend Reject"
+    )
+    joined = ", ".join(drivers[:3])
+    return f"{lead} ({confidence_score:.0%} confidence) based on {joined}."
+</file>
+
+<file path="ai-service/app/schemas.py">
+"""Pydantic contracts for the prediction API."""
+
+from __future__ import annotations
+
+from typing import Literal
+
+from pydantic import BaseModel, Field
+
+from app.config import REASON_TYPES
+
+
+class PredictRequest(BaseModel):
+    working_days_count: int = Field(..., ge=0, le=7, description="Faculty working days in the week")
+    has_schedule_conflict: int = Field(..., ge=0, le=1, description="1 if the proposed slot overlaps another schedule")
+    institutional_event_conflict: int = Field(..., ge=0, le=1, description="1 if the slot clashes with an event")
+    previous_requests_count: int = Field(..., ge=0, description="Prior modification requests from this faculty member")
+    department_coverage: float = Field(..., ge=0.0, le=1.0, description="Share of department coverage remaining")
+    reason_type: Literal["Medical", "Personal", "Research"] = Field(..., description="Categorical request reason")
+
+    model_config = {
+        "json_schema_extra": {
+            "examples": [
+                {
+                    "working_days_count": 4,
+                    "has_schedule_conflict": 0,
+                    "institutional_event_conflict": 0,
+                    "previous_requests_count": 1,
+                    "department_coverage": 0.82,
+                    "reason_type": "Medical",
+                }
+            ]
+        }
+    }
+
+
+class PredictResponse(BaseModel):
+    recommendation: Literal["Approve", "Reject"]
+    confidence_score: float = Field(..., ge=0.0, le=1.0)
+    reason: str
+    model_name: str | None = None
+
+
+class HealthResponse(BaseModel):
+    status: str
+    model_loaded: bool
+    allowed_reason_types: tuple[str, ...] = REASON_TYPES
+</file>
+
+<file path="ai-service/.gitignore">
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+.env
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+.DS_Store
+</file>
+
+<file path="ai-service/main.py">
+"""FastAPI inference service for Head of Department recommendations."""
+
+from __future__ import annotations
+
+import logging
+import sys
+from contextlib import asynccontextmanager
+from pathlib import Path
+from typing import Any
+
+SERVICE_ROOT = Path(__file__).resolve().parent
+if str(SERVICE_ROOT) not in sys.path:
+    sys.path.insert(0, str(SERVICE_ROOT))
+
+import joblib
+import pandas as pd
+from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+
+from app.config import API_HOST, API_PORT, FEATURE_COLUMNS, MODEL_PATH, REASON_TYPES
+from app.rationale import build_rationale
+from app.schemas import HealthResponse, PredictRequest, PredictResponse
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s | %(levelname)s | %(message)s",
+)
+logger = logging.getLogger("ai-service")
+
+_model_bundle: dict[str, Any] | None = None
+
+
+def load_model_bundle() -> dict[str, Any]:
+    if not MODEL_PATH.exists():
+        raise FileNotFoundError(
+            f"Model file not found at {MODEL_PATH}. Run `python train.py` first."
+        )
+    bundle = joblib.load(MODEL_PATH)
+    if "pipeline" not in bundle:
+        raise ValueError("Invalid model artifact: missing 'pipeline' key.")
+    return bundle
+
+
+@asynccontextmanager
+async def lifespan(_app: FastAPI):
+    global _model_bundle
+    try:
+        _model_bundle = load_model_bundle()
+        logger.info("Loaded model '%s' from %s", _model_bundle.get("model_name"), MODEL_PATH)
+    except Exception as exc:  # noqa: BLE001
+        _model_bundle = None
+        logger.warning("Service started without a trained model: %s", exc)
+    yield
+
+
+app = FastAPI(
+    title="Faculty Schedule AI Service",
+    description="Tier 3 intelligence API that recommends Approve/Reject for schedule modification requests.",
+    version="1.0.0",
+    lifespan=lifespan,
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000", "http://localhost:3001"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
+@app.get("/health", response_model=HealthResponse)
+def health() -> HealthResponse:
+    return HealthResponse(
+        status="ok" if _model_bundle is not None else "model_unavailable",
+        model_loaded=_model_bundle is not None,
+        allowed_reason_types=REASON_TYPES,
+    )
+
+
+@app.post("/predict", response_model=PredictResponse)
+def predict(payload: PredictRequest) -> PredictResponse:
+    global _model_bundle
+    if _model_bundle is None:
+        try:
+            _model_bundle = load_model_bundle()
+        except FileNotFoundError as exc:
+            raise HTTPException(status_code=503, detail=str(exc)) from exc
+        except Exception as exc:  # noqa: BLE001
+            raise HTTPException(status_code=500, detail=f"Failed to load model: {exc}") from exc
+
+    bundle = _model_bundle
+
+    pipeline = bundle["pipeline"]
+    features = pd.DataFrame([payload.model_dump()], columns=FEATURE_COLUMNS)
+
+    try:
+        probabilities = pipeline.predict_proba(features)[0]
+        class_index = int(probabilities.argmax())
+        predicted_label = int(pipeline.classes_[class_index])
+        confidence_score = float(probabilities[class_index])
+    except Exception as exc:  # noqa: BLE001
+        logger.exception("Inference failed")
+        raise HTTPException(status_code=500, detail=f"Prediction failed: {exc}") from exc
+
+    recommendation = "Approve" if predicted_label == 1 else "Reject"
+    reason = build_rationale(payload.model_dump(), recommendation, confidence_score)
+
+    return PredictResponse(
+        recommendation=recommendation,
+        confidence_score=round(confidence_score, 4),
+        reason=reason,
+        model_name=str(bundle.get("model_name", "unknown")),
+    )
+
+
+if __name__ == "__main__":
+    import uvicorn
+
+    uvicorn.run("main:app", host=API_HOST, port=API_PORT, reload=False)
+</file>
+
+<file path="ai-service/requirements.txt">
+pandas>=2.2.0
+scikit-learn>=1.5.0
+joblib>=1.4.0
+fastapi>=0.115.0
+uvicorn[standard]>=0.32.0
+pydantic>=2.9.0
+numpy>=1.26.0
+</file>
+
+<file path="ai-service/train.py">
+"""Train, compare, and export the best schedule-request classifier."""
+
+from __future__ import annotations
+
+import logging
+import sys
+from pathlib import Path
+
+SERVICE_ROOT = Path(__file__).resolve().parent
+if str(SERVICE_ROOT) not in sys.path:
+    sys.path.insert(0, str(SERVICE_ROOT))
+
+import joblib
+from sklearn.model_selection import train_test_split
+
+from app.config import FEATURE_COLUMNS, MODEL_PATH, RANDOM_STATE, TARGET_COLUMN, TEST_SIZE
+from app.data import clean_dataset, generate_raw_dataset, inject_quality_issues
+from app.evaluation import evaluate_pipeline, format_comparison_table, select_best_model
+from app.pipeline import build_candidate_models, wrap_with_preprocessor
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s | %(levelname)s | %(message)s",
+)
+logger = logging.getLogger("train")
+
+
+def main() -> int:
+    logger.info("Generating synthetic faculty schedule-request dataset")
+    raw = inject_quality_issues(generate_raw_dataset())
+    dataset = clean_dataset(raw)
+    logger.info("Cleaned dataset shape: %s (from %s raw rows)", dataset.shape, raw.shape)
+
+    features = dataset[FEATURE_COLUMNS]
+    target = dataset[TARGET_COLUMN]
+    x_train, x_test, y_train, y_test = train_test_split(
+        features,
+        target,
+        test_size=TEST_SIZE,
+        random_state=RANDOM_STATE,
+        stratify=target,
+    )
+    logger.info(
+        "Split complete | train=%s (%.0f%%) test=%s (%.0f%%)",
+        x_train.shape[0],
+        (1 - TEST_SIZE) * 100,
+        x_test.shape[0],
+        TEST_SIZE * 100,
+    )
+
+    results = []
+    fitted = {}
+    for name, estimator in build_candidate_models().items():
+        logger.info("Training %s", name)
+        pipeline = wrap_with_preprocessor(estimator)
+        pipeline.fit(x_train, y_train)
+        metrics = evaluate_pipeline(name, pipeline, x_test, y_test)
+        results.append(metrics)
+        fitted[name] = pipeline
+
+    winner = select_best_model(results)
+    print("\nSchedule AI model comparison")
+    print(format_comparison_table(results, winner))
+
+    MODEL_PATH.parent.mkdir(parents=True, exist_ok=True)
+    payload = {
+        "pipeline": fitted[winner.name],
+        "model_name": winner.name,
+        "metrics": winner.__dict__,
+        "feature_columns": FEATURE_COLUMNS,
+    }
+    joblib.dump(payload, MODEL_PATH)
+    logger.info("Exported best pipeline (%s) to %s", winner.name, MODEL_PATH)
+    return 0
+
+
+if __name__ == "__main__":
+    try:
+        sys.exit(main())
+    except Exception as exc:  # noqa: BLE001 - top-level CLI guard
+        logging.exception("Training failed: %s", exc)
+        sys.exit(1)
+</file>
 
 <file path="backend/.agents/skills/prisma-cli/references/db-execute.md">
 # prisma db execute
@@ -11737,6 +13738,13 @@ EXCEPTION
 END $$;
 </file>
 
+<file path="backend/prisma/migrations/20260819120000_add_ai_recommendation_fields/migration.sql">
+-- AlterTable
+ALTER TABLE "ModificationRequest" ADD COLUMN IF NOT EXISTS "aiRecommendation" TEXT;
+ALTER TABLE "ModificationRequest" ADD COLUMN IF NOT EXISTS "aiConfidenceScore" DOUBLE PRECISION;
+ALTER TABLE "ModificationRequest" ADD COLUMN IF NOT EXISTS "aiReason" TEXT;
+</file>
+
 <file path="backend/prisma/migrations/migration_lock.toml">
 # Please do not edit this file manually
 # It should be added in your version-control system (e.g., Git)
@@ -11836,6 +13844,391 @@ async function main() {
 main()
   .catch(console.error)
   .finally(() => prisma.$disconnect());
+</file>
+
+<file path="backend/src/ai/ai.module.ts">
+import { Module } from '@nestjs/common';
+import { AiService } from './ai.service';
+
+@Module({
+  providers: [AiService],
+  exports: [AiService],
+})
+export class AiModule {}
+</file>
+
+<file path="backend/src/ai/ai.service.spec.ts">
+import { Test, TestingModule } from '@nestjs/testing';
+import { ConfigService } from '@nestjs/config';
+import { AiService } from './ai.service';
+import { PrismaService } from '../prisma/prisma.service';
+import { AI_FALLBACK } from './ai.types';
+
+describe('AiService', () => {
+  let service: AiService;
+
+  beforeEach(async () => {
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [
+        AiService,
+        { provide: PrismaService, useValue: {} },
+        {
+          provide: ConfigService,
+          useValue: {
+            get: (key: string, fallback?: unknown) => {
+              if (key === 'AI_SERVICE_URL') return 'http://localhost:8000';
+              if (key === 'AI_SERVICE_TIMEOUT_MS') return 50;
+              return fallback;
+            },
+          },
+        },
+      ],
+    }).compile();
+
+    service = module.get<AiService>(AiService);
+  });
+
+  it('maps medical reasons', () => {
+    expect(service.mapReasonType('Doctor appointment')).toBe('Medical');
+  });
+
+  it('returns Pending when the AI service is unreachable', async () => {
+    const spy = jest
+      .spyOn(global, 'fetch')
+      .mockRejectedValue(new Error('ECONNREFUSED'));
+    const result = await service.predict({
+      working_days_count: 3,
+      has_schedule_conflict: 0,
+      institutional_event_conflict: 0,
+      previous_requests_count: 1,
+      department_coverage: 0.8,
+      reason_type: 'Personal',
+    });
+    spy.mockRestore();
+    expect(result.recommendation).toBe(AI_FALLBACK.recommendation);
+  });
+});
+</file>
+
+<file path="backend/src/ai/ai.service.ts">
+import { Injectable, Logger } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { Role } from '@prisma/client';
+import { PrismaService } from '../prisma/prisma.service';
+import { CreateRequestDto } from '../requests/dto/create-request.dto';
+import {
+  AI_FALLBACK,
+  AiPredictPayload,
+  AiPredictResult,
+  AiReasonType,
+} from './ai.types';
+
+const DEFAULT_SLOT_START = '08:30';
+const DEFAULT_SLOT_END = '10:00';
+
+@Injectable()
+export class AiService {
+  private readonly logger = new Logger(AiService.name);
+
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly config: ConfigService,
+  ) {}
+
+  async recommendForRequest(
+    userId: string,
+    dto: CreateRequestDto,
+    excludeRequestId?: string,
+  ): Promise<AiPredictResult> {
+    try {
+      const payload = await this.buildPredictPayload(
+        userId,
+        dto,
+        excludeRequestId,
+      );
+      return await this.predict(payload);
+    } catch (error) {
+      this.logger.warn(
+        `AI feature mapping failed; storing Pending. ${this.stringifyError(error)}`,
+      );
+      return AI_FALLBACK;
+    }
+  }
+
+  async predict(payload: AiPredictPayload): Promise<AiPredictResult> {
+    const baseUrl = String(
+      this.config.get('AI_SERVICE_URL') ?? 'http://localhost:8000',
+    ).replace(/\/$/, '');
+    const timeoutMs = Number(this.config.get('AI_SERVICE_TIMEOUT_MS') ?? 4000);
+    const safeTimeout = Number.isFinite(timeoutMs)
+      ? Math.max(500, timeoutMs)
+      : 4000;
+
+    try {
+      const response = await fetch(`${baseUrl}/predict`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify(this.clampPayload(payload)),
+        signal: AbortSignal.timeout(safeTimeout),
+      });
+
+      if (!response.ok) {
+        this.logger.warn(`AI service responded with HTTP ${response.status}`);
+        return AI_FALLBACK;
+      }
+
+      const raw = await response.text();
+      let body: {
+        recommendation?: string;
+        confidence_score?: number;
+        reason?: string;
+      };
+      try {
+        body = JSON.parse(raw) as typeof body;
+      } catch {
+        this.logger.warn('AI service returned non-JSON payload');
+        return AI_FALLBACK;
+      }
+
+      const recommendation =
+        body.recommendation === 'Approve' || body.recommendation === 'Reject'
+          ? body.recommendation
+          : null;
+
+      if (!recommendation) {
+        return AI_FALLBACK;
+      }
+
+      const confidence = Number(body.confidence_score);
+      return {
+        recommendation,
+        confidence_score: Number.isFinite(confidence)
+          ? Math.min(1, Math.max(0, confidence))
+          : null,
+        reason: body.reason?.trim() || null,
+      };
+    } catch (error) {
+      this.logger.warn(
+        `AI service unreachable; storing Pending. ${this.stringifyError(error)}`,
+      );
+      return AI_FALLBACK;
+    }
+  }
+
+  async buildPredictPayload(
+    userId: string,
+    dto: CreateRequestDto,
+    excludeRequestId?: string,
+  ): Promise<AiPredictPayload> {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      include: { schedules: true },
+    });
+
+    if (!user) {
+      return {
+        working_days_count: 0,
+        has_schedule_conflict: 0,
+        institutional_event_conflict: 0,
+        previous_requests_count: 0,
+        department_coverage: 1,
+        reason_type: this.mapReasonType(dto.reason),
+      };
+    }
+
+    const regularDays = new Set(
+      user.schedules
+        .filter((slot) => !slot.weekSpecificOnly)
+        .map((slot) => slot.dayOfWeek),
+    );
+
+    const proposedDate = this.parseUtcDate(dto.proposedDate);
+    const proposedDay = proposedDate ? proposedDate.getUTCDay() : 0;
+    const linkedSchedule = dto.scheduleId
+      ? user.schedules.find((slot) => slot.id === dto.scheduleId)
+      : undefined;
+    const startTime = linkedSchedule?.startTime ?? DEFAULT_SLOT_START;
+    const endTime = linkedSchedule?.endTime ?? DEFAULT_SLOT_END;
+
+    const [peerSlots, eventConflict, previousRequests, coverage] =
+      await Promise.all([
+        this.findPeerSlotsOnDay(user.departmentId, userId, proposedDay),
+        this.hasInstitutionalEvent(user.departmentId, proposedDate),
+        this.prisma.modificationRequest.count({
+          where: {
+            userId,
+            ...(excludeRequestId ? { id: { not: excludeRequestId } } : {}),
+          },
+        }),
+        this.computeDepartmentCoverage(
+          user.departmentId,
+          dto.type === 'MODIFICATION'
+            ? (linkedSchedule?.dayOfWeek ?? proposedDay)
+            : proposedDay,
+          dto.type === 'MODIFICATION' ? userId : undefined,
+        ),
+      ]);
+
+    const hasConflict = peerSlots.some(
+      (slot) => startTime < slot.endTime && endTime > slot.startTime,
+    );
+
+    return {
+      working_days_count: Math.min(7, Math.max(0, regularDays.size)),
+      has_schedule_conflict: hasConflict ? 1 : 0,
+      institutional_event_conflict: eventConflict ? 1 : 0,
+      previous_requests_count: previousRequests,
+      department_coverage: coverage,
+      reason_type: this.mapReasonType(dto.reason),
+    };
+  }
+
+  mapReasonType(reason?: string): AiReasonType {
+    const text = (reason ?? '').toLowerCase();
+    if (
+      /(medical|sick|health|doctor|hospital|clinic|illness|appointment)/.test(
+        text,
+      )
+    ) {
+      return 'Medical';
+    }
+    if (
+      /(research|conference|paper|publication|journal|symposium|workshop|thesis)/.test(
+        text,
+      )
+    ) {
+      return 'Research';
+    }
+    return 'Personal';
+  }
+
+  private async findPeerSlotsOnDay(
+    departmentId: string | null,
+    userId: string,
+    dayOfWeek: number,
+  ) {
+    if (!departmentId) return [];
+    return this.prisma.schedule.findMany({
+      where: {
+        dayOfWeek,
+        userId: { not: userId },
+        user: { departmentId, role: Role.FACULTY },
+      },
+      select: { startTime: true, endTime: true },
+    });
+  }
+
+  private async hasInstitutionalEvent(
+    departmentId: string | null,
+    proposedDate: Date | null,
+  ): Promise<boolean> {
+    if (!departmentId || !proposedDate) return false;
+    const dayStart = new Date(
+      Date.UTC(
+        proposedDate.getUTCFullYear(),
+        proposedDate.getUTCMonth(),
+        proposedDate.getUTCDate(),
+      ),
+    );
+    const dayEnd = new Date(dayStart);
+    dayEnd.setUTCDate(dayEnd.getUTCDate() + 1);
+
+    const event = await this.prisma.event.findFirst({
+      where: {
+        departmentId,
+        eventDate: { gte: dayStart, lt: dayEnd },
+      },
+      select: { id: true },
+    });
+    return Boolean(event);
+  }
+
+  private async computeDepartmentCoverage(
+    departmentId: string | null,
+    dayOfWeek: number,
+    excludingUserId?: string,
+  ): Promise<number> {
+    if (!departmentId) return 1;
+
+    const facultyWhere = { departmentId, role: Role.FACULTY };
+    const [facultyCount, workingCount] = await Promise.all([
+      this.prisma.user.count({ where: facultyWhere }),
+      this.prisma.user.count({
+        where: {
+          ...facultyWhere,
+          ...(excludingUserId ? { id: { not: excludingUserId } } : {}),
+          schedules: {
+            some: { dayOfWeek, weekSpecificOnly: false },
+          },
+        },
+      }),
+    ]);
+
+    if (facultyCount === 0) return 1;
+    return Number(
+      Math.min(1, Math.max(0, workingCount / facultyCount)).toFixed(4),
+    );
+  }
+
+  private clampPayload(payload: AiPredictPayload): AiPredictPayload {
+    return {
+      working_days_count: Math.min(
+        7,
+        Math.max(0, Math.round(payload.working_days_count)),
+      ),
+      has_schedule_conflict: payload.has_schedule_conflict === 1 ? 1 : 0,
+      institutional_event_conflict:
+        payload.institutional_event_conflict === 1 ? 1 : 0,
+      previous_requests_count: Math.max(
+        0,
+        Math.round(payload.previous_requests_count),
+      ),
+      department_coverage: Math.min(
+        1,
+        Math.max(0, payload.department_coverage),
+      ),
+      reason_type: payload.reason_type,
+    };
+  }
+
+  private parseUtcDate(value?: string | Date | null): Date | null {
+    if (!value) return null;
+    const parsed = value instanceof Date ? value : new Date(value);
+    return Number.isNaN(parsed.getTime()) ? null : parsed;
+  }
+
+  private stringifyError(error: unknown): string {
+    return error instanceof Error ? error.message : String(error);
+  }
+}
+</file>
+
+<file path="backend/src/ai/ai.types.ts">
+export type AiReasonType = 'Medical' | 'Personal' | 'Research';
+
+export interface AiPredictPayload {
+  working_days_count: number;
+  has_schedule_conflict: 0 | 1;
+  institutional_event_conflict: 0 | 1;
+  previous_requests_count: number;
+  department_coverage: number;
+  reason_type: AiReasonType;
+}
+
+export interface AiPredictResult {
+  recommendation: 'Approve' | 'Reject' | 'Pending';
+  confidence_score: number | null;
+  reason: string | null;
+}
+
+export const AI_FALLBACK: AiPredictResult = {
+  recommendation: 'Pending',
+  confidence_score: null,
+  reason: 'AI analysis is pending; the intelligence service was unavailable.',
+};
 </file>
 
 <file path="backend/src/auth/dto/login.dto.ts">
@@ -12130,17 +14523,6 @@ export function assertNoScheduleOverlap(
     }
   }
 }
-</file>
-
-<file path="backend/src/config/env.validation.ts">
-import * as Joi from 'joi';
-
-export const envValidationSchema = Joi.object({
-  DATABASE_URL: Joi.string().required(),
-  DIRECT_URL: Joi.string().required(),
-  JWT_SECRET: Joi.string().min(32).required(),
-  PORT: Joi.number().default(3000),
-});
 </file>
 
 <file path="backend/src/departments/dto/assign-department.dto.ts">
@@ -12559,28 +14941,6 @@ describe('RequestsController', () => {
 });
 </file>
 
-<file path="backend/src/requests/requests.service.spec.ts">
-import { Test, TestingModule } from '@nestjs/testing';
-import { RequestsService } from './requests.service';
-import { PrismaService } from '../prisma/prisma.service';
-
-describe('RequestsService', () => {
-  let service: RequestsService;
-
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [RequestsService, { provide: PrismaService, useValue: {} }],
-    }).compile();
-
-    service = module.get<RequestsService>(RequestsService);
-  });
-
-  it('should be defined', () => {
-    expect(service).toBeDefined();
-  });
-});
-</file>
-
 <file path="backend/src/schedules/dto/create-schedule.dto.ts">
 import { IsInt, IsNotEmpty, IsString, Max, Min } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
@@ -12803,14 +15163,6 @@ import { UsersController } from './users.controller';
   exports: [UsersService],
 })
 export class UsersModule {}
-</file>
-
-<file path="backend/src/.env.example">
-DATABASE_URL="postgresql://user:password@localhost:5432/faculty_schedule"
-DIRECT_URL="postgresql://user:password@localhost:5432/faculty_schedule"
-JWT_SECRET="replace-with-a-long-random-string-min-32-chars"
-FRONTEND_URL="http://localhost:3001"
-PORT=3000
 </file>
 
 <file path="backend/src/app.controller.spec.ts">
@@ -27373,6 +29725,63 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 }
 </file>
 
+<file path="frontend/components/faculty-work/AiRecommendationBadge.tsx">
+'use client';
+
+type AiRecommendation = 'Approve' | 'Reject' | 'Pending' | string | null | undefined;
+
+interface AiRecommendationBadgeProps {
+  recommendation?: AiRecommendation;
+  confidenceScore?: number | null;
+  reason?: string | null;
+}
+
+function formatConfidence(score?: number | null): string | null {
+  if (score === null || score === undefined || Number.isNaN(score)) {
+    return null;
+  }
+  const pct = score <= 1 ? Math.round(score * 100) : Math.round(score);
+  return `${Math.min(100, Math.max(0, pct))}%`;
+}
+
+export function AiRecommendationBadge({
+  recommendation,
+  confidenceScore,
+  reason,
+}: AiRecommendationBadgeProps) {
+  const value = recommendation?.trim() || 'Pending';
+  const confidence = formatConfidence(confidenceScore);
+
+  const styles =
+    value === 'Approve'
+      ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
+      : value === 'Reject'
+        ? 'bg-red-50 text-red-800 border-red-200'
+        : 'bg-slate-50 text-slate-600 border-slate-200';
+
+  const label =
+    value === 'Approve'
+      ? `AI Suggests Approve${confidence ? ` (${confidence})` : ''}`
+      : value === 'Reject'
+        ? `AI Suggests Reject${confidence ? ` (${confidence})` : ''}`
+        : 'AI Suggestion Pending';
+
+  return (
+    <span className="inline-flex flex-col items-start gap-0.5 max-w-xs">
+      <span
+        title={reason || label}
+        className={`px-2.5 py-0.5 rounded-full text-[11px] font-semibold border ${styles}`}
+      >
+        {label}
+      </span>
+      {reason ? (
+        <span className="text-[10px] leading-snug text-slate-500">{reason}</span>
+      ) : null}
+    </span>
+  );
+}
+</file>
+
 <file path="frontend/lib/api-error.ts">
 function normalizeMessage(value: unknown): string | null {
   if (typeof value === 'string' && value.trim()) return value;
@@ -27451,42 +29860,6 @@ export async function deleteEvent(id: string) {
   const { data } = await apiClient.delete(`/events/${id}`);
   return data;
 }
-</file>
-
-<file path="frontend/lib/types.ts">
-export interface User {
-    id: string;
-    email: string;
-    fullName: string;
-    role: 'ADMIN' | 'HOD' | 'FACULTY';
-    departmentId?: string;
-  }
-  
-  export interface Schedule {
-    id: string;
-    userId: string;
-    dayOfWeek: number;
-    startTime: string;
-    endTime: string;
-    subject: string;
-  }
-  
-  export interface EventItem {
-    id: string;
-    title: string;
-    eventDate: string;
-    description?: string;
-    departmentId?: string;
-  }
-  
-  export interface ModificationRequest {
-    id: string;
-    type: 'MODIFICATION' | 'ADDITIONAL' | 'COMPENSATION';
-    status: 'PENDING' | 'APPROVED' | 'REJECTED';
-    proposedDate?: string;
-    reason: string;
-    createdAt: string;
-  }
 </file>
 
 <file path="frontend/public/file.svg">
@@ -27783,6 +30156,36 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
 }
 </file>
 
+<file path="backend/src/config/env.validation.ts">
+import * as Joi from 'joi';
+
+export const envValidationSchema = Joi.object({
+  DATABASE_URL: Joi.string().required(),
+  DIRECT_URL: Joi.string().required(),
+  JWT_SECRET: Joi.string().min(32).required(),
+  PORT: Joi.number().default(3000),
+  AI_SERVICE_URL: Joi.string().uri().default('http://localhost:8000'),
+  AI_SERVICE_TIMEOUT_MS: Joi.number().min(500).default(4000),
+});
+
+/** Coerce env values (e.g. timeout strings → numbers) before ConfigService stores them. */
+export function validateEnv(
+  config: Record<string, unknown>,
+): Record<string, unknown> {
+  const result = envValidationSchema.validate(config, {
+    abortEarly: false,
+    allowUnknown: true,
+    convert: true,
+  });
+
+  if (result.error) {
+    throw new Error(`Config validation error: ${result.error.message}`);
+  }
+
+  return result.value as Record<string, unknown>;
+}
+</file>
+
 <file path="backend/src/events/events.module.ts">
 import { Module } from '@nestjs/common';
 import { EventsService } from './events.service';
@@ -27885,18 +30288,40 @@ export class RequestsController {
 }
 </file>
 
-<file path="backend/src/requests/requests.module.ts">
-import { Module } from '@nestjs/common';
+<file path="backend/src/requests/requests.service.spec.ts">
+import { Test, TestingModule } from '@nestjs/testing';
 import { RequestsService } from './requests.service';
-import { RequestsController } from './requests.controller';
+import { PrismaService } from '../prisma/prisma.service';
+import { AiService } from '../ai/ai.service';
 
-@Module({
-  imports: [],
-  controllers: [RequestsController],
-  providers: [RequestsService],
-  exports: [RequestsService],
-})
-export class RequestsModule {}
+describe('RequestsService', () => {
+  let service: RequestsService;
+
+  beforeEach(async () => {
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [
+        RequestsService,
+        { provide: PrismaService, useValue: {} },
+        {
+          provide: AiService,
+          useValue: {
+            recommendForRequest: jest.fn().mockResolvedValue({
+              recommendation: 'Pending',
+              confidence_score: null,
+              reason: null,
+            }),
+          },
+        },
+      ],
+    }).compile();
+
+    service = module.get<RequestsService>(RequestsService);
+  });
+
+  it('should be defined', () => {
+    expect(service).toBeDefined();
+  });
+});
 </file>
 
 <file path="backend/src/users/users.controller.ts">
@@ -28024,6 +30449,16 @@ describe('UsersService', () => {
     expect(createArgs.data.password).not.toBe('password123');
   });
 });
+</file>
+
+<file path="backend/src/.env.example">
+DATABASE_URL="postgresql://user:password@localhost:5432/faculty_schedule"
+DIRECT_URL="postgresql://user:password@localhost:5432/faculty_schedule"
+JWT_SECRET="replace-with-a-long-random-string-min-32-chars"
+FRONTEND_URL="http://localhost:3001"
+PORT=3000
+AI_SERVICE_URL="http://localhost:8000"
+AI_SERVICE_TIMEOUT_MS=4000
 </file>
 
 <file path="backend/eslint.config.mjs">
@@ -28664,6 +31099,52 @@ export async function updateRequestStatus(
   });
   return data;
 }
+</file>
+
+<file path="frontend/lib/types.ts">
+export interface User {
+    id: string;
+    email: string;
+    fullName: string;
+    role: 'ADMIN' | 'HOD' | 'FACULTY';
+    departmentId?: string;
+  }
+  
+  export interface Schedule {
+    id: string;
+    userId: string;
+    dayOfWeek: number;
+    startTime: string;
+    endTime: string;
+    subject: string;
+  }
+  
+  export interface EventItem {
+    id: string;
+    title: string;
+    eventDate: string;
+    description?: string;
+    departmentId?: string;
+  }
+  
+  export interface ModificationRequest {
+    id: string;
+    type: 'MODIFICATION' | 'ADDITIONAL' | 'COMPENSATION';
+    status: 'PENDING' | 'APPROVED' | 'REJECTED';
+    proposedDate?: string;
+    reason: string;
+    createdAt: string;
+    aiRecommendation?: 'Approve' | 'Reject' | 'Pending' | null;
+    aiConfidenceScore?: number | null;
+    aiReason?: string | null;
+    user?: {
+      id: string;
+      fullName?: string;
+      email?: string;
+    };
+    userId?: string;
+    reviewComment?: string | null;
+  }
 </file>
 
 <file path="frontend/lib/users.ts">
@@ -29573,6 +32054,21 @@ export class UpdateStatusDto {
 }
 </file>
 
+<file path="backend/src/requests/requests.module.ts">
+import { Module } from '@nestjs/common';
+import { RequestsService } from './requests.service';
+import { RequestsController } from './requests.controller';
+import { AiModule } from '../ai/ai.module';
+
+@Module({
+  imports: [AiModule],
+  controllers: [RequestsController],
+  providers: [RequestsService],
+  exports: [RequestsService],
+})
+export class RequestsModule {}
+</file>
+
 <file path="backend/src/users/users.service.ts">
 import {
   Injectable,
@@ -29731,47 +32227,6 @@ export class UsersService {
     return { deleted: true };
   }
 }
-</file>
-
-<file path="backend/src/app.module.ts">
-import { Module } from '@nestjs/common';
-import { PrismaModule } from './prisma/prisma.module';
-import { AuthModule } from './auth/auth.module';
-import { UsersModule } from './users/users.module';
-import { RequestsModule } from './requests/requests.module';
-import { SchedulesModule } from './schedules/schedules.module';
-import { DepartmentsModule } from './departments/departments.module';
-import { EventsModule } from './events/events.module';
-import { NotificationsModule } from './notifications/notifications.module';
-import { ConfigModule } from '@nestjs/config';
-import { envValidationSchema } from './config/env.validation';
-import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
-import { APP_GUARD } from '@nestjs/core';
-import { JwtAuthGuard } from './auth/jwt.guard';
-
-@Module({
-  imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-      validationSchema: envValidationSchema,
-    }),
-    ThrottlerModule.forRoot([{ ttl: 60000, limit: 100 }]),
-    PrismaModule,
-    AuthModule,
-    UsersModule,
-    RequestsModule,
-    SchedulesModule,
-    DepartmentsModule,
-    EventsModule,
-    NotificationsModule,
-  ],
-  controllers: [],
-  providers: [
-    { provide: APP_GUARD, useClass: ThrottlerGuard },
-    { provide: APP_GUARD, useClass: JwtAuthGuard },
-  ],
-})
-export class AppModule {}
 </file>
 
 <file path="frontend/app/dashboard/admin/assignments/page.tsx">
@@ -31331,393 +33786,6 @@ export function FacultyDashboard() {
 export default FacultyDashboard;
 </file>
 
-<file path="frontend/components/faculty-work/HoDApproval.tsx">
-'use client';
-
-import { useMemo, useState } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useCurrentUser } from '@/lib/hooks/use-current-user';
-import { getDepartmentRequests, updateRequestStatus } from '@/lib/requests';
-import { getUserScheduleSlots } from '@/lib/schedules';
-import { getStartOfWeekIso } from '@/lib/date';
-import { getApiErrorMessage } from '@/lib/api-error';
-
-type StatusTab = 'PENDING' | 'APPROVED' | 'REJECTED' | 'ALL';
-const PAGE_SIZE = 8;
-const DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-
-function StatusBadge({ status }: { status: string }) {
-  const styles: Record<string, string> = {
-    PENDING: 'bg-amber-100 text-amber-800 border-amber-200',
-    APPROVED: 'bg-emerald-100 text-emerald-800 border-emerald-200',
-    REJECTED: 'bg-red-100 text-red-800 border-red-200',
-  };
-  return (
-    <span className={`px-2.5 py-0.5 rounded-full text-[11px] font-semibold border ${styles[status] ?? 'bg-slate-100 text-slate-600'}`}>
-      {status}
-    </span>
-  );
-}
-
-function TypeBadge({ type }: { type: string }) {
-  return (
-    <span className="px-2 py-0.5 rounded-md text-[10px] font-medium bg-slate-100 text-slate-600 border border-slate-200">
-      {type}
-    </span>
-  );
-}
-
-export function HoDApproval() {
-  const { data: user } = useCurrentUser();
-  const queryClient = useQueryClient();
-
-  const { data: requests, isLoading, isError } = useQuery({
-    queryKey: ['department-requests'],
-    queryFn: getDepartmentRequests,
-    enabled: user?.role === 'HOD' || user?.role === 'ADMIN',
-  });
-
-  const [activeTab, setActiveTab] = useState<StatusTab>('PENDING');
-  const [page, setPage] = useState(1);
-  const [approvingId, setApprovingId] = useState<string | null>(null);
-  const [rejectingId, setRejectingId] = useState<string | null>(null);
-  const [rejectReason, setRejectReason] = useState('');
-  const [compScheduleId, setCompScheduleId] = useState('');
-  const [compWeek, setCompWeek] = useState('');
-  const [compUserId, setCompUserId] = useState<string | null>(null);
-
-  const { data: compUserSlots } = useQuery({
-    queryKey: ['compensation-slots', compUserId],
-    queryFn: () => getUserScheduleSlots(compUserId!),
-    enabled: !!compUserId,
-  });
-
-  const [errorRequestId, setErrorRequestId] = useState<string | null>(null);
-  const [errorMessage, setErrorMessage] = useState('');
-
-  const mutation = useMutation({
-    mutationFn: ({
-      id,
-      status,
-      reviewComment,
-    }: {
-      id: string;
-      status: 'APPROVED' | 'REJECTED';
-      reviewComment?: string;
-    }) =>
-      updateRequestStatus(id, status, {
-        compensationScheduleId: compScheduleId || undefined,
-        compensationWeekStartDate: compWeek || undefined,
-        reviewComment,
-      }),
-    onMutate: async ({ id, status, reviewComment }) => {
-      setErrorRequestId(null);
-      setErrorMessage('');
-      await queryClient.cancelQueries({ queryKey: ['department-requests'] });
-      const previous = queryClient.getQueryData<any[]>(['department-requests']);
-      queryClient.setQueryData(['department-requests'], (old: any[] | undefined) =>
-        (old ?? []).map((r) =>
-          r.id === id ? { ...r, status, reviewComment: reviewComment ?? r.reviewComment } : r,
-        ),
-      );
-      return { previous };
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['department-requests'] });
-      queryClient.invalidateQueries({ queryKey: ['department-schedule'] });
-      queryClient.invalidateQueries({ queryKey: ['my-schedule-week'] });
-      queryClient.invalidateQueries({ queryKey: ['my-schedule-list'] });
-      setApprovingId(null);
-      setRejectingId(null);
-      setRejectReason('');
-      setCompScheduleId('');
-      setCompWeek('');
-      setCompUserId(null);
-    },
-    onError: (error: any, variables, context) => {
-      if (context?.previous) {
-        queryClient.setQueryData(['department-requests'], context.previous);
-      }
-      setErrorRequestId(variables.id);
-      setErrorMessage(
-        getApiErrorMessage(error, 'This request could not be processed.'),
-      );
-    },
-  });
-
-  const requestList = requests ?? [];
-  const pendingCount = requestList.filter((r: any) => r.status === 'PENDING').length;
-  const approvedCount = requestList.filter((r: any) => r.status === 'APPROVED').length;
-  const rejectedCount = requestList.filter((r: any) => r.status === 'REJECTED').length;
-
-  const filtered = useMemo(() => {
-    if (activeTab === 'ALL') return requestList;
-    return requestList.filter((r: any) => r.status === activeTab);
-  }, [requestList, activeTab]);
-
-  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
-  const paginated = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
-
-  const tabs: { id: StatusTab; label: string; count: number }[] = [
-    { id: 'PENDING', label: 'Pending', count: pendingCount },
-    { id: 'APPROVED', label: 'Approved', count: approvedCount },
-    { id: 'REJECTED', label: 'Rejected', count: rejectedCount },
-    { id: 'ALL', label: 'All Requests', count: requestList.length },
-  ];
-
-  function switchTab(tab: StatusTab) {
-    setActiveTab(tab);
-    setPage(1);
-    setApprovingId(null);
-    setRejectingId(null);
-  }
-
-  function handleApprove(req: any) {
-    if (req.type === 'COMPENSATION' && approvingId !== req.id) {
-      setApprovingId(req.id);
-      setCompUserId(req.userId);
-      setCompScheduleId('');
-      setCompWeek(getStartOfWeekIso());
-      setErrorRequestId(null);
-      setErrorMessage('');
-      return;
-    }
-    mutation.mutate({ id: req.id, status: 'APPROVED' });
-  }
-
-  function handleReject(req: any) {
-    if (rejectingId !== req.id) {
-      setRejectingId(req.id);
-      setRejectReason('');
-      return;
-    }
-    if (rejectReason.trim().length < 3) return;
-    mutation.mutate({
-      id: req.id,
-      status: 'REJECTED',
-      reviewComment: rejectReason.trim(),
-    });
-  }
-
-  return (
-    <div className="max-w-4xl mx-auto space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-slate-900 font-serif">Faculty Requests</h1>
-        <p className="text-sm text-slate-500 mt-1">
-          Review, approve, or reject schedule change requests from your faculty.
-        </p>
-      </div>
-
-      <div className="flex flex-wrap gap-2 border-b border-slate-200 pb-1">
-        {tabs.map((tab) => (
-          <button
-            key={tab.id}
-            onClick={() => switchTab(tab.id)}
-            className={`px-3.5 py-2 text-xs font-semibold rounded-t-lg transition-colors ${
-              activeTab === tab.id
-                ? 'bg-slate-900 text-white'
-                : 'text-slate-600 hover:bg-slate-100'
-            }`}
-          >
-            {tab.label}
-            <span className={`ml-1.5 px-1.5 py-0.5 rounded-full text-[10px] ${
-              activeTab === tab.id ? 'bg-slate-700' : 'bg-slate-200'
-            }`}>
-              {tab.count}
-            </span>
-          </button>
-        ))}
-      </div>
-
-      {isLoading && <p className="text-sm text-slate-500">Loading requests…</p>}
-      {isError && <p className="text-sm text-red-600">Could not load requests. Please try again.</p>}
-
-      {!isLoading && !isError && (
-        <>
-          <div className="space-y-3">
-            {paginated.length === 0 ? (
-              <div className="bg-white rounded-xl border border-slate-200 p-10 text-center text-sm text-slate-400">
-                No {activeTab === 'ALL' ? '' : activeTab.toLowerCase()} requests found.
-              </div>
-            ) : (
-              paginated.map((req: any) => (
-                <div
-                  key={req.id}
-                  className={`bg-white rounded-xl border shadow-sm p-4 transition-all ${
-                    req.status === 'PENDING'
-                      ? 'border-amber-200 ring-1 ring-amber-100'
-                      : req.status === 'REJECTED'
-                      ? 'border-red-100'
-                      : 'border-slate-200'
-                  }`}
-                >
-                  {errorRequestId === req.id && errorMessage && (
-                    <div className="mb-3 px-3 py-2 rounded-lg text-xs bg-red-50 text-red-700 border border-red-200">
-                      {errorMessage}
-                    </div>
-                  )}
-
-                  <div className="flex items-start gap-3">
-                    <div className="w-10 h-10 rounded-full bg-indigo-50 text-indigo-700 flex items-center justify-center text-xs font-bold shrink-0">
-                      {req.user?.fullName?.slice(0, 2).toUpperCase() ?? '??'}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex flex-wrap items-center gap-2 mb-1">
-                        <span className="text-sm font-semibold text-slate-900">
-                          {req.user?.fullName ?? req.user?.email}
-                        </span>
-                        <TypeBadge type={req.type} />
-                        <StatusBadge status={req.status} />
-                      </div>
-                      <p className="text-xs text-slate-600">{req.reason || 'No comment provided'}</p>
-                      {req.proposedDate && (
-                        <p className="text-xs text-slate-500 mt-1">
-                          Target: {new Date(req.proposedDate).toLocaleDateString(undefined, {
-                            weekday: 'short', month: 'short', day: 'numeric',
-                          })}
-                        </p>
-                      )}
-                      <p className="text-[11px] text-slate-400 mt-1">
-                        Submitted {new Date(req.createdAt).toLocaleDateString()}
-                      </p>
-                      {req.status === 'REJECTED' && req.reviewComment && (
-                        <div className="mt-2 px-3 py-2 rounded-lg text-xs bg-red-50 text-red-700 border border-red-100">
-                          <span className="font-semibold">HoD feedback:</span> {req.reviewComment}
-                        </div>
-                      )}
-                    </div>
-
-                    {req.status === 'PENDING' && (
-                      <div className="flex items-center gap-2 shrink-0">
-                        <button
-                          onClick={() => handleApprove(req)}
-                          disabled={mutation.isPending}
-                          className="px-3 py-1.5 rounded-lg text-xs font-semibold text-white bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50"
-                        >
-                          Approve
-                        </button>
-                        <button
-                          onClick={() => handleReject(req)}
-                          disabled={mutation.isPending}
-                          className="px-3 py-1.5 rounded-lg text-xs font-semibold text-white bg-red-600 hover:bg-red-700 disabled:opacity-50"
-                        >
-                          Reject
-                        </button>
-                      </div>
-                    )}
-                  </div>
-
-                  {req.type === 'COMPENSATION' && approvingId === req.id && (
-                    <div className="mt-3 p-3 rounded-lg bg-slate-50 border border-slate-200 space-y-3">
-                      <p className="text-xs text-slate-600">
-                        Choose which regular slot to skip and in which week. The faculty member&apos;s extra day ({req.proposedDate ? new Date(req.proposedDate).toLocaleDateString() : 'proposed date'}) will be added after approval.
-                      </p>
-                      <div className="flex flex-wrap items-end gap-3">
-                      <div>
-                        <label className="block text-[10px] font-semibold text-slate-500 uppercase mb-1">Skip slot</label>
-                        <select
-                          value={compScheduleId}
-                          onChange={(e) => setCompScheduleId(e.target.value)}
-                          className="text-xs px-2 py-1.5 rounded-lg border border-slate-200 bg-white"
-                        >
-                          <option value="">Select a slot</option>
-                          {(compUserSlots ?? []).map((s: any) => (
-                            <option key={s.id} value={s.id}>
-                              {DAY_NAMES[s.dayOfWeek]} {s.startTime}–{s.endTime}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-                      <div>
-                        <label className="block text-[10px] font-semibold text-slate-500 uppercase mb-1">In week of</label>
-                        <input
-                          type="date"
-                          value={compWeek}
-                          onChange={(e) => setCompWeek(e.target.value)}
-                          className="text-xs px-2 py-1.5 rounded-lg border border-slate-200"
-                        />
-                      </div>
-                      <button
-                        onClick={() => mutation.mutate({ id: req.id, status: 'APPROVED' })}
-                        disabled={mutation.isPending || !compScheduleId || !compWeek}
-                        className="px-3 py-1.5 rounded-lg text-xs font-semibold text-white bg-emerald-600 disabled:opacity-50"
-                      >
-                        Confirm Approve
-                      </button>
-                      <button
-                        onClick={() => { setApprovingId(null); setCompUserId(null); }}
-                        className="px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-200 text-slate-600"
-                      >
-                        Cancel
-                      </button>
-                      </div>
-                    </div>
-                  )}
-
-                  {rejectingId === req.id && (
-                    <div className="mt-3 p-3 rounded-lg bg-red-50 border border-red-100 space-y-2">
-                      <label className="block text-xs font-semibold text-red-800">Rejection reason (required)</label>
-                      <textarea
-                        value={rejectReason}
-                        onChange={(e) => setRejectReason(e.target.value)}
-                        rows={2}
-                        placeholder="Explain why this request is rejected…"
-                        className="w-full text-xs px-3 py-2 rounded-lg border border-red-200 bg-white"
-                      />
-                      <div className="flex gap-2">
-                        <button
-                          onClick={() => handleReject(req)}
-                          disabled={mutation.isPending || rejectReason.trim().length < 3}
-                          className="px-3 py-1.5 rounded-lg text-xs font-semibold text-white bg-red-600 disabled:opacity-50"
-                        >
-                          Confirm Reject
-                        </button>
-                        <button
-                          onClick={() => { setRejectingId(null); setRejectReason(''); }}
-                          className="px-3 py-1.5 rounded-lg text-xs font-semibold border border-red-200 text-red-700"
-                        >
-                          Cancel
-                        </button>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              ))
-            )}
-          </div>
-
-          {filtered.length > PAGE_SIZE && (
-            <div className="flex items-center justify-between pt-2">
-              <span className="text-xs text-slate-500">
-                Page {page} of {totalPages} · {filtered.length} request{filtered.length !== 1 ? 's' : ''}
-              </span>
-              <div className="flex gap-2">
-                <button
-                  disabled={page === 1}
-                  onClick={() => setPage((p) => p - 1)}
-                  className="px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-200 bg-white disabled:opacity-40"
-                >
-                  Previous
-                </button>
-                <button
-                  disabled={page >= totalPages}
-                  onClick={() => setPage((p) => p + 1)}
-                  className="px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-200 bg-white disabled:opacity-40"
-                >
-                  Next
-                </button>
-              </div>
-            </div>
-          )}
-        </>
-      )}
-    </div>
-  );
-}
-
-export default HoDApproval;
-</file>
-
 <file path="frontend/components/faculty-work/ScheduleRequest.tsx">
 'use client';
 import { useState } from 'react';
@@ -32140,144 +34208,6 @@ export async function getUserScheduleSlots(userId: string) {
   const { data } = await apiClient.get(`/schedules/user/${userId}`);
   return (data as Array<{ id: string; dayOfWeek: number; startTime: string; endTime: string; weekSpecificOnly?: boolean }>)
     .filter((slot) => !slot.weekSpecificOnly);
-}
-</file>
-
-<file path="backend/prisma/schema.prisma">
-generator client {
-  provider = "prisma-client-js"
-}
-
-datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
-}
-
-model Department {
-  id        String   @id @default(uuid())
-  name      String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  code      String   @unique
-  events    Event[]
-  users     User[]
-}
-
-model User {
-  id                                       String                @id @default(uuid())
-  email                                    String                @unique
-  password                                 String
-  fullName                                 String
-  role                                     Role                  @default(FACULTY)
-  departmentId                             String?
-  createdAt                                DateTime              @default(now())
-  updatedAt                                DateTime              @updatedAt
-  requests                                 ModificationRequest[]
-  Notification_Notification_senderIdToUser Notification[]        @relation("Notification_senderIdToUser")
-  Notification_Notification_userIdToUser   Notification[]        @relation("Notification_userIdToUser")
-  schedules                                Schedule[]
-  department                               Department?           @relation(fields: [departmentId], references: [id])
-}
-
-model ModificationRequest {
-  id                String             @id @default(uuid())
-  userId            String
-  type              RequestType
-  status            RequestStatus      @default(PENDING)
-  originalDate      DateTime?
-  proposedDate      DateTime?
-  reason            String?
-  createdAt         DateTime           @default(now())
-  updatedAt         DateTime           @updatedAt
-  scheduleId        String?
-  reviewedAt        DateTime?
-  reviewedById      String?
-  reviewComment     String?
-  schedule          Schedule?          @relation(fields: [scheduleId], references: [id])
-  user              User               @relation(fields: [userId], references: [id], onDelete: Cascade)
-  scheduleException ScheduleException?
-}
-
-model Schedule {
-  id               String                @id @default(uuid())
-  userId           String
-  dayOfWeek        Int
-  startTime        String
-  endTime          String
-  createdAt        DateTime              @default(now())
-  updatedAt        DateTime              @updatedAt
-  subject          String?
-  weekSpecificOnly Boolean               @default(false)
-  requests         ModificationRequest[]
-  user             User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
-  exceptions       ScheduleException[]
-}
-
-model ScheduleException {
-  id            String               @id @default(cuid())
-  scheduleId    String
-  weekStartDate DateTime
-  newDayOfWeek  Int
-  newStartTime  String
-  newEndTime    String
-  isSkipped     Boolean              @default(false)
-  requestId     String?              @unique
-  createdAt     DateTime             @default(now())
-  request       ModificationRequest? @relation(fields: [requestId], references: [id])
-  schedule      Schedule             @relation(fields: [scheduleId], references: [id])
-
-  @@unique([scheduleId, weekStartDate])
-}
-
-model Event {
-  id           String     @id @default(uuid())
-  title        String
-  description  String?
-  eventDate    DateTime
-  departmentId String
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
-  department   Department @relation(fields: [departmentId], references: [id], onDelete: Cascade)
-}
-
-model Notification {
-  id                               String           @id @default(uuid())
-  userId                           String
-  senderId                         String?
-  title                            String
-  message                          String
-  type                             NotificationType @default(GENERAL)
-  read                             Boolean          @default(false)
-  createdAt                        DateTime         @default(now())
-  User_Notification_senderIdToUser User?            @relation("Notification_senderIdToUser", fields: [senderId], references: [id])
-  User_Notification_userIdToUser   User             @relation("Notification_userIdToUser", fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([userId, type, senderId, createdAt])
-}
-
-enum Role {
-  ADMIN
-  HOD
-  FACULTY
-}
-
-enum RequestType {
-  MODIFICATION
-  ADDITIONAL
-  COMPENSATION
-}
-
-enum RequestStatus {
-  PENDING
-  APPROVED
-  REJECTED
-}
-
-enum NotificationType {
-  GENERAL
-  NEW_FACULTY
-  SCHEDULE_REMINDER
 }
 </file>
 
@@ -32804,6 +34734,47 @@ export class SchedulesService {
 }
 </file>
 
+<file path="backend/src/app.module.ts">
+import { Module } from '@nestjs/common';
+import { PrismaModule } from './prisma/prisma.module';
+import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
+import { RequestsModule } from './requests/requests.module';
+import { SchedulesModule } from './schedules/schedules.module';
+import { DepartmentsModule } from './departments/departments.module';
+import { EventsModule } from './events/events.module';
+import { NotificationsModule } from './notifications/notifications.module';
+import { ConfigModule } from '@nestjs/config';
+import { validateEnv } from './config/env.validation';
+import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtAuthGuard } from './auth/jwt.guard';
+
+@Module({
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      validate: validateEnv,
+    }),
+    ThrottlerModule.forRoot([{ ttl: 60000, limit: 100 }]),
+    PrismaModule,
+    AuthModule,
+    UsersModule,
+    RequestsModule,
+    SchedulesModule,
+    DepartmentsModule,
+    EventsModule,
+    NotificationsModule,
+  ],
+  controllers: [],
+  providers: [
+    { provide: APP_GUARD, useClass: ThrottlerGuard },
+    { provide: APP_GUARD, useClass: JwtAuthGuard },
+  ],
+})
+export class AppModule {}
+</file>
+
 <file path="frontend/app/dashboard/layout.tsx">
 "use client";
 
@@ -32926,12 +34897,621 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 }
 </file>
 
+<file path="frontend/components/faculty-work/HoDApproval.tsx">
+'use client';
+
+import { useMemo, useState } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useCurrentUser } from '@/lib/hooks/use-current-user';
+import { getDepartmentRequests, updateRequestStatus } from '@/lib/requests';
+import { getUserScheduleSlots } from '@/lib/schedules';
+import { getStartOfWeekIso } from '@/lib/date';
+import { getApiErrorMessage } from '@/lib/api-error';
+import { AiRecommendationBadge } from '@/components/faculty-work/AiRecommendationBadge';
+
+type StatusTab = 'PENDING' | 'APPROVED' | 'REJECTED' | 'ALL';
+const PAGE_SIZE = 8;
+const DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+function StatusBadge({ status }: { status: string }) {
+  const styles: Record<string, string> = {
+    PENDING: 'bg-amber-100 text-amber-800 border-amber-200',
+    APPROVED: 'bg-emerald-100 text-emerald-800 border-emerald-200',
+    REJECTED: 'bg-red-100 text-red-800 border-red-200',
+  };
+  return (
+    <span className={`px-2.5 py-0.5 rounded-full text-[11px] font-semibold border ${styles[status] ?? 'bg-slate-100 text-slate-600'}`}>
+      {status}
+    </span>
+  );
+}
+
+function TypeBadge({ type }: { type: string }) {
+  return (
+    <span className="px-2 py-0.5 rounded-md text-[10px] font-medium bg-slate-100 text-slate-600 border border-slate-200">
+      {type}
+    </span>
+  );
+}
+
+export function HoDApproval() {
+  const { data: user } = useCurrentUser();
+  const queryClient = useQueryClient();
+
+  const { data: requests, isLoading, isError } = useQuery({
+    queryKey: ['department-requests'],
+    queryFn: getDepartmentRequests,
+    enabled: user?.role === 'HOD' || user?.role === 'ADMIN',
+  });
+
+  const [activeTab, setActiveTab] = useState<StatusTab>('PENDING');
+  const [page, setPage] = useState(1);
+  const [approvingId, setApprovingId] = useState<string | null>(null);
+  const [rejectingId, setRejectingId] = useState<string | null>(null);
+  const [rejectReason, setRejectReason] = useState('');
+  const [compScheduleId, setCompScheduleId] = useState('');
+  const [compWeek, setCompWeek] = useState('');
+  const [compUserId, setCompUserId] = useState<string | null>(null);
+
+  const { data: compUserSlots } = useQuery({
+    queryKey: ['compensation-slots', compUserId],
+    queryFn: () => getUserScheduleSlots(compUserId!),
+    enabled: !!compUserId,
+  });
+
+  const [errorRequestId, setErrorRequestId] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState('');
+
+  const mutation = useMutation({
+    mutationFn: ({
+      id,
+      status,
+      reviewComment,
+    }: {
+      id: string;
+      status: 'APPROVED' | 'REJECTED';
+      reviewComment?: string;
+    }) =>
+      updateRequestStatus(id, status, {
+        compensationScheduleId: compScheduleId || undefined,
+        compensationWeekStartDate: compWeek || undefined,
+        reviewComment,
+      }),
+    onMutate: async ({ id, status, reviewComment }) => {
+      setErrorRequestId(null);
+      setErrorMessage('');
+      await queryClient.cancelQueries({ queryKey: ['department-requests'] });
+      const previous = queryClient.getQueryData<any[]>(['department-requests']);
+      queryClient.setQueryData(['department-requests'], (old: any[] | undefined) =>
+        (old ?? []).map((r) =>
+          r.id === id ? { ...r, status, reviewComment: reviewComment ?? r.reviewComment } : r,
+        ),
+      );
+      return { previous };
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['department-requests'] });
+      queryClient.invalidateQueries({ queryKey: ['department-schedule'] });
+      queryClient.invalidateQueries({ queryKey: ['my-schedule-week'] });
+      queryClient.invalidateQueries({ queryKey: ['my-schedule-list'] });
+      setApprovingId(null);
+      setRejectingId(null);
+      setRejectReason('');
+      setCompScheduleId('');
+      setCompWeek('');
+      setCompUserId(null);
+    },
+    onError: (error: any, variables, context) => {
+      if (context?.previous) {
+        queryClient.setQueryData(['department-requests'], context.previous);
+      }
+      setErrorRequestId(variables.id);
+      setErrorMessage(
+        getApiErrorMessage(error, 'This request could not be processed.'),
+      );
+    },
+  });
+
+  const requestList = requests ?? [];
+  const pendingCount = requestList.filter((r: any) => r.status === 'PENDING').length;
+  const approvedCount = requestList.filter((r: any) => r.status === 'APPROVED').length;
+  const rejectedCount = requestList.filter((r: any) => r.status === 'REJECTED').length;
+
+  const filtered = useMemo(() => {
+    if (activeTab === 'ALL') return requestList;
+    return requestList.filter((r: any) => r.status === activeTab);
+  }, [requestList, activeTab]);
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const paginated = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+
+  const tabs: { id: StatusTab; label: string; count: number }[] = [
+    { id: 'PENDING', label: 'Pending', count: pendingCount },
+    { id: 'APPROVED', label: 'Approved', count: approvedCount },
+    { id: 'REJECTED', label: 'Rejected', count: rejectedCount },
+    { id: 'ALL', label: 'All Requests', count: requestList.length },
+  ];
+
+  function switchTab(tab: StatusTab) {
+    setActiveTab(tab);
+    setPage(1);
+    setApprovingId(null);
+    setRejectingId(null);
+  }
+
+  function handleApprove(req: any) {
+    if (req.type === 'COMPENSATION' && approvingId !== req.id) {
+      setApprovingId(req.id);
+      setCompUserId(req.userId);
+      setCompScheduleId('');
+      setCompWeek(getStartOfWeekIso());
+      setErrorRequestId(null);
+      setErrorMessage('');
+      return;
+    }
+    mutation.mutate({ id: req.id, status: 'APPROVED' });
+  }
+
+  function handleReject(req: any) {
+    if (rejectingId !== req.id) {
+      setRejectingId(req.id);
+      setRejectReason('');
+      return;
+    }
+    if (rejectReason.trim().length < 3) return;
+    mutation.mutate({
+      id: req.id,
+      status: 'REJECTED',
+      reviewComment: rejectReason.trim(),
+    });
+  }
+
+  return (
+    <div className="max-w-4xl mx-auto space-y-6">
+      <div>
+        <h1 className="text-2xl font-bold text-slate-900 font-serif">Faculty Requests</h1>
+        <p className="text-sm text-slate-500 mt-1">
+          Review, approve, or reject schedule change requests from your faculty.
+        </p>
+      </div>
+
+      <div className="flex flex-wrap gap-2 border-b border-slate-200 pb-1">
+        {tabs.map((tab) => (
+          <button
+            key={tab.id}
+            onClick={() => switchTab(tab.id)}
+            className={`px-3.5 py-2 text-xs font-semibold rounded-t-lg transition-colors ${
+              activeTab === tab.id
+                ? 'bg-slate-900 text-white'
+                : 'text-slate-600 hover:bg-slate-100'
+            }`}
+          >
+            {tab.label}
+            <span className={`ml-1.5 px-1.5 py-0.5 rounded-full text-[10px] ${
+              activeTab === tab.id ? 'bg-slate-700' : 'bg-slate-200'
+            }`}>
+              {tab.count}
+            </span>
+          </button>
+        ))}
+      </div>
+
+      {isLoading && <p className="text-sm text-slate-500">Loading requests…</p>}
+      {isError && <p className="text-sm text-red-600">Could not load requests. Please try again.</p>}
+
+      {!isLoading && !isError && (
+        <>
+          <div className="space-y-3">
+            {paginated.length === 0 ? (
+              <div className="bg-white rounded-xl border border-slate-200 p-10 text-center text-sm text-slate-400">
+                No {activeTab === 'ALL' ? '' : activeTab.toLowerCase()} requests found.
+              </div>
+            ) : (
+              paginated.map((req: any) => (
+                <div
+                  key={req.id}
+                  className={`bg-white rounded-xl border shadow-sm p-4 transition-all ${
+                    req.status === 'PENDING'
+                      ? 'border-amber-200 ring-1 ring-amber-100'
+                      : req.status === 'REJECTED'
+                      ? 'border-red-100'
+                      : 'border-slate-200'
+                  }`}
+                >
+                  {errorRequestId === req.id && errorMessage && (
+                    <div className="mb-3 px-3 py-2 rounded-lg text-xs bg-red-50 text-red-700 border border-red-200">
+                      {errorMessage}
+                    </div>
+                  )}
+
+                  <div className="flex items-start gap-3">
+                    <div className="w-10 h-10 rounded-full bg-indigo-50 text-indigo-700 flex items-center justify-center text-xs font-bold shrink-0">
+                      {req.user?.fullName?.slice(0, 2).toUpperCase() ?? '??'}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex flex-wrap items-center gap-2 mb-1">
+                        <span className="text-sm font-semibold text-slate-900">
+                          {req.user?.fullName ?? req.user?.email}
+                        </span>
+                        <TypeBadge type={req.type} />
+                        <StatusBadge status={req.status} />
+                        <AiRecommendationBadge
+                          recommendation={req.aiRecommendation}
+                          confidenceScore={req.aiConfidenceScore}
+                          reason={req.aiReason}
+                        />
+                      </div>
+                      <p className="text-xs text-slate-600">{req.reason || 'No comment provided'}</p>
+                      {req.proposedDate && (
+                        <p className="text-xs text-slate-500 mt-1">
+                          Target: {new Date(req.proposedDate).toLocaleDateString(undefined, {
+                            weekday: 'short', month: 'short', day: 'numeric',
+                          })}
+                        </p>
+                      )}
+                      <p className="text-[11px] text-slate-400 mt-1">
+                        Submitted {new Date(req.createdAt).toLocaleDateString()}
+                      </p>
+                      {req.status === 'REJECTED' && req.reviewComment && (
+                        <div className="mt-2 px-3 py-2 rounded-lg text-xs bg-red-50 text-red-700 border border-red-100">
+                          <span className="font-semibold">HoD feedback:</span> {req.reviewComment}
+                        </div>
+                      )}
+                    </div>
+
+                    {req.status === 'PENDING' && (
+                      <div className="flex items-center gap-2 shrink-0">
+                        <button
+                          onClick={() => handleApprove(req)}
+                          disabled={mutation.isPending}
+                          className="px-3 py-1.5 rounded-lg text-xs font-semibold text-white bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50"
+                        >
+                          Approve
+                        </button>
+                        <button
+                          onClick={() => handleReject(req)}
+                          disabled={mutation.isPending}
+                          className="px-3 py-1.5 rounded-lg text-xs font-semibold text-white bg-red-600 hover:bg-red-700 disabled:opacity-50"
+                        >
+                          Reject
+                        </button>
+                      </div>
+                    )}
+                  </div>
+
+                  {req.type === 'COMPENSATION' && approvingId === req.id && (
+                    <div className="mt-3 p-3 rounded-lg bg-slate-50 border border-slate-200 space-y-3">
+                      <p className="text-xs text-slate-600">
+                        Choose which regular slot to skip and in which week. The faculty member&apos;s extra day ({req.proposedDate ? new Date(req.proposedDate).toLocaleDateString() : 'proposed date'}) will be added after approval.
+                      </p>
+                      <div className="flex flex-wrap items-end gap-3">
+                      <div>
+                        <label className="block text-[10px] font-semibold text-slate-500 uppercase mb-1">Skip slot</label>
+                        <select
+                          value={compScheduleId}
+                          onChange={(e) => setCompScheduleId(e.target.value)}
+                          className="text-xs px-2 py-1.5 rounded-lg border border-slate-200 bg-white"
+                        >
+                          <option value="">Select a slot</option>
+                          {(compUserSlots ?? []).map((s: any) => (
+                            <option key={s.id} value={s.id}>
+                              {DAY_NAMES[s.dayOfWeek]} {s.startTime}–{s.endTime}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-[10px] font-semibold text-slate-500 uppercase mb-1">In week of</label>
+                        <input
+                          type="date"
+                          value={compWeek}
+                          onChange={(e) => setCompWeek(e.target.value)}
+                          className="text-xs px-2 py-1.5 rounded-lg border border-slate-200"
+                        />
+                      </div>
+                      <button
+                        onClick={() => mutation.mutate({ id: req.id, status: 'APPROVED' })}
+                        disabled={mutation.isPending || !compScheduleId || !compWeek}
+                        className="px-3 py-1.5 rounded-lg text-xs font-semibold text-white bg-emerald-600 disabled:opacity-50"
+                      >
+                        Confirm Approve
+                      </button>
+                      <button
+                        onClick={() => { setApprovingId(null); setCompUserId(null); }}
+                        className="px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-200 text-slate-600"
+                      >
+                        Cancel
+                      </button>
+                      </div>
+                    </div>
+                  )}
+
+                  {rejectingId === req.id && (
+                    <div className="mt-3 p-3 rounded-lg bg-red-50 border border-red-100 space-y-2">
+                      <label className="block text-xs font-semibold text-red-800">Rejection reason (required)</label>
+                      <textarea
+                        value={rejectReason}
+                        onChange={(e) => setRejectReason(e.target.value)}
+                        rows={2}
+                        placeholder="Explain why this request is rejected…"
+                        className="w-full text-xs px-3 py-2 rounded-lg border border-red-200 bg-white"
+                      />
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => handleReject(req)}
+                          disabled={mutation.isPending || rejectReason.trim().length < 3}
+                          className="px-3 py-1.5 rounded-lg text-xs font-semibold text-white bg-red-600 disabled:opacity-50"
+                        >
+                          Confirm Reject
+                        </button>
+                        <button
+                          onClick={() => { setRejectingId(null); setRejectReason(''); }}
+                          className="px-3 py-1.5 rounded-lg text-xs font-semibold border border-red-200 text-red-700"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ))
+            )}
+          </div>
+
+          {filtered.length > PAGE_SIZE && (
+            <div className="flex items-center justify-between pt-2">
+              <span className="text-xs text-slate-500">
+                Page {page} of {totalPages} · {filtered.length} request{filtered.length !== 1 ? 's' : ''}
+              </span>
+              <div className="flex gap-2">
+                <button
+                  disabled={page === 1}
+                  onClick={() => setPage((p) => p - 1)}
+                  className="px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-200 bg-white disabled:opacity-40"
+                >
+                  Previous
+                </button>
+                <button
+                  disabled={page >= totalPages}
+                  onClick={() => setPage((p) => p + 1)}
+                  className="px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-200 bg-white disabled:opacity-40"
+                >
+                  Next
+                </button>
+              </div>
+            </div>
+          )}
+        </>
+      )}
+    </div>
+  );
+}
+
+export default HoDApproval;
+</file>
+
+<file path="backend/prisma/schema.prisma">
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Department {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  code      String   @unique
+  events    Event[]
+  users     User[]
+}
+
+model User {
+  id                                       String                @id @default(uuid())
+  email                                    String                @unique
+  password                                 String
+  fullName                                 String
+  role                                     Role                  @default(FACULTY)
+  departmentId                             String?
+  createdAt                                DateTime              @default(now())
+  updatedAt                                DateTime              @updatedAt
+  requests                                 ModificationRequest[]
+  Notification_Notification_senderIdToUser Notification[]        @relation("Notification_senderIdToUser")
+  Notification_Notification_userIdToUser   Notification[]        @relation("Notification_userIdToUser")
+  schedules                                Schedule[]
+  department                               Department?           @relation(fields: [departmentId], references: [id])
+}
+
+model ModificationRequest {
+  id                String             @id @default(uuid())
+  userId            String
+  type              RequestType
+  status            RequestStatus      @default(PENDING)
+  originalDate      DateTime?
+  proposedDate      DateTime?
+  reason            String?
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  scheduleId        String?
+  reviewedAt        DateTime?
+  reviewedById      String?
+  reviewComment     String?
+  aiRecommendation  String?            @default("Pending")
+  aiConfidenceScore Float?
+  aiReason          String?
+  schedule          Schedule?          @relation(fields: [scheduleId], references: [id])
+  user              User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  scheduleException ScheduleException?
+}
+
+model Schedule {
+  id               String                @id @default(uuid())
+  userId           String
+  dayOfWeek        Int
+  startTime        String
+  endTime          String
+  createdAt        DateTime              @default(now())
+  updatedAt        DateTime              @updatedAt
+  subject          String?
+  weekSpecificOnly Boolean               @default(false)
+  requests         ModificationRequest[]
+  user             User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  exceptions       ScheduleException[]
+}
+
+model ScheduleException {
+  id            String               @id @default(cuid())
+  scheduleId    String
+  weekStartDate DateTime
+  newDayOfWeek  Int
+  newStartTime  String
+  newEndTime    String
+  isSkipped     Boolean              @default(false)
+  requestId     String?              @unique
+  createdAt     DateTime             @default(now())
+  request       ModificationRequest? @relation(fields: [requestId], references: [id])
+  schedule      Schedule             @relation(fields: [scheduleId], references: [id])
+
+  @@unique([scheduleId, weekStartDate])
+}
+
+model Event {
+  id           String     @id @default(uuid())
+  title        String
+  description  String?
+  eventDate    DateTime
+  departmentId String
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  department   Department @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+}
+
+model Notification {
+  id                               String           @id @default(uuid())
+  userId                           String
+  senderId                         String?
+  title                            String
+  message                          String
+  type                             NotificationType @default(GENERAL)
+  read                             Boolean          @default(false)
+  createdAt                        DateTime         @default(now())
+  User_Notification_senderIdToUser User?            @relation("Notification_senderIdToUser", fields: [senderId], references: [id])
+  User_Notification_userIdToUser   User             @relation("Notification_userIdToUser", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, type, senderId, createdAt])
+}
+
+enum Role {
+  ADMIN
+  HOD
+  FACULTY
+}
+
+enum RequestType {
+  MODIFICATION
+  ADDITIONAL
+  COMPENSATION
+}
+
+enum RequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum NotificationType {
+  GENERAL
+  NEW_FACULTY
+  SCHEDULE_REMINDER
+}
+</file>
+
+<file path="backend/src/common/filters/all-exceptions.filter.ts">
+import {
+  ExceptionFilter,
+  Catch,
+  ArgumentsHost,
+  HttpException,
+  HttpStatus,
+  Logger,
+} from '@nestjs/common';
+import { Request, Response } from 'express';
+
+@Catch()
+export class AllExceptionsFilter implements ExceptionFilter {
+  private readonly logger = new Logger(AllExceptionsFilter.name);
+
+  catch(exception: unknown, host: ArgumentsHost) {
+    const ctx = host.switchToHttp();
+    const response = ctx.getResponse<Response>();
+    const request = ctx.getRequest<Request>();
+
+    const status =
+      exception instanceof HttpException
+        ? exception.getStatus()
+        : HttpStatus.INTERNAL_SERVER_ERROR;
+
+    const message = this.extractMessage(exception);
+
+    if (exception instanceof HttpException) {
+      const statusCode = Number(status);
+      if (statusCode >= 500) {
+        this.logger.error(
+          `${request.method} ${request.url} → ${status}`,
+          exception.stack,
+        );
+      }
+    } else {
+      this.logger.error(
+        `${request.method} ${request.url} → unhandled exception`,
+        exception instanceof Error ? exception.stack : String(exception),
+      );
+    }
+
+    response.status(status).json({
+      statusCode: status,
+      timestamp: new Date().toISOString(),
+      message,
+    });
+  }
+
+  private extractMessage(exception: unknown): string | string[] {
+    if (!(exception instanceof HttpException)) {
+      return 'Internal server error';
+    }
+
+    const response = exception.getResponse();
+    if (typeof response === 'string') {
+      return response;
+    }
+
+    if (typeof response === 'object' && response !== null) {
+      const payload = response as { message?: string | string[] };
+      if (
+        typeof payload.message === 'string' ||
+        Array.isArray(payload.message)
+      ) {
+        return payload.message;
+      }
+    }
+
+    return exception.message;
+  }
+}
+</file>
+
 <file path="backend/src/requests/requests.service.ts">
 import {
   Injectable,
   NotFoundException,
   BadRequestException,
   ConflictException,
+  Logger,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateRequestDto } from './dto/create-request.dto';
@@ -32940,13 +35520,19 @@ import { RequestStatus, RequestType, Role, Prisma } from '@prisma/client';
 import { assertNoScheduleOverlap } from '../common/utils/schedule-overlap.util';
 import { startOfWeek } from '../common/utils/date.util';
 import { paginate } from '../common/utils/pagination.util';
+import { AiService } from '../ai/ai.service';
 
 const DEFAULT_SLOT_START = '08:30';
 const DEFAULT_SLOT_END = '10:00';
 
 @Injectable()
 export class RequestsService {
-  constructor(private readonly prisma: PrismaService) {}
+  private readonly logger = new Logger(RequestsService.name);
+
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly aiService: AiService,
+  ) {}
 
   async create(userId: string, dto: CreateRequestDto) {
     if (dto.type === RequestType.MODIFICATION) {
@@ -33021,9 +35607,28 @@ export class RequestsService {
       }
     }
 
-    return this.prisma.modificationRequest.create({
-      data: { ...dto, userId },
+    const created = await this.prisma.modificationRequest.create({
+      data: {
+        userId,
+        type: dto.type,
+        reason: dto.reason,
+        scheduleId: dto.scheduleId,
+        originalDate: dto.originalDate,
+        proposedDate: dto.proposedDate,
+        aiRecommendation: 'Pending',
+      },
     });
+
+    try {
+      return await this.attachAiRecommendation(created.id, userId, dto);
+    } catch (error) {
+      this.logger.warn(
+        `AI enrichment skipped for request ${created.id}: ${
+          error instanceof Error ? error.message : String(error)
+        }`,
+      );
+      return created;
+    }
   }
 
   async findMyRequests(userId: string) {
@@ -33088,25 +35693,31 @@ export class RequestsService {
     _callerRole: Role,
     _callerDepartmentId: string | null,
   ) {
+    const request = await this.prisma.modificationRequest.findUnique({
+      where: { id },
+      include: { user: true, schedule: true },
+    });
+
+    if (!request) {
+      throw new NotFoundException(`Request #${id} not found`);
+    }
+
+    if (request.status !== RequestStatus.PENDING) {
+      throw new BadRequestException('This request has already been processed');
+    }
+
+    if (dto.status === RequestStatus.REJECTED && !dto.reviewComment?.trim()) {
+      throw new BadRequestException('A rejection reason is required');
+    }
+
     return this.prisma.$transaction(async (tx) => {
-      const request = await tx.modificationRequest.findUnique({
+      const stillPending = await tx.modificationRequest.findUnique({
         where: { id },
-        include: { user: true, schedule: true },
       });
-
-      if (!request) {
-        throw new NotFoundException(`Request #${id} not found`);
-      }
-
-      if (request.status !== RequestStatus.PENDING) {
+      if (!stillPending || stillPending.status !== RequestStatus.PENDING) {
         throw new BadRequestException(
           'This request has already been processed',
         );
-      }
-
-      // HoD has global approval rights for demo/unified setup
-      if (dto.status === RequestStatus.REJECTED && !dto.reviewComment?.trim()) {
-        throw new BadRequestException('A rejection reason is required');
       }
 
       const updatedRequest = await tx.modificationRequest.update({
@@ -33136,6 +35747,38 @@ export class RequestsService {
 
       return updatedRequest;
     });
+  }
+
+  private async attachAiRecommendation(
+    requestId: string,
+    userId: string,
+    dto: CreateRequestDto,
+  ) {
+    const prediction = await this.aiService.recommendForRequest(
+      userId,
+      dto,
+      requestId,
+    );
+
+    try {
+      return await this.prisma.modificationRequest.update({
+        where: { id: requestId },
+        data: {
+          aiRecommendation: prediction.recommendation,
+          aiConfidenceScore: prediction.confidence_score,
+          aiReason: prediction.reason,
+        },
+      });
+    } catch (error) {
+      this.logger.warn(
+        `Could not persist AI fields for request ${requestId}: ${
+          error instanceof Error ? error.message : String(error)
+        }`,
+      );
+      return this.prisma.modificationRequest.findUniqueOrThrow({
+        where: { id: requestId },
+      });
+    }
   }
 
   private async applyModificationApproval(
@@ -33352,7 +35995,7 @@ export class RequestsService {
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { ValidationPipe } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import { AllExceptionsFilter } from './common/filters/all-exceptions.filter';
 import helmet from 'helmet';
 
@@ -33399,84 +36042,11 @@ async function bootstrap() {
 
   const port = process.env.PORT || 3000;
   await app.listen(port);
-  console.log(`🚀 Server running on: http://localhost:${port}`);
-  console.log(`📚 Swagger Documentation: http://localhost:${port}/api`);
+  const logger = new Logger('Bootstrap');
+  logger.log(`Server running on: http://localhost:${port}`);
+  logger.log(`Swagger documentation: http://localhost:${port}/api`);
 }
 void bootstrap();
-</file>
-
-<file path="backend/src/common/filters/all-exceptions.filter.ts">
-import {
-  ExceptionFilter,
-  Catch,
-  ArgumentsHost,
-  HttpException,
-  HttpStatus,
-  Logger,
-} from '@nestjs/common';
-import { Request, Response } from 'express';
-
-@Catch()
-export class AllExceptionsFilter implements ExceptionFilter {
-  private readonly logger = new Logger(AllExceptionsFilter.name);
-
-  catch(exception: unknown, host: ArgumentsHost) {
-    const ctx = host.switchToHttp();
-    const response = ctx.getResponse<Response>();
-    const request = ctx.getRequest<Request>();
-
-    const status =
-      exception instanceof HttpException
-        ? exception.getStatus()
-        : HttpStatus.INTERNAL_SERVER_ERROR;
-
-    const message = this.extractMessage(exception);
-
-    if (exception instanceof HttpException) {
-      const statusCode = Number(status);
-      if (statusCode >= 500) {
-        this.logger.error(
-          `${request.method} ${request.url} → ${status}`,
-          exception.stack,
-        );
-      }
-    } else {
-      this.logger.error(
-        `${request.method} ${request.url} → unhandled exception`,
-        exception instanceof Error ? exception.stack : String(exception),
-      );
-    }
-
-    response.status(status).json({
-      statusCode: status,
-      timestamp: new Date().toISOString(),
-      message,
-    });
-  }
-
-  private extractMessage(exception: unknown): string | string[] {
-    if (!(exception instanceof HttpException)) {
-      return 'Internal server error';
-    }
-
-    const response = exception.getResponse();
-    if (typeof response === 'string') {
-      return response;
-    }
-
-    if (typeof response === 'object' && response !== null) {
-      const payload = response as { message?: string | string[] };
-      if (
-        typeof payload.message === 'string' ||
-        Array.isArray(payload.message)
-      ) {
-        return payload.message;
-      }
-    }
-
-    return exception.message;
-  }
-}
 </file>
 
 </files>

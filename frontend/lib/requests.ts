@@ -1,4 +1,5 @@
 import { apiClient } from './api-client';
+import type { ModificationRequest } from './types';
 
 export async function getMyRequests() {
   const { data } = await apiClient.get('/requests/my-requests');
@@ -16,8 +17,8 @@ export async function createRequest(payload: {
   return data;
 }
 
-export async function getDepartmentRequests() {
-  const { data } = await apiClient.get('/requests/department');
+export async function getDepartmentRequests(): Promise<ModificationRequest[]> {
+  const { data } = await apiClient.get<ModificationRequest[]>('/requests/department');
   return data;
 }
 

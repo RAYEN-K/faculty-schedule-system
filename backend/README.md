@@ -46,8 +46,8 @@ REST API built with **NestJS + Prisma + PostgreSQL** that lets a university depa
   | `DATABASE_URL` | PostgreSQL connection string (pooled)                                          |
   | `DIRECT_URL`   | PostgreSQL connection string (direct, used by Prisma migrations)               |
   | `JWT_SECRET`   | Random string, **minimum 32 characters** — the app refuses to start without it |
-  | `FRONTEND_URL` | Your Next.js frontend URL, used for CORS (defaults to `http://localhost:3001`) |
-  | `PORT`         | API port (defaults to `3000`)                                                  |
+  | `FRONTEND_URL` | Your Next.js frontend URL, used for CORS (defaults to `http://localhost:3000`) |
+  | `PORT`         | API port (defaults to `3001`)                                                  |
 
 3. **Run database migrations**
   ```bash
