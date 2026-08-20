@@ -212,6 +212,20 @@ export class RequestsService {
         );
       }
 
+<<<<<<< HEAD
+=======
+      // 2. Department Check for HOD
+      if (
+        callerRole === Role.HOD &&
+        request.user.departmentId !== callerDepartmentId
+      ) {
+        throw new BadRequestException(
+          'You can only manage requests from your own department',
+        );
+      }
+
+      // 3. Update Request Status
+>>>>>>> f842f1dbb861396a7c4931c4f82dad80c5c9991a
       const updatedRequest = await tx.modificationRequest.update({
         where: { id },
         data: {
@@ -225,16 +239,90 @@ export class RequestsService {
         },
       });
 
+<<<<<<< HEAD
+=======
+      // If not approved, stop here
+>>>>>>> f842f1dbb861396a7c4931c4f82dad80c5c9991a
       if (dto.status !== RequestStatus.APPROVED) {
         return updatedRequest;
       }
 
       if (request.type === RequestType.MODIFICATION && request.scheduleId) {
+<<<<<<< HEAD
         await this.applyModificationApproval(tx, request);
       } else if (request.type === RequestType.ADDITIONAL) {
         await this.applyAdditionalApproval(tx, request);
       } else if (request.type === RequestType.COMPENSATION) {
         await this.applyCompensationApproval(tx, request, dto);
+=======
+        if (!request.proposedDate || !request.schedule) {
+          throw new BadRequestException(
+            'Modification request must have a proposedDate and associated schedule.',
+          );
+        }
+
+        const proposedDate = new Date(request.proposedDate);
+        const newDayOfWeek = proposedDate.getUTCDay();
+
+        try {
+          await tx.scheduleException.create({
+            data: {
+              scheduleId: request.scheduleId,
+              weekStartDate: request.originalDate ?? proposedDate,
+              newDayOfWeek,
+              newStartTime: request.schedule.startTime,
+              newEndTime: request.schedule.endTime,
+              isSkipped: false,
+              requestId: request.id,
+            },
+          });
+        } catch (error) {
+          if (
+            error instanceof Prisma.PrismaClientKnownRequestError &&
+            error.code === 'P2002'
+          ) {
+            throw new ConflictException(
+              'This week already has a scheduling exception for this slot',
+            );
+          }
+          throw error;
+        }
+      } else if (
+        request.type === RequestType.ADDITIONAL ||
+        request.type === RequestType.COMPENSATION
+      ) {
+        if (!request.proposedDate) {
+          throw new BadRequestException(
+            'Proposed date is required for this request type',
+          );
+        }
+
+        const proposedDate = new Date(request.proposedDate);
+        const dayOfWeek = proposedDate.getUTCDay();
+
+        // Check for overlap before creating schedule
+        const existingUserSchedules = await tx.schedule.findMany({
+          where: { userId: request.userId, dayOfWeek },
+        });
+
+        assertNoScheduleOverlap(
+          {
+            dayOfWeek,
+            startTime: '08:30',
+            endTime: '10:00',
+          },
+          existingUserSchedules,
+        );
+
+        const newSlot: CreateScheduleDto = {
+          userId: request.userId,
+          dayOfWeek,
+          startTime: '08:30',
+          endTime: '10:00',
+        };
+
+        await this.schedulesService.create(newSlot);
+>>>>>>> f842f1dbb861396a7c4931c4f82dad80c5c9991a
       }
 
       return updatedRequest;
